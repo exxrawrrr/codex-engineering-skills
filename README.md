@@ -1,10 +1,419 @@
 # Codex Engineering Skills
 
-Reusable engineering skills for Codex and other agent workflows that understand `SKILL.md`-style instructions.
+> **Catatan buat gue sendiri dulu.**
+>
+> Repo ini bukan "install semua biar AI makin sakti".
+>
+> Justru kebalikannya.
+>
+> Kalau nanti gue mulai masukin 48 skill ke satu agent terus heran kenapa context-nya sesak:
+>
+> **woco README iki meneh.**
 
-The suite focuses on **boring, testable, recoverable engineering**: strict TypeScript architecture, monorepo boundaries, SQLite durability, resilient crawlers, local-first application security, system testing, and project-level skill routing.
+<p align="center">
+  <img src="https://raw.githubusercontent.com/exxrawrrr/exxrawrrr/main/assets/readme-memes/copilot-dependency.jpg" width="320" alt="AI dependency meme" />
+</p>
 
-## Included
+## Ngene loh, cak.
+
+Awalnya gue cuma butuh beberapa instruction yang bikin agent engineering **nggak ngawur**.
+
+Bukan cuma:
+
+> "buat monorepo."
+
+Tapi:
+
+> "buat monorepo, ngerti ownership package-nya, dependency direction-nya, export boundary-nya, terus jangan bikin semua package saling gandengan kayak rombongan kondangan."
+
+Terus berkembang.
+
+Butuh SQLite? bikin skill.
+
+Butuh crawler yang nggak amnesia habis restart? bikin skill.
+
+Butuh security local-first? bikin skill.
+
+Butuh testing yang nggak cuma tiga assertion terus merasa aman? bikin skill.
+
+Butuh router khusus GrowthOps? yo bikin lagi.
+
+Lama-lama:
+
+> **lah kok dadi bengkel.**
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/exxrawrrr/exxrawrrr/main/assets/readme-memes/confused-math-lady.jpg" width="300" alt="confused math lady meme" />
+</p>
+
+Dan akhirnya gue sadar:
+
+**ya sudah. Memang ini bengkel.**
+
+---
+
+## Ini skill garage, bukan buffet all-you-can-eat
+
+Kesalahan paling gampang waktu punya koleksi skill:
+
+```text
+"wah ada 8"
+↓
+"load semua"
+↓
+context gede
+↓
+instruction tabrakan
+↓
+agent mikir kelamaan
+↓
+token kobong
+↓
+gue:
+"kok ngene?"
+```
+
+Ora usah.
+
+Prinsip repo ini sederhana:
+
+> **pakai skill paling sedikit yang cukup buat kerjaan saat ini.**
+
+Bukan semua skill harus aktif.
+
+Bukan semua skill harus stable.
+
+Bukan semua skill harus relevan ke semua project.
+
+Presence is not endorsement.
+
+Kalau satu skill ada di sini, artinya:
+
+> **pernah cukup berguna, menarik, atau penting untuk dikoleksi.**
+
+Bukan berarti harus disuntikkan ke setiap chat sampai model megap-megap.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/exxrawrrr/exxrawrrr/main/assets/readme-memes/galaxy-brain.jpg" width="310" alt="galaxy brain meme" />
+</p>
+
+---
+
+## Yang gue kejar dari skill beginian
+
+Gue nggak terlalu peduli skill-nya terdengar keren.
+
+Gue lebih peduli apakah setelah skill dipakai:
+
+- agent ngerti boundary;
+- keputusan teknis lebih konsisten;
+- context lebih kecil;
+- testing lebih masuk akal;
+- error lebih recoverable;
+- source dan provenance jelas;
+- project-specific rule nggak bocor ke project lain;
+- dan hasil akhirnya bisa diverifikasi.
+
+Kalau skill cuma bikin agent ngomong makin panjang tapi implementasinya sama:
+
+**ngapain.**
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/exxrawrrr/exxrawrrr/main/assets/readme-memes/ai-slop-trojan-horse.jpg" width="320" alt="AI slop meme" />
+</p>
+
+---
+
+## Cara gue mikir routing-nya
+
+Kurang lebih:
+
+```text
+PROJECT CONTEXT
+      ↓
+PROJECT ROUTER
+      ↓
+pilih specialist skill yang relevan
+      ↓
+ambil references seperlunya
+      ↓
+implement
+      ↓
+verify
+```
+
+Bukan:
+
+```text
+PROJECT
+  ↓
+LOAD EVERYTHING
+  ↓
+SEMOGA ALLAH MEMBERKATI CONTEXT WINDOW
+```
+
+Nah.
+
+---
+
+## Status itu penting
+
+Gue sengaja bedain skill jadi beberapa jenis.
+
+### `stable`
+
+Sudah cukup berguna buat pemakaian normal dan memang diniatkan untuk dirawat.
+
+### `incubating`
+
+Masih diuji.
+
+Bisa berubah.
+
+Bisa dipotong.
+
+Bisa ternyata idenya bagus tapi implementasinya perlu ditampar ulang.
+
+### `reference`
+
+Disimpan sebagai knowledge/pattern.
+
+Nggak harus masuk install normal.
+
+### `project`
+
+Sengaja spesifik ke satu project.
+
+Contohnya `growthops-engineering`.
+
+Kalau lu copy mentah skill project-specific ke project lain terus ternyata aneh:
+
+ya karena memang **ora digawe kanggo kono**.
+
+---
+
+## Skill yang sekarang ada
+
+| Skill | Status | Buat apa |
+| --- | --- | --- |
+| `typescript-node-architecture` | stable | strict TypeScript/Node boundaries, contracts, lifecycle, error design |
+| `monorepo-typescript` | stable | pnpm workspaces, package ownership, exports, dependency direction |
+| `sqlite-data-modeling` | stable | schema, migration, transactions, locking, restart-safe persistence |
+| `resilient-crawler-engineering` | stable | durable crawling, retries, robots/sitemaps, checkpoint/resume |
+| `application-security-local-first` | stable | SSRF, DNS rebinding, XSS, path safety, secrets, prompt boundaries |
+| `testing-typescript-systems` | stable | Vitest, MSW, fixtures, durability/fault/restart testing |
+| `agent-skill-authoring` | incubating | bikin, review, package, dan maintain agent skill |
+| `growthops-engineering` | project | router + engineering contract khusus GrowthOps |
+
+Canonical registry: [REGISTRY.json](REGISTRY.json)
+
+---
+
+## Kenapa ada `growthops-engineering` di repo generic?
+
+Karena gue pengen ada satu contoh **beneran dipakai di project nyata**.
+
+Bukan contoh:
+
+```text
+my-awesome-project
+todo: implement later
+```
+
+Tapi router yang memang punya vocabulary, milestone, contract, dan boundary dari project asli.
+
+Fungsinya buat belajar composition.
+
+Bukan buat dicopy terus nama GrowthOps diganti `ProjectX`.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/exxrawrrr/exxrawrrr/main/assets/readme-memes/copy-paste-keyboard.jpg" width="285" alt="copy paste keyboard meme" />
+</p>
+
+**Adapt. Ojo mung Ctrl+C Ctrl+V.**
+
+---
+
+## Gue juga nggak mau skill ini jadi kitab suci
+
+Engineering berubah.
+
+Library berubah.
+
+Agent behavior berubah.
+
+Model berubah.
+
+Best practice juga kadang cuma best practice sampai ketemu production.
+
+Jadi skill harus bisa:
+
+```text
+dipakai
+→ diuji
+→ dikritik
+→ direvisi
+→ dipromosikan
+→ diturunkan statusnya
+→ dipensiunkan kalau perlu
+```
+
+Makanya ada [COLLECTION_POLICY.md](COLLECTION_POLICY.md).
+
+Kalau sebuah skill sudah redundant atau ternyata lebih banyak bikin ribet daripada membantu:
+
+**ya wes, jangan dipelihara karena gengsi.**
+
+---
+
+## Provenance jangan disembunyikan
+
+Repo ini bukan hasil gue bangun dari ruang hampa terus mendadak mendapat wahyu engineering.
+
+Public repositories dan official docs dipelajari.
+
+Pattern dibandingkan.
+
+Lalu instruction ditulis ulang, disempitkan, dikembangkan, dan disusun buat workflow agent.
+
+Detailnya ada di:
+
+- [ATTRIBUTION.md](ATTRIBUTION.md)
+- [NOTICE](NOTICE)
+- [SOURCES.md](SOURCES.md)
+
+Kalau ada ide bagus datang dari orang lain, ya sebut.
+
+Simple.
+
+---
+
+## Install
+
+Dry run dulu kalau pengen lihat apa yang bakal berubah:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\install.ps1 -DryRun
+```
+
+Install:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\install.ps1
+```
+
+Generic skills only:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\install.ps1 -GenericOnly
+```
+
+Default target:
+
+```text
+%USERPROFILE%\.codex\skills
+```
+
+Existing matching folders dibackup sebelum replacement.
+
+Karena installer yang merasa paling tahu lalu nimpa file tanpa backup itu bukan automation.
+
+Itu villain origin story.
+
+---
+
+## Validate
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\validate.ps1
+```
+
+Validator ngecek hal-hal seperti:
+
+- frontmatter;
+- skill names;
+- references;
+- encoding corruption;
+- tool-output contamination;
+- context size;
+- generic/project leakage;
+- suite maintenance assets.
+
+Kalau validator merah:
+
+jangan dibujuk.
+
+Benerin.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/exxrawrrr/exxrawrrr/main/assets/readme-memes/drake-reject-approve.jpg" width="300" alt="drake reject approve meme" />
+</p>
+
+---
+
+## Build your own skills
+
+Kalau mau bikin skill sendiri, mulai dari:
+
+- [AUTHORING_STANDARD.md](AUTHORING_STANDARD.md)
+- [templates/project-router/SKILL.md](templates/project-router/SKILL.md)
+- [examples/ROUTING_EXAMPLES.md](examples/ROUTING_EXAMPLES.md)
+- [REGISTRY.json](REGISTRY.json)
+
+`agent-skill-authoring` juga sengaja ada sebagai meta-skill untuk bantu proses itu.
+
+Tapi tetap:
+
+> skill yang bagus bukan skill yang paling panjang.
+
+Skill yang bagus adalah instruction yang bikin agent **lebih tepat**, tanpa bikin context berubah jadi gudang kardus.
+
+---
+
+## Pesan buat gue nanti
+
+Kalau collection ini suatu hari isinya 100 skill:
+
+cek lagi.
+
+Jangan-jangan yang gue bangun bukan skill system.
+
+Jangan-jangan cuma folder hoarding dengan YAML.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/exxrawrrr/exxrawrrr/main/assets/readme-memes/thinking-pepe.jpg" width="250" alt="thinking pepe meme" />
+</p>
+
+Yang dicari tetap sama:
+
+> **small context, strong boundaries, boring reliability.**
+
+Kalau skill nggak membantu salah satu dari itu, minimal harus punya alasan bagus kenapa dia masih tinggal di sini.
+
+---
+
+<br/>
+
+# For everyone else
+
+> If you came here for the reusable engineering suite rather than the owner's notes, this section is the cleaner overview.
+
+## Codex Engineering Skills
+
+**Codex Engineering Skills is a curated collection of reusable engineering skills for Codex and other agent workflows that understand `SKILL.md`-style instructions.**
+
+The suite focuses on reliable engineering patterns rather than maximum instruction volume.
+
+Its main goals are:
+
+- smaller task-specific context;
+- explicit engineering boundaries;
+- reusable specialist guidance;
+- clear separation between generic and project-specific instructions;
+- validation and provenance;
+- testable, recoverable system design.
+
+## Included skills
 
 | Skill | Purpose |
 | --- | --- |
@@ -15,37 +424,35 @@ The suite focuses on **boring, testable, recoverable engineering**: strict TypeS
 | `application-security-local-first` | SSRF/DNS rebinding, XSS, path safety, secrets, prompt-injection boundaries |
 | `testing-typescript-systems` | Vitest, MSW, fixtures, durability/fault/restart tests, targeted E2E |
 | `agent-skill-authoring` | Meta-skill for creating, reviewing, packaging, and publishing agent skills |
-| `growthops-engineering` | Example of a real project-specific router/contract skill |
+| `growthops-engineering` | Real project-specific router and engineering contract example |
 
-The reusable skills are designed to work across projects. `growthops-engineering` is intentionally project-specific and should be adapted rather than copied unchanged.
-
-## Skill garage / collection philosophy
-
-This repository is also a **personal/public skill garage**: a place to collect engineering skills, patterns, experiments, and project routers that may be useful now or later.
-
-A skill being present here does **not** mean everyone should load it, install it, or use it on every project.
-
-Registry status helps communicate intent:
-
-- `stable` — actively useful and expected to be maintained;
-- `incubating` — experimental/new, useful for testing and refinement;
-- `reference` — kept mainly as a pattern or knowledge asset;
-- `project` — intentionally tied to a specific project.
-
-The goal is to curate useful skills without pretending every collected skill is universally necessary.
-
-## Design
+## Routing model
 
 ```text
 project router
   -> relevant specialist skill(s)
     -> selected references
-      -> verification
+      -> implementation
+        -> verification
 ```
 
-This keeps context smaller than loading one giant instruction corpus for every task.
+The collection intentionally avoids the assumption that every available skill should be loaded for every task.
 
-## Install
+## Collection model
+
+Registry status communicates intended use:
+
+**stable** — reusable and maintained for normal use.
+
+**incubating** — experimental and expected to evolve.
+
+**reference** — retained primarily as a knowledge or pattern asset.
+
+**project** — intentionally tied to one project's scope and vocabulary.
+
+See [COLLECTION_POLICY.md](COLLECTION_POLICY.md) and [REGISTRY.json](REGISTRY.json).
+
+## Installation
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\install.ps1 -DryRun
@@ -58,54 +465,40 @@ Generic skills only:
 powershell -ExecutionPolicy Bypass -File .\install.ps1 -GenericOnly
 ```
 
-Default target is `%USERPROFILE%\.codex\skills`. Existing matching folders are backed up before replacement.
-
-## Validate
+## Validation
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\validate.ps1
 ```
 
-The validator checks frontmatter, names, references, encoding corruption, tool-output contamination, context size, generic/project leakage, and suite maintenance assets.
+The validator checks skill metadata, references, context size, project leakage, encoding issues, generated-output contamination, and repository maintenance rules.
 
 ## Provenance
 
-These skills are **newly authored as a curated synthesis**. This repository is not a wholesale fork or copy of one upstream project.
+These skills are newly authored as a curated synthesis rather than a wholesale fork of one upstream project.
 
-Public repositories and official documentation were studied, patterns were compared, then the skills were rewritten, narrowed, extended, and organized for agent use.
+Public repositories and official documentation were studied and compared, then the material was rewritten and organized for agent workflows.
 
-See [ATTRIBUTION.md](ATTRIBUTION.md), [NOTICE](NOTICE), and [SOURCES.md](SOURCES.md).
+See:
 
-Key public references:
+- [ATTRIBUTION.md](ATTRIBUTION.md)
+- [NOTICE](NOTICE)
+- [SOURCES.md](SOURCES.md)
 
-- [@brendonboshell](https://github.com/brendonboshell) — [supercrawler](https://github.com/brendonboshell/supercrawler)
-- [@timothy-nishimura](https://github.com/timothy-nishimura) — [crawl](https://github.com/timothy-nishimura/crawl)
-- [@alfa546](https://github.com/alfa546) — [Crawler](https://github.com/alfa546/Crawler)
-- [@Jean-W-FE](https://github.com/Jean-W-FE) — [nextjs-monorepo-agent-skill](https://github.com/Jean-W-FE/nextjs-monorepo-agent-skill)
-- [@ersinkoc](https://github.com/ersinkoc) — [project-bootstrap](https://github.com/ersinkoc/project-bootstrap)
-- [@trailofbits](https://github.com/trailofbits) — [claude-code-config](https://github.com/trailofbits/claude-code-config)
-- [@jezweb](https://github.com/jezweb) — [claude-skills](https://github.com/jezweb/claude-skills)
+## Authoring
 
-Official references include TypeScript, pnpm, SQLite, Vitest, MSW, Playwright, and OWASP guidance.
-
-## License
-
-Apache-2.0. Third-party projects retain their own copyrights and licenses. See [ATTRIBUTION.md](ATTRIBUTION.md).
-
-## Contributing
-
-Contributions that improve correctness, safety, portability, context efficiency, testability, or source attribution are welcome.
-## Build your own skills
-
-This repository now includes `agent-skill-authoring`, an original meta-skill for designing and reviewing maintainable agent skills.
-
-Start from:
+To create or adapt skills, start with:
 
 - [AUTHORING_STANDARD.md](AUTHORING_STANDARD.md)
 - [templates/project-router/SKILL.md](templates/project-router/SKILL.md)
 - [examples/ROUTING_EXAMPLES.md](examples/ROUTING_EXAMPLES.md)
-- [REGISTRY.json](REGISTRY.json)
 
-The validator and installer are registry-driven, so adding a new skill means adding its folder plus one registry entry.
+## License
 
-See [COLLECTION_POLICY.md](COLLECTION_POLICY.md) for how stable, experimental, reference, and project-specific skills are handled.
+Apache-2.0.
+
+Third-party projects retain their own copyrights and licenses as documented in the attribution files.
+
+---
+
+**Use the smallest skill set that can do the job well. Context is a resource too.**
