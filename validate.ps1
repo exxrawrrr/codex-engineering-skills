@@ -36,18 +36,18 @@ if ($fail.Count -eq 0) {
     }
 
     if ($kind -notin @("generic","project")) {
-      $fail.Add("$name: invalid kind '$kind'")
+      $fail.Add("$($name): invalid kind '$kind'")
     }
 
     $dir = Join-Path $PSScriptRoot $relativePath
     if (-not (Test-Path $dir)) {
-      $fail.Add("$name: registered path missing -> $relativePath")
+      $fail.Add("$($name): registered path missing -> $relativePath")
       continue
     }
 
     $skill = Join-Path $dir "SKILL.md"
     if (-not (Test-Path $skill)) {
-      $fail.Add("$name: missing SKILL.md")
+      $fail.Add("$($name): missing SKILL.md")
       continue
     }
 
@@ -55,22 +55,22 @@ if ($fail.Count -eq 0) {
     $lines = Get-Content $skill
 
     if (-not $raw.StartsWith("---")) {
-      $fail.Add("$name: missing YAML frontmatter opener")
+      $fail.Add("$($name): missing YAML frontmatter opener")
     }
     if ($raw -notmatch "(?m)^name:\s+$([regex]::Escape($name))\s*$") {
-      $fail.Add("$name: frontmatter name does not match registry/directory")
+      $fail.Add("$($name): frontmatter name does not match registry/directory")
     }
     if ($raw -notmatch "(?m)^description:\s+.+$") {
-      $fail.Add("$name: missing description")
+      $fail.Add("$($name): missing description")
     }
     if ($raw.Contains([char]0xFFFD)) {
-      $fail.Add("$name: contains Unicode replacement character U+FFFD")
+      $fail.Add("$($name): contains Unicode replacement character U+FFFD")
     }
 
     if ($lines.Count -gt 500) {
-      $warn.Add("$name: SKILL.md exceeds 500 lines ($($lines.Count))")
+      $warn.Add("$($name): SKILL.md exceeds 500 lines ($($lines.Count))")
     } else {
-      $pass.Add("$name: SKILL.md size OK ($($lines.Count) lines)")
+      $pass.Add("$($name): SKILL.md size OK ($($lines.Count) lines)")
     }
 
     $refs = [regex]::Matches($raw, 'references/[A-Za-z0-9._/-]+\.md') |
@@ -79,17 +79,17 @@ if ($fail.Count -eq 0) {
     foreach ($ref in $refs) {
       $refPath = Join-Path $dir ($ref -replace '/', '\')
       if (-not (Test-Path $refPath)) {
-        $fail.Add("$name: broken reference -> $ref")
+        $fail.Add("$($name): broken reference -> $ref")
       }
     }
 
     Get-ChildItem $dir -Recurse -File | ForEach-Object {
       $fileRaw = Get-Content $_.FullName -Raw
       if ($fileRaw.Contains([char]0xFFFD)) {
-        $fail.Add("$name: replacement character in $($_.FullName)")
+        $fail.Add("$($name): replacement character in $($_.FullName)")
       }
       if ($fileRaw -match "(?m)^\[Reading .+\]$" -or $fileRaw -match "(?m)^\[executed on device: .+\]$") {
-        $fail.Add("$name: tool-output contamination in $($_.FullName)")
+        $fail.Add("$($name): tool-output contamination in $($_.FullName)")
       }
     }
 
@@ -97,7 +97,7 @@ if ($fail.Count -eq 0) {
       $hits = Get-ChildItem $dir -Recurse -File |
         Select-String -Pattern "GrowthOps" -SimpleMatch -ErrorAction SilentlyContinue
       if ($hits) {
-        $warn.Add("$name: generic skill contains GrowthOps-specific text")
+        $warn.Add("$($name): generic skill contains GrowthOps-specific text")
       }
     }
   }
