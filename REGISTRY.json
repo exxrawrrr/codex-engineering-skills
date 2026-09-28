@@ -1,55 +1,110 @@
 {
   "schema_version": 1,
   "suite": "codex-engineering-skills",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "skills": [
     {
       "name": "typescript-node-architecture",
       "kind": "generic",
       "path": "skills/typescript-node-architecture",
-      "tags": ["typescript","node","architecture","backend"]
+      "tags": [
+        "typescript",
+        "node",
+        "architecture",
+        "backend"
+      ],
+      "status": "stable"
     },
     {
       "name": "monorepo-typescript",
       "kind": "generic",
       "path": "skills/monorepo-typescript",
-      "tags": ["typescript","pnpm","monorepo","workspaces"]
+      "tags": [
+        "typescript",
+        "pnpm",
+        "monorepo",
+        "workspaces"
+      ],
+      "status": "stable"
     },
     {
       "name": "sqlite-data-modeling",
       "kind": "generic",
       "path": "skills/sqlite-data-modeling",
-      "tags": ["sqlite","database","persistence","migrations","durability"]
+      "tags": [
+        "sqlite",
+        "database",
+        "persistence",
+        "migrations",
+        "durability"
+      ],
+      "status": "stable"
     },
     {
       "name": "resilient-crawler-engineering",
       "kind": "generic",
       "path": "skills/resilient-crawler-engineering",
-      "tags": ["crawler","http","retry","resume","robots","sitemap"]
+      "tags": [
+        "crawler",
+        "http",
+        "retry",
+        "resume",
+        "robots",
+        "sitemap"
+      ],
+      "status": "stable"
     },
     {
       "name": "application-security-local-first",
       "kind": "generic",
       "path": "skills/application-security-local-first",
-      "tags": ["security","ssrf","xss","filesystem","prompt-injection"]
+      "tags": [
+        "security",
+        "ssrf",
+        "xss",
+        "filesystem",
+        "prompt-injection"
+      ],
+      "status": "stable"
     },
     {
       "name": "testing-typescript-systems",
       "kind": "generic",
       "path": "skills/testing-typescript-systems",
-      "tags": ["testing","vitest","msw","fixtures","fault-injection","e2e"]
+      "tags": [
+        "testing",
+        "vitest",
+        "msw",
+        "fixtures",
+        "fault-injection",
+        "e2e"
+      ],
+      "status": "stable"
     },
     {
       "name": "agent-skill-authoring",
       "kind": "generic",
       "path": "skills/agent-skill-authoring",
-      "tags": ["skills","authoring","progressive-disclosure","validation","provenance"]
+      "tags": [
+        "skills",
+        "authoring",
+        "progressive-disclosure",
+        "validation",
+        "provenance"
+      ],
+      "status": "incubating"
     },
     {
       "name": "growthops-engineering",
       "kind": "project",
       "path": "skills/growthops-engineering",
-      "tags": ["router","growthops","project-contract","milestones"]
+      "tags": [
+        "router",
+        "growthops",
+        "project-contract",
+        "milestones"
+      ],
+      "status": "project"
     }
   ]
 }
