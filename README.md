@@ -14,9 +14,25 @@ The suite focuses on **boring, testable, recoverable engineering**: strict TypeS
 | `resilient-crawler-engineering` | Durable frontier, retries/backoff, robots/sitemaps, checkpoint/resume |
 | `application-security-local-first` | SSRF/DNS rebinding, XSS, path safety, secrets, prompt-injection boundaries |
 | `testing-typescript-systems` | Vitest, MSW, fixtures, durability/fault/restart tests, targeted E2E |
+| `agent-skill-authoring` | Meta-skill for creating, reviewing, packaging, and publishing agent skills |
 | `growthops-engineering` | Example of a real project-specific router/contract skill |
 
-The first six are reusable. `growthops-engineering` is intentionally project-specific and should be adapted rather than copied unchanged.
+The reusable skills are designed to work across projects. `growthops-engineering` is intentionally project-specific and should be adapted rather than copied unchanged.
+
+## Skill garage / collection philosophy
+
+This repository is also a **personal/public skill garage**: a place to collect engineering skills, patterns, experiments, and project routers that may be useful now or later.
+
+A skill being present here does **not** mean everyone should load it, install it, or use it on every project.
+
+Registry status helps communicate intent:
+
+- `stable` — actively useful and expected to be maintained;
+- `incubating` — experimental/new, useful for testing and refinement;
+- `reference` — kept mainly as a pattern or knowledge asset;
+- `project` — intentionally tied to a specific project.
+
+The goal is to curate useful skills without pretending every collected skill is universally necessary.
 
 ## Design
 
@@ -91,3 +107,5 @@ Start from:
 - [REGISTRY.json](REGISTRY.json)
 
 The validator and installer are registry-driven, so adding a new skill means adding its folder plus one registry entry.
+
+See [COLLECTION_POLICY.md](COLLECTION_POLICY.md) for how stable, experimental, reference, and project-specific skills are handled.
