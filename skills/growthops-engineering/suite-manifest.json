@@ -1,0 +1,31 @@
+{
+  "suite": "growthops-engineering-suite",
+  "version": "1.0.0",
+  "skills": [
+    "typescript-node-architecture",
+    "monorepo-typescript",
+    "sqlite-data-modeling",
+    "resilient-crawler-engineering",
+    "application-security-local-first",
+    "testing-typescript-systems",
+    "growthops-engineering"
+  ],
+  "project_specific": ["growthops-engineering"],
+  "generic": [
+    "typescript-node-architecture",
+    "monorepo-typescript",
+    "sqlite-data-modeling",
+    "resilient-crawler-engineering",
+    "application-security-local-first",
+    "testing-typescript-systems"
+  ],
+  "recommended_supporting_skills": [
+    "systematic-debugging",
+    "verification-loop",
+    "requesting-code-review",
+    "codebase-onboarding",
+    "playwright-cli",
+    "vercel-react-best-practices",
+    "web-design-guidelines"
+  ]
+}
