@@ -79,3 +79,15 @@ Apache-2.0. Third-party projects retain their own copyrights and licenses. See [
 ## Contributing
 
 Contributions that improve correctness, safety, portability, context efficiency, testability, or source attribution are welcome.
+## Build your own skills
+
+This repository now includes `agent-skill-authoring`, an original meta-skill for designing and reviewing maintainable agent skills.
+
+Start from:
+
+- [AUTHORING_STANDARD.md](AUTHORING_STANDARD.md)
+- [templates/project-router/SKILL.md](templates/project-router/SKILL.md)
+- [examples/ROUTING_EXAMPLES.md](examples/ROUTING_EXAMPLES.md)
+- [REGISTRY.json](REGISTRY.json)
+
+The validator and installer are registry-driven, so adding a new skill means adding its folder plus one registry entry.

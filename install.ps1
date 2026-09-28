@@ -6,19 +6,16 @@ param(
 
 $ErrorActionPreference = "Stop"
 $sourceRoot = Join-Path $PSScriptRoot "skills"
+$registryPath = Join-Path $PSScriptRoot "REGISTRY.json"
 
-$generic = @(
-  "typescript-node-architecture",
-  "monorepo-typescript",
-  "sqlite-data-modeling",
-  "resilient-crawler-engineering",
-  "application-security-local-first",
-  "testing-typescript-systems"
-)
+if (-not (Test-Path $registryPath)) {
+  throw "Missing REGISTRY.json"
+}
 
-$skills = @($generic)
-if (-not $GenericOnly) {
-  $skills += "growthops-engineering"
+$registry = Get-Content $registryPath -Raw | ConvertFrom-Json
+$entries = @($registry.skills)
+if ($GenericOnly) {
+  $entries = @($entries | Where-Object { $_.kind -eq "generic" })
 }
 
 if (-not (Test-Path $TargetRoot)) {
@@ -32,17 +29,18 @@ if (-not (Test-Path $TargetRoot)) {
 $stamp = Get-Date -Format "yyyyMMdd-HHmmss"
 $backupRoot = Join-Path $TargetRoot "_skill-backups\$stamp"
 
-foreach ($name in $skills) {
-  $src = Join-Path $sourceRoot $name
+foreach ($entry in $entries) {
+  $name = [string]$entry.name
+  $src = Join-Path $PSScriptRoot ([string]$entry.path)
   $dst = Join-Path $TargetRoot $name
 
   if (-not (Test-Path (Join-Path $src "SKILL.md"))) {
-    throw "Invalid bundle: missing $name\SKILL.md"
+    throw "Invalid registry entry or bundle: $name"
   }
 
   if (Test-Path $dst) {
     if ($DryRun) {
-      Write-Output "[DRY RUN] Would back up existing $dst to $backupRoot"
+      Write-Output "[DRY RUN] Would back up $dst -> $backupRoot"
     } else {
       New-Item -ItemType Directory -Path $backupRoot -Force | Out-Null
       Copy-Item $dst (Join-Path $backupRoot $name) -Recurse -Force
@@ -55,16 +53,6 @@ foreach ($name in $skills) {
     if (Test-Path $dst) { Remove-Item $dst -Recurse -Force }
     Copy-Item $src $dst -Recurse -Force
     Write-Output "[INSTALLED] $name"
-  }
-}
-
-if (-not $DryRun) {
-  $validator = Join-Path $TargetRoot "growthops-engineering\scripts\validate-suite.ps1"
-  if ((-not $GenericOnly) -and (Test-Path $validator)) {
-    & powershell -ExecutionPolicy Bypass -File $validator -SkillsRoot $TargetRoot
-    if ($LASTEXITCODE -ne 0) {
-      throw "Post-install validation failed."
-    }
   }
 }
 
