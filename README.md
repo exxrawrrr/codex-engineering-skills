@@ -11,7 +11,7 @@
 > **woco README iki meneh.**
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/exxrawrrr/exxrawrrr/main/assets/readme-memes/copilot-dependency.jpg" width="320" alt="AI dependency meme" />
+  <img src="https://raw.githubusercontent.com/exxrawrrr/exxrawrrr/main/assets/readme-memes/merge-conflict.jpg" width="315" alt="merge conflict meme" />
 </p>
 
 ## Ngene loh, cak.
@@ -43,7 +43,7 @@ Lama-lama:
 > **lah kok dadi bengkel.**
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/exxrawrrr/exxrawrrr/main/assets/readme-memes/confused-math-lady.jpg" width="300" alt="confused math lady meme" />
+  <img src="https://raw.githubusercontent.com/exxrawrrr/exxrawrrr/main/assets/readme-memes/99-bugs.jpg" width="300" alt="99 bugs meme" />
 </p>
 
 Dan akhirnya gue sadar:
@@ -85,6 +85,10 @@ Bukan semua skill harus stable.
 
 Bukan semua skill harus relevan ke semua project.
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/exxrawrrr/exxrawrrr/main/assets/readme-memes/printf-debugging.jpg" width="290" alt="printf debugging meme" />
+</p>
+
 Presence is not endorsement.
 
 Kalau satu skill ada di sini, artinya:
@@ -94,7 +98,7 @@ Kalau satu skill ada di sini, artinya:
 Bukan berarti harus disuntikkan ke setiap chat sampai model megap-megap.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/exxrawrrr/exxrawrrr/main/assets/readme-memes/galaxy-brain.jpg" width="310" alt="galaxy brain meme" />
+  <img src="https://raw.githubusercontent.com/exxrawrrr/exxrawrrr/main/assets/readme-memes/heisenbug.jpg" width="305" alt="heisenbug meme" />
 </p>
 
 ---
@@ -119,7 +123,7 @@ Kalau skill cuma bikin agent ngomong makin panjang tapi implementasinya sama:
 **ngapain.**
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/exxrawrrr/exxrawrrr/main/assets/readme-memes/ai-slop-trojan-horse.jpg" width="320" alt="AI slop meme" />
+  <img src="https://raw.githubusercontent.com/exxrawrrr/exxrawrrr/main/assets/readme-memes/stackoverflow-copypaste.jpg" width="290" alt="stackoverflow copy paste meme" />
 </p>
 
 ---
@@ -227,10 +231,14 @@ Fungsinya buat belajar composition.
 Bukan buat dicopy terus nama GrowthOps diganti `ProjectX`.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/exxrawrrr/exxrawrrr/main/assets/readme-memes/copy-paste-keyboard.jpg" width="285" alt="copy paste keyboard meme" />
+  <img src="https://raw.githubusercontent.com/exxrawrrr/exxrawrrr/main/assets/readme-memes/git-commit-fixed-stuff.jpg" width="300" alt="git commit fixed stuff meme" />
 </p>
 
 **Adapt. Ojo mung Ctrl+C Ctrl+V.**
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/exxrawrrr/exxrawrrr/main/assets/readme-memes/xkcd-git.png" width="300" alt="xkcd git meme" />
+</p>
 
 ---
 
@@ -346,7 +354,7 @@ jangan dibujuk.
 Benerin.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/exxrawrrr/exxrawrrr/main/assets/readme-memes/drake-reject-approve.jpg" width="300" alt="drake reject approve meme" />
+  <img src="https://raw.githubusercontent.com/exxrawrrr/exxrawrrr/main/assets/readme-memes/xkcd-compiling.png" width="295" alt="xkcd compiling meme" />
 </p>
 
 ---
@@ -381,7 +389,7 @@ Jangan-jangan yang gue bangun bukan skill system.
 Jangan-jangan cuma folder hoarding dengan YAML.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/exxrawrrr/exxrawrrr/main/assets/readme-memes/thinking-pepe.jpg" width="250" alt="thinking pepe meme" />
+  <img src="https://raw.githubusercontent.com/exxrawrrr/exxrawrrr/main/assets/readme-memes/rubber-duck.jpg" width="285" alt="rubber duck debugging meme" />
 </p>
 
 Yang dicari tetap sama:
