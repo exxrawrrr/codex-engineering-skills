@@ -1,0 +1,149 @@
+{
+  "schema_version": 1,
+  "phase": "14",
+  "split": "14A",
+  "reviewed_on": "2026-09-30",
+  "completion_state": "DECISIONS_LOCKED_IMPLEMENTATION_PENDING_14B",
+  "required_candidates": [
+    "agent-skill-evaluation",
+    "api-contract-testing",
+    "ci-cd-reliability"
+  ],
+  "policy": [
+    "A candidate must have a distinct trigger/boundary before implementation.",
+    "Problem evidence may justify incubation but is not skill-effectiveness evidence.",
+    "A newly created skill starts incubating and remains UNPROVEN unless a post-creation behavioral record supports more.",
+    "Overlap with existing or later-wave skills must be narrowed before ADOPT/MODIFY.",
+    "No Wave A candidate may be marked stable during incubation."
+  ],
+  "decisions": [
+    {
+      "candidate": "agent-skill-evaluation",
+      "decision": "KEEP",
+      "target_skill": "agent-skill-evaluation",
+      "implementation_state": "CREATED",
+      "lifecycle_status": "incubating",
+      "evidence_state": "UNPROVEN",
+      "evidence_tier": "none",
+      "problem_evidence": [
+        "Repository phases 05-07 established separate behavioral, context-cost, and router-evaluation concerns that need a reusable evaluation discipline."
+      ],
+      "effectiveness_evidence": "NONE_POST_CREATION",
+      "boundary": {
+        "owns": [
+          "evaluation of skill/router/loading-strategy effectiveness claims",
+          "comparative case design and confound discipline",
+          "criterion-level evidence interpretation",
+          "evidence-tier claim discipline"
+        ],
+        "excludes": [
+          "skill authoring/restructuring",
+          "ordinary application/system test strategy",
+          "CI pipeline repair",
+          "general debugging"
+        ]
+      },
+      "overlap_review": {
+        "agent-skill-authoring": "Distinct: authoring creates/restructures skill artifacts; evaluation tests claims about their effect.",
+        "testing-typescript-systems": "Distinct: application testing proves product/system behavior; evaluation tests skill/router treatment claims."
+      },
+      "case_or_unproven": {
+        "state": "UNPROVEN",
+        "planned_case": "skill-evaluation-review-quality-v1"
+      },
+      "next_action": "Retain as incubating. Do not promote until a controlled post-creation case executes."
+    },
+    {
+      "candidate": "api-contract-testing",
+      "decision": "ADOPT",
+      "target_skill": "api-contract-testing",
+      "implementation_state": "PENDING_14B",
+      "lifecycle_status": "incubating",
+      "evidence_state": "UNPROVEN",
+      "evidence_tier": "none",
+      "problem_evidence": [
+        "No current skill owns machine-readable API compatibility checks across provider/consumer versions.",
+        "testing-typescript-systems covers test layering and deterministic boundaries but does not define schema compatibility or consumer/provider contract gates.",
+        "typescript-node-architecture asks for stable contracts but does not own executable compatibility testing."
+      ],
+      "effectiveness_evidence": "NONE_SKILL_NOT_CREATED",
+      "boundary": {
+        "owns": [
+          "machine-readable HTTP/API contract compatibility checks",
+          "request/response schema conformance",
+          "backward-compatibility break detection",
+          "provider/consumer contract verification",
+          "contract fixture/versioning strategy"
+        ],
+        "excludes": [
+          "general API implementation architecture",
+          "ordinary unit/integration testing strategy",
+          "API security authorization policy",
+          "runtime observability"
+        ]
+      },
+      "overlap_review": {
+        "testing-typescript-systems": "Complementary: this candidate owns compatibility semantics; general testing owns test layering/execution strategy.",
+        "typescript-node-architecture": "Complementary: architecture owns contract design/boundaries; this candidate owns executable contract compatibility evidence."
+      },
+      "case_or_unproven": {
+        "state": "UNPROVEN",
+        "planned_case": "api-backward-compatibility-breaking-response-v1",
+        "minimum_criteria": [
+          "detects removal of a previously required/served response field as a breaking contract change when consumers rely on it",
+          "distinguishes schema validation from behavioral integration tests",
+          "requires provider/consumer version evidence rather than snapshot-only approval",
+          "reports compatibility result without claiming production safety"
+        ]
+      },
+      "next_action": "Create as a separate incubating skill in Chat 14B with provenance, routing example, limitations, and explicit NOT_RUN/UNPROVEN evidence."
+    },
+    {
+      "candidate": "ci-cd-reliability",
+      "decision": "MODIFY",
+      "target_skill": "ci-pipeline-reliability",
+      "implementation_state": "PENDING_14B",
+      "lifecycle_status": "incubating",
+      "evidence_state": "UNPROVEN",
+      "evidence_tier": "none",
+      "problem_evidence": [
+        "Phase 11 re-audit PR #26 found implicit CI guarantees around matrix parity, shell/runtime evidence, skip/soft-fail behavior, and critical-suite presence that required dedicated hardening.",
+        "PR #26 GitHub Actions run 36686190812 demonstrated the problem class on Windows and Ubuntu, but predates this candidate skill and therefore is not effectiveness evidence."
+      ],
+      "effectiveness_evidence": "NONE_SKILL_NOT_CREATED",
+      "rename_reason": "The original 'ci-cd-reliability' scope is too broad and would overlap Wave B release/rollback engineering. Narrowing to 'ci-pipeline-reliability' keeps ownership on pre-deployment workflow signal integrity.",
+      "boundary": {
+        "owns": [
+          "CI workflow trigger and permission correctness",
+          "matrix/runner parity and shell/runtime assumptions",
+          "failure propagation and no-soft-fail guarantees",
+          "cache/artifact/test-gate correctness",
+          "flaky-test handling policy and reproducible CI diagnostics"
+        ],
+        "excludes": [
+          "production deployment rollout strategy",
+          "release promotion and rollback procedures",
+          "supply-chain security policy",
+          "application/system test design",
+          "runtime production observability"
+        ]
+      },
+      "overlap_review": {
+        "testing-typescript-systems": "Distinct: test skill designs tests; CI skill ensures pipeline execution/reporting of those tests remains trustworthy.",
+        "phase15-release-rollback-engineering": "Separated by rename/scope: CI pipeline ends at trustworthy pre-deployment gates; release/rollback owns production promotion/recovery.",
+        "phase15-supply-chain-security": "Distinct: CI pipeline may enforce a supplied security gate but does not own dependency/provenance security policy."
+      },
+      "case_or_unproven": {
+        "state": "UNPROVEN",
+        "planned_case": "ci-matrix-silent-skip-v1",
+        "minimum_criteria": [
+          "detects one OS leg or critical test silently omitted from a shared matrix",
+          "rejects continue-on-error/conditional skip on required validation gates",
+          "separates test failure from CI harness/configuration failure",
+          "does not expand into deployment rollback design"
+        ]
+      },
+      "next_action": "Create target skill ci-pipeline-reliability in Chat 14B, not the broader ci-cd-reliability name."
+    }
+  ]
+}
