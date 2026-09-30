@@ -171,8 +171,13 @@ foreach ($case in @($casesDoc.cases)) {
     }
   }
 
-  if ($selectionMode -eq "exact_required" -and $maxSelected -ne $required.Count) {
-    $errors.Add("${id}: exact_required max_selected must equal required skill count")
+  if ($selectionMode -eq "exact_required") {
+    if (-not (Test-SameStringSet -Actual $allowed -Expected $required)) {
+      $errors.Add("${id}: exact_required allowed set must exactly match required skills")
+    }
+    if ($maxSelected -ne $required.Count) {
+      $errors.Add("${id}: exact_required max_selected must equal required skill count")
+    }
   }
 
   if ($scope -eq "generic") {
