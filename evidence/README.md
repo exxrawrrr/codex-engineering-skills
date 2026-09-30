@@ -35,3 +35,18 @@ An observational record may support `observed` or `repeated`. It cannot support 
 A registry skill may claim only the highest tier directly supported for that skill by one of its referenced evidence records. Merely pointing at an existing evidence record is not enough.
 
 `benchmarked` requires comparative evidence that explicitly marks that skill as `benchmarked`. Do not infer it from passing tests, repeated use, or an observational case study.
+
+## Incubation records
+
+Files under `evidence/incubation/` are admission/lifecycle decision records, not reusable effectiveness evidence by themselves.
+
+They may document:
+- why a candidate exists;
+- ADOPT/MODIFY/DEFER/REJECT decisions;
+- overlap boundaries;
+- planned representative cases;
+- explicit `UNPROVEN` state;
+- promotion or rejection conditions.
+
+They do **not** raise a registry `evidence_tier` unless a separate auditable record is added to `evidence/INDEX.json` and explicitly supports that skill. A pre-creation problem case can justify incubation without proving that the new skill is effective.
+
