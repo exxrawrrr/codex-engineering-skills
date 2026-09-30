@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "suite": "fixture-suite",
+  "version": "0.0.0-fixture",
+  "skills": [
+    {
+      "name": "missing-fixture-skill",
+      "kind": "generic",
+      "path": "skills/this-directory-does-not-exist",
+      "tags": [
+        "fixture"
+      ],
+      "status": "stable"
+    }
+  ]
+}

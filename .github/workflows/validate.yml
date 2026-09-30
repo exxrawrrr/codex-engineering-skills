@@ -19,3 +19,6 @@ jobs:
       - name: Prove text-hygiene negative fixture
         shell: pwsh
         run: .\validate.ps1 -ExpectTextHygieneFailurePath .\evidence\fixtures\validation\mojibake-sample.txt
+      - name: Prove registry negative fixtures
+        shell: pwsh
+        run: .\tests\validator-fixtures.ps1

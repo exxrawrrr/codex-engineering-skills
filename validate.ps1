@@ -65,10 +65,12 @@ if (-not (Test-Path $RegistryPath)) {
 
 if ($fail.Count -eq 0) {
   $names = New-Object System.Collections.Generic.HashSet[string]
+  $registryByName = @{}
 
   foreach ($entry in $registry.skills) {
     $name = [string]$entry.name
     $kind = [string]$entry.kind
+    $status = [string]$entry.status
     $relativePath = [string]$entry.path
 
     if ([string]::IsNullOrWhiteSpace($name)) {
@@ -78,13 +80,20 @@ if ($fail.Count -eq 0) {
 
     if (-not $names.Add($name)) {
       $fail.Add("Duplicate registry skill name: $name")
+    } else {
+      $registryByName[$name] = $entry
     }
 
     if ($kind -notin @("generic","project")) {
       $fail.Add("$($name): invalid kind '$kind'")
     }
 
-    $dir = Join-Path $PSScriptRoot $relativePath
+    if ($status -notin @("stable","incubating","reference","project")) {
+      $fail.Add("$($name): invalid status '$status'")
+    }
+
+    $relativeSkillPath = $relativePath -replace '^[\\/]*skills[\\/]', ''
+    $dir = Join-Path $SkillsRoot $relativeSkillPath
     if (-not (Test-Path $dir)) {
       $fail.Add("$($name): registered path missing -> $relativePath")
       continue
@@ -140,6 +149,48 @@ if ($fail.Count -eq 0) {
         Select-String -Pattern "GrowthOps" -SimpleMatch -ErrorAction SilentlyContinue
       if ($hits) {
         $warn.Add("$($name): generic skill contains GrowthOps-specific text")
+      }
+    }
+  }
+
+  Get-ChildItem $SkillsRoot -Recurse -File -Filter "suite-manifest.json" -ErrorAction SilentlyContinue | ForEach-Object {
+    $manifestPath = $_.FullName
+    try {
+      $manifest = Get-Content $manifestPath -Raw | ConvertFrom-Json
+    } catch {
+      $fail.Add("Invalid suite manifest JSON: $manifestPath")
+      return
+    }
+
+    $manifestSkills = @($manifest.skills | ForEach-Object { [string]$_ })
+    $genericSkills = @($manifest.generic | ForEach-Object { [string]$_ })
+    $projectSkills = @($manifest.project_specific | ForEach-Object { [string]$_ })
+    $partition = @($genericSkills + $projectSkills)
+
+    if (($manifestSkills | Sort-Object -Unique).Count -ne $manifestSkills.Count) {
+      $fail.Add("Suite manifest has duplicate skills: $manifestPath")
+    }
+
+    foreach ($skillName in $manifestSkills) {
+      if (-not $registryByName.ContainsKey($skillName)) {
+        $fail.Add("Suite manifest references unregistered skill '$skillName': $manifestPath")
+      }
+      if (@($partition | Where-Object { $_ -eq $skillName }).Count -ne 1) {
+        $fail.Add("Suite manifest skill '$skillName' must appear exactly once in generic/project_specific: $manifestPath")
+      }
+    }
+
+    foreach ($skillName in $partition) {
+      if ($manifestSkills -notcontains $skillName) {
+        $fail.Add("Suite manifest partition contains skill not present in skills list '$skillName': $manifestPath")
+        continue
+      }
+      if (-not $registryByName.ContainsKey($skillName)) {
+        continue
+      }
+      $expectedKind = if ($genericSkills -contains $skillName) { "generic" } else { "project" }
+      if ([string]$registryByName[$skillName].kind -ne $expectedKind) {
+        $fail.Add("Suite manifest kind mismatch for '$skillName': expected $expectedKind")
       }
     }
   }
