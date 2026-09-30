@@ -1,0 +1,3 @@
+INTENTIONALLY INVALID FIXTURE — Unicode replacement character
+
+corrupted text: bad�byte
