@@ -121,6 +121,21 @@
       "evidence_refs": []
     },
     {
+      "name": "agent-skill-evaluation",
+      "kind": "generic",
+      "path": "skills/agent-skill-evaluation",
+      "tags": [
+        "skills",
+        "evaluation",
+        "benchmarking",
+        "routing",
+        "evidence"
+      ],
+      "status": "incubating",
+      "evidence_tier": "none",
+      "evidence_refs": []
+    },
+    {
       "name": "growthops-engineering",
       "kind": "project",
       "path": "skills/growthops-engineering",

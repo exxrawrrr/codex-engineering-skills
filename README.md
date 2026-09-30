@@ -207,6 +207,7 @@ ya karena memang **ora digawe kanggo kono**.
 | `application-security-local-first` | stable | SSRF, DNS rebinding, XSS, path safety, secrets, prompt boundaries |
 | `testing-typescript-systems` | stable | Vitest, MSW, fixtures, durability/fault/restart testing |
 | `agent-skill-authoring` | incubating | bikin, review, package, dan maintain agent skill |
+| `agent-skill-evaluation` | incubating | evaluasi skill/router dengan case, baseline, evidence, dan context-cost discipline |
 | `growthops-engineering` | project | router + engineering contract khusus GrowthOps |
 
 Canonical registry: [REGISTRY.json](REGISTRY.json)
@@ -448,6 +449,7 @@ Its main goals are:
 | `application-security-local-first` | SSRF/DNS rebinding, XSS, path safety, secrets, prompt-injection boundaries |
 | `testing-typescript-systems` | Vitest, MSW, fixtures, durability/fault/restart tests, targeted E2E |
 | `agent-skill-authoring` | Meta-skill for creating, reviewing, packaging, and publishing agent skills |
+| `agent-skill-evaluation` | Evidence-backed evaluation of skill/router effectiveness, routing, and context cost |
 | `growthops-engineering` | Real project-specific router and engineering contract example |
 
 ## Routing model

@@ -76,6 +76,12 @@ These were used as design references, not copied wholesale.
 - https://github.com/jezweb/claude-skills
   - testing skill patterns, Vitest/integration-test decomposition.
 
+## Repository-original evaluation framework
+
+`agent-skill-evaluation` is an original synthesis built from this repository's own evidence model, behavioral case contract, context benchmark, and router-evaluation work.
+
+Its provenance mapping points back to this repository rather than implying an external benchmark framework was copied.
+
 ## Project-specific source
 
 GrowthOps product rules come from the canonical GrowthOps blueprint authored for this project.
