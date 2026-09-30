@@ -22,7 +22,7 @@ function Test-SameStringSet {
   $actualNormalized = @($Actual | Sort-Object -Unique)
   $expectedNormalized = @($Expected | Sort-Object -Unique)
   if ($actualNormalized.Count -ne $expectedNormalized.Count) { return $false }
-  return $null -eq (Compare-Object $actualNormalized $expectedNormalized)
+  return (($actualNormalized -join [char]0x001F) -eq ($expectedNormalized -join [char]0x001F))
 }
 
 function Test-IsoTimestamp {
@@ -179,6 +179,8 @@ foreach ($fixtureId in $fixtureById.Keys) {
 }
 
 $resultKeys = New-Object System.Collections.Generic.HashSet[string]
+$resultCaseIds = New-Object System.Collections.Generic.HashSet[string]
+$resultRecordCount = 0
 $resultFiles = @(Get-ChildItem $ResultsRoot -File -Filter "*.json" | Sort-Object Name)
 if ($resultFiles.Count -eq 0) {
   $schemaErrors.Add("Evaluation results root contains no JSON result files")
@@ -206,6 +208,9 @@ foreach ($resultFile in $resultFiles) {
     }
 
     $case = $caseById[$caseId]
+    $resultRecordCount++
+    [void]$resultCaseIds.Add($caseId)
+
     $allowedVariants = @($case.allowed_variants | ForEach-Object { [string]$_ })
     if ([string]::IsNullOrWhiteSpace($variant) -or $variant -notin $allowedVariants) {
       $schemaErrors.Add("$($resultFile.Name): invalid variant '$variant' for '$caseId'")
@@ -223,6 +228,9 @@ foreach ($resultFile in $resultFiles) {
       continue
     }
 
+    if ($null -eq $result.PSObject.Properties["skills_loaded"]) {
+      $schemaErrors.Add("$($resultFile.Name): skills_loaded is required for '$caseId/$variant'")
+    }
     $skillsLoaded = @($result.skills_loaded | ForEach-Object { [string]$_ })
     if (($skillsLoaded | Sort-Object -Unique).Count -ne $skillsLoaded.Count) {
       $schemaErrors.Add("$($resultFile.Name): duplicate skills_loaded for '$caseId/$variant'")
@@ -335,6 +343,15 @@ foreach ($resultFile in $resultFiles) {
       $failCount++
       Write-Output "[FAIL] $caseId / $variant"
     }
+  }
+}
+
+if ($resultRecordCount -eq 0) {
+  $schemaErrors.Add("Evaluation corpus contains no result records")
+}
+foreach ($caseId in $caseById.Keys) {
+  if (-not $resultCaseIds.Contains($caseId)) {
+    $schemaErrors.Add("Evaluation case '$caseId' has no result record")
   }
 }
 
