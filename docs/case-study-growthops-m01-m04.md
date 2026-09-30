@@ -2,7 +2,8 @@
 
 Evidence state: **PARTIALLY VERIFIED**  
 Source repository: `exxrawrrr/GrowthOps`  
-Evidence window: M01 through M04, committed public records only
+Evidence window: M01 through M04, committed public records only  
+Public-source re-audit: 2026-09-30
 
 This case study documents how the Codex Engineering Skills suite appeared in real GrowthOps engineering work.
 
@@ -25,9 +26,17 @@ Excluded:
 - local session logs;
 - secrets or credentials;
 - unrelated local workspace content;
-- unfinished M05 work.
+- M05-and-later work, regardless of current repository state.
 
 Machine-readable source: [`evidence/cases/growthops-m01-m04.json`](../evidence/cases/growthops-m01-m04.json)
+
+## Public-source verification
+
+During the Phase 08 re-audit, every implementation/merge commit listed by the machine-readable case was resolved in the public `exxrawrrr/GrowthOps` repository, and the M01-M04 checkpoint/progress records were re-read against the claims below.
+
+The machine-readable case and `evidence/INDEX.json` are required to carry the same public commit set and the same skill-observation mapping. CI enforces that parity.
+
+This remains a historical M01-M04 evidence window. M05 and later work are outside this case study even if the GrowthOps repository continues to evolve.
 
 ## M01 — Repository Foundation
 
