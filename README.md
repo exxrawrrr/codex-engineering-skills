@@ -361,7 +361,7 @@ Validator ngecek hal-hal seperti:
 - tool-output contamination;
 - guardrail panjang `SKILL.md` (>500 baris menghasilkan warning);
 - generic/project leakage;
-- registry lifecycle-status dan evidence-reference contract;
+- registry kind/lifecycle-status dan evidence-reference contract;
 - project suite-manifest consistency;
 
 Kalau validator merah:
