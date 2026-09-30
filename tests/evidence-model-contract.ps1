@@ -153,6 +153,30 @@ try {
   Write-EvidenceIndex -Path $none.EvidencePath
   Assert-Accepted -Case $none -Label "none tier without refs"
 
+  $invalidTier = New-EvidenceCase -Name "invalid-tier"
+  Write-Registry -Path $invalidTier.RegistryPath -Tier "proven" -Refs @()
+  Write-EvidenceIndex -Path $invalidTier.EvidencePath
+  Assert-Rejected -Case $invalidTier -ExpectedText "invalid evidence_tier 'proven'"
+
+  $noneWithRef = New-EvidenceCase -Name "none-with-ref"
+  Write-Registry -Path $noneWithRef.RegistryPath -Tier "none" -Refs @("record-1")
+  Write-EvidenceIndex -Path $noneWithRef.EvidencePath -Records @(
+    (New-EvidenceRecord -SkillTier "observed")
+  )
+  Assert-Rejected -Case $noneWithRef -ExpectedText "evidence_tier 'none' cannot have evidence_refs"
+
+  $tierWithoutRef = New-EvidenceCase -Name "tier-without-ref"
+  Write-Registry -Path $tierWithoutRef.RegistryPath -Tier "observed" -Refs @()
+  Write-EvidenceIndex -Path $tierWithoutRef.EvidencePath
+  Assert-Rejected -Case $tierWithoutRef -ExpectedText "requires at least one evidence_ref"
+
+  $unknownRef = New-EvidenceCase -Name "unknown-ref"
+  Write-Registry -Path $unknownRef.RegistryPath -Tier "observed" -Refs @("missing-record")
+  Write-EvidenceIndex -Path $unknownRef.EvidencePath -Records @(
+    (New-EvidenceRecord -SkillTier "observed")
+  )
+  Assert-Rejected -Case $unknownRef -ExpectedText "unknown evidence_ref 'missing-record'"
+
   $observed = New-EvidenceCase -Name "observed"
   Write-Registry -Path $observed.RegistryPath -Tier "observed" -Refs @("record-1")
   Write-EvidenceIndex -Path $observed.EvidencePath -Records @(
@@ -264,6 +288,27 @@ try {
     )
   } | ConvertTo-Json -Depth 12 | Set-Content -Path $nonObjectObservations.EvidencePath -Encoding utf8NoBOM
   Assert-Rejected -Case $nonObjectObservations -ExpectedText "skill_observations must be an object mapping skill names to tiers"
+
+  $duplicateRecordIds = New-EvidenceCase -Name "duplicate-record-ids"
+  Write-Registry -Path $duplicateRecordIds.RegistryPath -Tier "observed" -Refs @("record-1")
+  Write-EvidenceIndex -Path $duplicateRecordIds.EvidencePath -Records @(
+    (New-EvidenceRecord -Id "record-1" -SkillTier "observed"),
+    (New-EvidenceRecord -Id "record-1" -SkillTier "observed")
+  )
+  Assert-Rejected -Case $duplicateRecordIds -ExpectedText "Duplicate evidence record id: record-1"
+
+  $missingRecords = New-EvidenceCase -Name "missing-records"
+  Write-Registry -Path $missingRecords.RegistryPath
+  [ordered]@{
+    schema_version = 1
+    evidence_tiers = [ordered]@{
+      none = "none"
+      observed = "observed"
+      repeated = "repeated"
+      benchmarked = "benchmarked"
+    }
+  } | ConvertTo-Json -Depth 12 | Set-Content -Path $missingRecords.EvidencePath -Encoding utf8NoBOM
+  Assert-Rejected -Case $missingRecords -ExpectedText "Evidence index: records is required"
 
   Write-Output "[PASS] evidence tier and claim contracts are regression-covered"
 } finally {
