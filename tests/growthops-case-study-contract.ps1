@@ -131,11 +131,27 @@ try {
   $case | ConvertTo-Json -Depth 20 | Set-Content $lostNuance.CasePath -Encoding utf8NoBOM
   Assert-Rejected -Sandbox $lostNuance -ExpectedText "M04: notes must preserve the M04-A2 router-unavailable nuance"
 
+  $sourceResolutionDrift = New-Sandbox -Name "source-resolution-drift"
+  $case = Get-Content $sourceResolutionDrift.CasePath -Raw | ConvertFrom-Json
+  $case.public_source_resolution.all_listed_commits_resolved = $false
+  $case | ConvertTo-Json -Depth 20 | Set-Content $sourceResolutionDrift.CasePath -Encoding utf8NoBOM
+  Assert-Rejected -Sandbox $sourceResolutionDrift -ExpectedText "Public-source resolution must record all listed commits as resolved"
+
   $docCommitDrift = New-Sandbox -Name "doc-commit-drift"
   $doc = Get-Content $docCommitDrift.DocPath -Raw
   $doc = $doc.Replace("b1bee1c9b80ad85d533fbd3fc3d102e489f49801","MISSING_M04_MERGE_SHA")
   Set-Content $docCommitDrift.DocPath -Value $doc -Encoding utf8NoBOM
   Assert-Rejected -Sandbox $docCommitDrift -ExpectedText "case-study document missing commit b1bee1c9b80ad85d533fbd3fc3d102e489f49801"
+
+  $sectionSkillDrift = New-Sandbox -Name "section-skill-drift"
+  $doc = Get-Content $sectionSkillDrift.DocPath -Raw
+  $m02Start = $doc.IndexOf("## M02 — Domain + SQLite Foundation")
+  $m03Start = $doc.IndexOf("## M03 — Persistent Job Engine")
+  $m02 = $doc.Substring($m02Start, $m03Start - $m02Start)
+  $m02 = $m02.Replace("- `sqlite-data-modeling`;","- omitted-sqlite-skill;")
+  $doc = $doc.Substring(0,$m02Start) + $m02 + $doc.Substring($m03Start)
+  Set-Content $sectionSkillDrift.DocPath -Value $doc -Encoding utf8NoBOM
+  Assert-Rejected -Sandbox $sectionSkillDrift -ExpectedText "M02: case-study document missing recorded skill 'sqlite-data-modeling'"
 
   $docScopeDrift = New-Sandbox -Name "doc-scope-drift"
   $doc = Get-Content $docScopeDrift.DocPath -Raw
