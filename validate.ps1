@@ -94,6 +94,10 @@ if (-not (Test-Path $EvidenceIndexPath)) {
       $fail.Add("Unsupported evidence index schema_version '$($evidenceIndex.schema_version)'; validator supports schema_version 1")
     }
 
+    if ($null -eq $evidenceIndex.records) {
+      $fail.Add("Evidence index: records is required")
+    }
+
     $expectedEvidenceTiers = @("none","observed","repeated","benchmarked")
     if ($null -eq $evidenceIndex.evidence_tiers) {
       $fail.Add("Evidence index: evidence_tiers is required")
