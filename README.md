@@ -341,11 +341,10 @@ Validator ngecek hal-hal seperti:
 - frontmatter;
 - skill names;
 - references;
-- encoding corruption;
+- UTF-8 BOM, replacement-character, and common mojibake corruption;
 - tool-output contamination;
 - context size;
 - generic/project leakage;
-- suite maintenance assets.
 
 Kalau validator merah:
 
