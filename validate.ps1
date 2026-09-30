@@ -1,9 +1,48 @@
 param(
   [string]$SkillsRoot = "$PSScriptRoot\skills",
-  [string]$RegistryPath = "$PSScriptRoot\REGISTRY.json"
+  [string]$RegistryPath = "$PSScriptRoot\REGISTRY.json",
+  [string]$ExpectTextHygieneFailurePath
 )
 
 $ErrorActionPreference = "Stop"
+
+function Get-TextHygieneIssues {
+  param([Parameter(Mandatory = $true)][string]$Path)
+
+  $issues = New-Object System.Collections.Generic.List[string]
+  $bytes = [System.IO.File]::ReadAllBytes($Path)
+  if ($bytes.Length -ge 3 -and $bytes[0] -eq 0xEF -and $bytes[1] -eq 0xBB -and $bytes[2] -eq 0xBF) {
+    $issues.Add("UTF-8 BOM")
+  }
+
+  $text = [System.IO.File]::ReadAllText($Path)
+  if ($text.Contains([char]0xFFFD)) {
+    $issues.Add("Unicode replacement character U+FFFD")
+  }
+
+  $mojibakeMarkers = @("â†", "â”", "â€“", "â€”", "â€™", "â€œ", "â€", "Â ")
+  foreach ($marker in $mojibakeMarkers) {
+    if ($text.Contains($marker)) {
+      $issues.Add("common mojibake marker '$marker'")
+      break
+    }
+  }
+
+  return @($issues)
+}
+
+if (-not [string]::IsNullOrWhiteSpace($ExpectTextHygieneFailurePath)) {
+  if (-not (Test-Path $ExpectTextHygieneFailurePath)) {
+    throw "Missing text-hygiene fixture: $ExpectTextHygieneFailurePath"
+  }
+  $fixtureIssues = @(Get-TextHygieneIssues -Path $ExpectTextHygieneFailurePath)
+  if ($fixtureIssues.Count -eq 0) {
+    Write-Output "[FAIL] Expected text-hygiene fixture to be rejected"
+    exit 1
+  }
+  Write-Output ("[PASS] Text-hygiene negative fixture rejected: {0}" -f ($fixtureIssues -join ", "))
+  exit 0
+}
 $fail = New-Object System.Collections.Generic.List[string]
 $warn = New-Object System.Collections.Generic.List[string]
 $pass = New-Object System.Collections.Generic.List[string]
@@ -63,10 +102,6 @@ if ($fail.Count -eq 0) {
     if ($raw -notmatch "(?m)^description:\s+.+$") {
       $fail.Add("$($name): missing description")
     }
-    if ($raw.Contains([char]0xFFFD)) {
-      $fail.Add("$($name): contains Unicode replacement character U+FFFD")
-    }
-
     if ($lines.Count -gt 500) {
       $warn.Add("$($name): SKILL.md exceeds 500 lines ($($lines.Count))")
     } else {
@@ -85,8 +120,9 @@ if ($fail.Count -eq 0) {
 
     Get-ChildItem $dir -Recurse -File | ForEach-Object {
       $fileRaw = Get-Content $_.FullName -Raw
-      if ($fileRaw.Contains([char]0xFFFD)) {
-        $fail.Add("$($name): replacement character in $($_.FullName)")
+      $textIssues = @(Get-TextHygieneIssues -Path $_.FullName)
+      foreach ($issue in $textIssues) {
+        $fail.Add("$($name): $issue in $($_.FullName)")
       }
       if ($fileRaw -match "(?m)^\[Reading .+\]$" -or $fileRaw -match "(?m)^\[executed on device: .+\]$") {
         $fail.Add("$($name): tool-output contamination in $($_.FullName)")
