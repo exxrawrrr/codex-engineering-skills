@@ -90,6 +90,29 @@
         "Name which provider/consumer refs are being compared.",
         "Do not claim authorization, performance, or production readiness from contract compatibility alone."
       ]
+    },
+    {
+      "id": "ci-matrix-silent-skip-v1",
+      "case_id": "ci-matrix-silent-skip",
+      "description": "Deterministic CI reliability scenario with missing platform coverage and a soft-failed required validation gate.",
+      "initial_state": {
+        "intended_matrix": [
+          "windows-latest",
+          "ubuntu-latest"
+        ],
+        "configured_matrix": [
+          "ubuntu-latest"
+        ],
+        "required_command": "npm test",
+        "required_step_configuration": "continue-on-error: true",
+        "deployment_scope": "out of scope"
+      },
+      "constraints": [
+        "Both intended OS legs are required validation evidence.",
+        "The required test command must be workflow-fatal when it fails.",
+        "Do not redesign the application tests themselves.",
+        "Do not expand the fix into production rollout or rollback strategy."
+      ]
     }
   ]
 }

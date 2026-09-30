@@ -117,6 +117,37 @@
           "description": "The result states what remains unproven, including unknown consumers and production behavior."
         }
       ]
+    },
+    {
+      "id": "ci-matrix-silent-skip",
+      "task": "Review a CI workflow that silently omits a required Windows matrix leg and allows a required validation step to soft-fail, then define the minimal reliable pre-deployment CI contract.",
+      "fixture_id": "ci-matrix-silent-skip-v1",
+      "allowed_variants": [
+        "no_skills",
+        "selected_skills",
+        "all_generic_skills"
+      ],
+      "recommended_skills": [
+        "ci-pipeline-reliability"
+      ],
+      "acceptance_criteria": [
+        {
+          "id": "missing_matrix_leg_identified",
+          "description": "The omitted required Windows matrix leg is identified as missing validation coverage."
+        },
+        {
+          "id": "soft_fail_risk_identified",
+          "description": "Required validation cannot remain continue-on-error/conditionally skipped without an explicit non-blocking contract."
+        },
+        {
+          "id": "failure_classification_correct",
+          "description": "Workflow/configuration failure is distinguished from an application test failure."
+        },
+        {
+          "id": "scope_boundary_preserved",
+          "description": "The recommendation remains pre-deployment and does not claim production rollout/rollback safety."
+        }
+      ]
     }
   ]
 }

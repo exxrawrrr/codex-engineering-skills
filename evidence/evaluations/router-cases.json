@@ -96,6 +96,7 @@
         "agent-skill-authoring",
         "agent-skill-evaluation",
         "api-contract-testing",
+        "ci-pipeline-reliability",
         "growthops-engineering"
       ],
       "max_selected": 0
@@ -136,6 +137,22 @@
       ],
       "allowed": [
         "api-contract-testing"
+      ],
+      "forbidden": [
+        "growthops-engineering"
+      ],
+      "max_selected": 1
+    },
+    {
+      "id": "generic-ci-silent-skip",
+      "task": "Repair a generic CI matrix/soft-fail reliability bug without expanding into production deployment guidance.",
+      "scope": "generic",
+      "selection_mode": "exact_required",
+      "required": [
+        "ci-pipeline-reliability"
+      ],
+      "allowed": [
+        "ci-pipeline-reliability"
       ],
       "forbidden": [
         "growthops-engineering"

@@ -65,3 +65,12 @@ Load:
 Also load `testing-typescript-systems` only when the task includes broader integration/test-layer design.
 
 Do not treat schema validity as proof that existing consumers remain compatible.
+
+## CI matrix / silent-skip reliability bug
+
+Load:
+- ci-pipeline-reliability
+
+Also load `testing-typescript-systems` only when the task includes designing or repairing the tests themselves.
+
+Do not expand this routing into production deployment rollout or rollback design.

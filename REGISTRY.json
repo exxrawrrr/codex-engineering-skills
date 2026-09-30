@@ -151,6 +151,22 @@
       "evidence_refs": []
     },
     {
+      "name": "ci-pipeline-reliability",
+      "kind": "generic",
+      "path": "skills/ci-pipeline-reliability",
+      "tags": [
+        "ci",
+        "github-actions",
+        "matrix",
+        "reliability",
+        "artifacts",
+        "flaky-tests"
+      ],
+      "status": "incubating",
+      "evidence_tier": "none",
+      "evidence_refs": []
+    },
+    {
       "name": "growthops-engineering",
       "kind": "project",
       "path": "skills/growthops-engineering",

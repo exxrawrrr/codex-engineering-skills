@@ -54,6 +54,12 @@
       "selected": [
         "api-contract-testing"
       ]
+    },
+    {
+      "case_id": "generic-ci-silent-skip",
+      "selected": [
+        "ci-pipeline-reliability"
+      ]
     }
   ]
 }

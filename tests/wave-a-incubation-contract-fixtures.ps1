@@ -53,10 +53,10 @@ function Assert-Passes {
   param([Parameter(Mandatory = $true)][hashtable]$Sandbox)
   $result = Invoke-Contract -Sandbox $Sandbox
   if ($result.ExitCode -ne 0) { throw "Expected Wave A contract to pass. Output: $($result.Text)" }
-  if (-not $result.Text.Contains("WAVE_A_CONTRACT STATE=IMPLEMENTATION_IN_PROGRESS_14B DECISIONS=3 CREATED=2 PENDING=1 FAIL=0")) {
+  if (-not $result.Text.Contains("WAVE_A_CONTRACT STATE=IMPLEMENTATION_COMPLETE_PENDING_LOCK DECISIONS=3 CREATED=3 PENDING=0 FAIL=0")) {
     throw "Wave A contract passed without expected progress summary. Output: $($result.Text)"
   }
-  Write-Output "[PASS] valid Wave A 14B progress ledger"
+  Write-Output "[PASS] valid Wave A fully implemented pre-lock ledger"
 }
 
 function Assert-Rejected {
@@ -103,13 +103,11 @@ try {
   Save-Json -Path $badModify.DecisionPath -Value $d
   Assert-Rejected -Sandbox $badModify -ExpectedText "target_skill must be 'ci-pipeline-reliability'"
 
-  $premature = New-Sandbox -Name "premature-ci-registration"
-  $registry = Get-Content -LiteralPath $premature.RegistryPath -Raw | ConvertFrom-Json
-  $registry.skills = @($registry.skills) + @([pscustomobject]@{
-    name="ci-pipeline-reliability";kind="generic";path="skills/ci-pipeline-reliability";tags=@("ci");status="incubating";evidence_tier="none";evidence_refs=@()
-  })
-  Save-Json -Path $premature.RegistryPath -Value $registry
-  Assert-Rejected -Sandbox $premature -ExpectedText "PENDING_14B target 'ci-pipeline-reliability' must not be prematurely registered"
+  $missingCreated = New-Sandbox -Name "missing-created-ci-registration"
+  $registry = Get-Content -LiteralPath $missingCreated.RegistryPath -Raw | ConvertFrom-Json
+  $registry.skills = @($registry.skills | Where-Object { $_.name -ne "ci-pipeline-reliability" })
+  Save-Json -Path $missingCreated.RegistryPath -Value $registry
+  Assert-Rejected -Sandbox $missingCreated -ExpectedText "CREATED target 'ci-pipeline-reliability' is missing from REGISTRY.json"
 
   $apiCase = New-Sandbox -Name "api-case-overclaim"
   $recordPath = Join-Path $apiCase.IncubationRoot "api-contract-testing.json"
