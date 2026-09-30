@@ -28,5 +28,6 @@
       "evidence": {},
       "notes": "Harness seed only; no behavioral claim."
     }
-  ]
+  ],
+  "evaluation_type": "behavioral_execution"
 }
