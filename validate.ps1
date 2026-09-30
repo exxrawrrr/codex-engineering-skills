@@ -146,9 +146,8 @@ if ($fail.Count -eq 0) {
       }
     }
 
-    $normalizedRegistryPath = $relativePath.Replace("\", "/")
     $expectedRegistryPath = "skills/$name"
-    if ($normalizedRegistryPath -ne $expectedRegistryPath) {
+    if ($relativePath -ne $expectedRegistryPath) {
       $fail.Add("$($name): non-canonical registered path '$relativePath'; expected '$expectedRegistryPath'")
     }
 
