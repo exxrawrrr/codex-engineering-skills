@@ -31,7 +31,7 @@ jobs:
           if (-not [string]::IsNullOrWhiteSpace($env:GITHUB_STEP_SUMMARY)) {
             Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Value "### PowerShell runtime"
             Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Value ""
-            Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Value ("`" + $runtime + "`")
+            Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Value $runtime
           }
       - name: Validate CI workflow contract
         shell: pwsh
