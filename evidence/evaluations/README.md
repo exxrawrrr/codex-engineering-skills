@@ -55,7 +55,7 @@ Every result contains:
 - `evidence`;
 - optional notes.
 
-A `case_id + variant` pair may appear only once across the result directory.
+A `case_id + variant` pair may appear only once across the result directory. Every defined case must have at least one result record, even when that result is `NOT_RUN`; deleting a case's evidence row must not silently shrink evaluation coverage.
 
 ### NOT_RUN
 
