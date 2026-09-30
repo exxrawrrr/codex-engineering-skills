@@ -148,7 +148,8 @@ try {
   $m02Start = $doc.IndexOf("## M02 — Domain + SQLite Foundation")
   $m03Start = $doc.IndexOf("## M03 — Persistent Job Engine")
   $m02 = $doc.Substring($m02Start, $m03Start - $m02Start)
-  $m02 = $m02.Replace("- `sqlite-data-modeling`;","- omitted-sqlite-skill;")
+  $tick = [char]0x60
+  $m02 = $m02.Replace("- " + $tick + "sqlite-data-modeling" + $tick + ";","- omitted-sqlite-skill;")
   $doc = $doc.Substring(0,$m02Start) + $m02 + $doc.Substring($m03Start)
   Set-Content $sectionSkillDrift.DocPath -Value $doc -Encoding utf8NoBOM
   Assert-Rejected -Sandbox $sectionSkillDrift -ExpectedText "M02: case-study document missing recorded skill 'sqlite-data-modeling'"
