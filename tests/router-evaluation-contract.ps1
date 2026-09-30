@@ -94,14 +94,15 @@ function Write-Selections {
     [int]$SchemaVersion = 2,
     [string]$EvaluationType = "documented_router_contract",
     [string]$RuntimeObedience = "NOT_RUN",
-    [switch]$AddRuntimeField
+    [switch]$AddRuntimeField,
+    [switch]$EmptyClaimLimit
   )
 
   $doc = [ordered]@{
     schema_version = $SchemaVersion
     evaluation_type = $EvaluationType
     runtime_obedience = $RuntimeObedience
-    claim_limit = "Static fixture only; no runtime obedience claim."
+    claim_limit = $(if ($EmptyClaimLimit) { "" } else { "Static fixture only; no runtime obedience claim." })
     selections = @($Selections)
   }
 
@@ -227,6 +228,24 @@ try {
     (New-Selection -Selected @())
   )
   Assert-Rejected -Sandbox $unrelatedIncomplete -ExpectedText "unrelated case must forbid every registered skill"
+
+  $oldSelectionSchema = New-Sandbox -Name "old-selection-schema"
+  Write-Selections -Path $oldSelectionSchema.ResultsPath -Selections @(
+    (New-Selection)
+  ) -SchemaVersion 1
+  Assert-Rejected -Sandbox $oldSelectionSchema -ExpectedText "Unsupported router selection schema_version '1'; expected 2"
+
+  $wrongEvaluationType = New-Sandbox -Name "wrong-evaluation-type"
+  Write-Selections -Path $wrongEvaluationType.ResultsPath -Selections @(
+    (New-Selection)
+  ) -EvaluationType "runtime_router_execution"
+  Assert-Rejected -Sandbox $wrongEvaluationType -ExpectedText "evaluation_type must be 'documented_router_contract'"
+
+  $emptyClaim = New-Sandbox -Name "empty-claim"
+  Write-Selections -Path $emptyClaim.ResultsPath -Selections @(
+    (New-Selection)
+  ) -EmptyClaimLimit
+  Assert-Rejected -Sandbox $emptyClaim -ExpectedText "requires non-empty claim_limit"
 
   $runtimeClaim = New-Sandbox -Name "runtime-claim"
   Write-Selections -Path $runtimeClaim.ResultsPath -Selections @(
