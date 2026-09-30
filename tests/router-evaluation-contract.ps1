@@ -207,10 +207,13 @@ try {
   )
   Assert-Rejected -Sandbox $unknownSkill -ExpectedText "required references unregistered skill 'missing-skill'"
 
-  $nonMinimal = New-Sandbox -Name "non-minimal-selection"
-  Write-Cases -Path $nonMinimal.CasesPath -Cases @(
+  $ambiguousAllowed = New-Sandbox -Name "ambiguous-allowed"
+  Write-Cases -Path $ambiguousAllowed.CasesPath -Cases @(
     (New-Case -Required @("skill-a") -Allowed @("skill-a","skill-b") -Forbidden @("project-router") -MaxSelected 1)
   )
+  Assert-Rejected -Sandbox $ambiguousAllowed -ExpectedText "exact_required allowed set must exactly match required skills"
+
+  $nonMinimal = New-Sandbox -Name "non-minimal-selection"
   Write-Selections -Path $nonMinimal.ResultsPath -Selections @(
     (New-Selection -Selected @("skill-b"))
   )
