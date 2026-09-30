@@ -56,37 +56,37 @@ foreach ($id in $caseById.Keys) {
   $forbidden = @($case.forbidden | ForEach-Object { [string]$_ })
 
   if (@($selected | Sort-Object -Unique).Count -ne $selected.Count) {
-    $errors.Add("$id: selected skills contain duplicates")
+    $errors.Add("${id}: selected skills contain duplicates")
   }
 
   foreach ($skill in $required) {
     if ($selected -notcontains $skill) {
-      $errors.Add("$id: required skill missing -> $skill")
+      $errors.Add("${id}: required skill missing -> $skill")
     }
   }
 
   foreach ($skill in $selected) {
     if ($allowed -notcontains $skill) {
-      $errors.Add("$id: selected skill outside allowed set -> $skill")
+      $errors.Add("${id}: selected skill outside allowed set -> $skill")
     }
   }
 
   foreach ($skill in $forbidden) {
     if ($selected -contains $skill) {
-      $errors.Add("$id: forbidden skill selected -> $skill")
+      $errors.Add("${id}: forbidden skill selected -> $skill")
     }
   }
 
   if ($selected.Count -gt [int]$case.max_selected) {
-    $errors.Add("$id: selected $($selected.Count) skills; max_selected is $($case.max_selected)")
+    $errors.Add("${id}: selected $($selected.Count) skills; max_selected is $($case.max_selected)")
   }
 
   if (($id.StartsWith("generic-") -or $id -eq "unrelated-readme-edit") -and
       $selected -contains "growthops-engineering") {
-    $errors.Add("$id: GrowthOps project router leaked into a generic/unrelated case")
+    $errors.Add("${id}: GrowthOps project router leaked into a generic/unrelated case")
   }
 
-  if (-not $errors.Where({ $_ -like "$id:*" })) {
+  if (-not $errors.Where({ $_ -like "${id}:*" })) {
     Write-Output "[PASS] $id -> $($selected -join ', ')"
   }
 }
