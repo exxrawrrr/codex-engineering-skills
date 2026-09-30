@@ -188,6 +188,21 @@ if ($resultFiles.Count -eq 0) {
 
 foreach ($resultFile in $resultFiles) {
   $doc = Get-Content $resultFile.FullName -Raw | ConvertFrom-Json
+  $evaluationType = [string]$doc.evaluation_type
+
+  if ([string]::IsNullOrWhiteSpace($evaluationType)) {
+    $schemaErrors.Add("$($resultFile.Name): evaluation_type is required")
+    continue
+  }
+  if ($evaluationType -eq "context_cost") {
+    Write-Output "[SKIP] $($resultFile.Name) / context_cost"
+    continue
+  }
+  if ($evaluationType -ne "behavioral_execution") {
+    $schemaErrors.Add("$($resultFile.Name): unsupported evaluation_type '$evaluationType'")
+    continue
+  }
+
   if ([int]$doc.schema_version -ne 2) {
     $schemaErrors.Add("$($resultFile.Name): unsupported result schema_version '$($doc.schema_version)'; expected 2")
     continue
