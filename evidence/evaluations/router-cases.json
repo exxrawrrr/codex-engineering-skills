@@ -95,6 +95,7 @@
         "testing-typescript-systems",
         "agent-skill-authoring",
         "agent-skill-evaluation",
+        "api-contract-testing",
         "growthops-engineering"
       ],
       "max_selected": 0
@@ -124,6 +125,22 @@
         "monorepo-typescript"
       ],
       "max_selected": 5
+    },
+    {
+      "id": "generic-api-contract-break",
+      "task": "Review a generic versioned HTTP API change for backward compatibility and define provider/consumer contract verification without project-specific guidance.",
+      "scope": "generic",
+      "selection_mode": "exact_required",
+      "required": [
+        "api-contract-testing"
+      ],
+      "allowed": [
+        "api-contract-testing"
+      ],
+      "forbidden": [
+        "growthops-engineering"
+      ],
+      "max_selected": 1
     }
   ]
 }

@@ -1,0 +1,63 @@
+{
+  "schema_version": 2,
+  "skill": "api-contract-testing",
+  "phase": "14B",
+  "reviewed_on": "2026-09-30",
+  "decision": "ADOPT",
+  "implementation_state": "CREATED",
+  "lifecycle_status": "incubating",
+  "evidence_state": "UNPROVEN",
+  "evidence_tier": "none",
+  "problem": "The suite lacked a specialist that owns machine-readable API compatibility, provider conformance, and consumer/provider contract verification without collapsing those concerns into general testing or architecture.",
+  "triggers": [
+    "OpenAPI or equivalent API contract changes",
+    "request/response compatibility review",
+    "provider conformance verification",
+    "consumer-driven contract verification",
+    "CI gate for versioned API compatibility"
+  ],
+  "boundary": {
+    "owns": [
+      "machine-readable API compatibility rules",
+      "provider conformance to a published contract",
+      "consumer/provider interaction contracts",
+      "versioned contract fixtures and compatibility evidence"
+    ],
+    "does_not_own": [
+      "general API/domain architecture",
+      "ordinary unit/integration/E2E test layering",
+      "authorization/security policy",
+      "production observability",
+      "deployment rollout or rollback"
+    ]
+  },
+  "overlap_review": "Distinct from testing-typescript-systems because this skill owns compatibility semantics and contract evidence; distinct from typescript-node-architecture because it verifies contracts rather than designing the broader architecture.",
+  "current_evidence": "The skill has been created with static validation, routing coverage, and a representative behavioral case definition, but no controlled post-creation behavioral execution has tested whether loading this skill improves outcomes.",
+  "representative_case_plan": {
+    "id": "api-backward-compatibility-breaking-response",
+    "fixture_id": "api-backward-compatibility-breaking-response-v1",
+    "required_variants": [
+      "no_skills",
+      "selected_skills"
+    ],
+    "minimum_criteria": [
+      "breaking response change is identified against a versioned contract/consumer expectation",
+      "schema validity is not confused with backward compatibility",
+      "provider/consumer verification evidence is distinguished from ordinary integration tests",
+      "result states what remains unproven"
+    ],
+    "execution_status": "NOT_RUN"
+  },
+  "limitations": [
+    "unknown consumers can still break outside the recorded contract set",
+    "contract checks do not prove business semantics, authorization, performance, or production readiness",
+    "tool-specific compatibility heuristics can disagree"
+  ],
+  "promotion_requirements": [
+    "execute at least one controlled representative case after creation",
+    "show criterion-level value beyond general testing/architecture guidance",
+    "no routing overlap regression",
+    "cross-platform repository validation remains green"
+  ],
+  "rejection_condition": "Merge into testing-typescript-systems or retire if real use shows compatibility semantics are not independently useful."
+}

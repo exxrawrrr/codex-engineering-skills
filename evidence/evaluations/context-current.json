@@ -15,47 +15,59 @@
     "application-security-local-first",
     "testing-typescript-systems",
     "agent-skill-authoring",
-    "agent-skill-evaluation"
+    "agent-skill-evaluation",
+    "api-contract-testing"
   ],
-  "all_generic_entrypoint_bytes": 30991,
+  "all_generic_entrypoint_bytes": 38388,
   "comparisons": [
     {
       "case_id": "typescript-package-boundary",
       "no_skills_bytes": 0,
       "selected_skills_bytes": 7079,
-      "all_generic_skills_bytes": 30991,
+      "all_generic_skills_bytes": 38388,
       "selected_skills": [
         "typescript-node-architecture",
         "testing-typescript-systems"
       ],
       "selected_skill_count": 2,
-      "generic_skill_count": 8
+      "generic_skill_count": 9
     },
     {
       "case_id": "sqlite-migration-safety",
       "no_skills_bytes": 0,
       "selected_skills_bytes": 10050,
-      "all_generic_skills_bytes": 30991,
+      "all_generic_skills_bytes": 38388,
       "selected_skills": [
         "sqlite-data-modeling",
         "testing-typescript-systems",
         "typescript-node-architecture"
       ],
       "selected_skill_count": 3,
-      "generic_skill_count": 8
+      "generic_skill_count": 9
     },
     {
       "case_id": "crawler-network-boundary",
       "no_skills_bytes": 0,
       "selected_skills_bytes": 14213,
-      "all_generic_skills_bytes": 30991,
+      "all_generic_skills_bytes": 38388,
       "selected_skills": [
         "resilient-crawler-engineering",
         "application-security-local-first",
         "testing-typescript-systems"
       ],
       "selected_skill_count": 3,
-      "generic_skill_count": 8
+      "generic_skill_count": 9
+    },
+    {
+      "case_id": "api-backward-compatibility-breaking-response",
+      "no_skills_bytes": 0,
+      "selected_skills_bytes": 7397,
+      "all_generic_skills_bytes": 38388,
+      "selected_skills": [
+        "api-contract-testing"
+      ],
+      "selected_skill_count": 1,
+      "generic_skill_count": 9
     }
   ],
   "runtime_metrics": {

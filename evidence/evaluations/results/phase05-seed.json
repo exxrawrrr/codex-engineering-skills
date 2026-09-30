@@ -27,6 +27,15 @@
       "criteria": {},
       "evidence": {},
       "notes": "Harness seed only; no behavioral claim."
+    },
+    {
+      "case_id": "api-backward-compatibility-breaking-response",
+      "variant": "selected_skills",
+      "execution_status": "NOT_RUN",
+      "skills_loaded": [],
+      "criteria": {},
+      "evidence": {},
+      "notes": "Wave A incubation case registered; no post-creation behavioral execution has run."
     }
   ],
   "evaluation_type": "behavioral_execution"

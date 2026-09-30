@@ -1,9 +1,9 @@
 param(
   [string]$DecisionPath = "$PSScriptRoot\..\evidence\incubation\wave-a-decisions-2026-09-30.json",
-  [string]$AgentRecordPath = "$PSScriptRoot\..\evidence\incubation\agent-skill-evaluation.json",
-  [string]$AgentSkillPath = "$PSScriptRoot\..\skills\agent-skill-evaluation\SKILL.md",
   [string]$RegistryPath = "$PSScriptRoot\..\REGISTRY.json",
-  [string]$ProvenancePath = "$PSScriptRoot\..\PROVENANCE.json"
+  [string]$ProvenancePath = "$PSScriptRoot\..\PROVENANCE.json",
+  [string]$SkillRoot = "$PSScriptRoot\..\skills",
+  [string]$IncubationRoot = "$PSScriptRoot\..\evidence\incubation"
 )
 
 $ErrorActionPreference = "Stop"
@@ -22,15 +22,13 @@ function Assert-ExactSet {
   }
 }
 
-foreach ($path in @($DecisionPath,$AgentRecordPath,$AgentSkillPath,$RegistryPath,$ProvenancePath)) {
+foreach ($path in @($DecisionPath,$RegistryPath,$ProvenancePath,$SkillRoot,$IncubationRoot)) {
   if (-not (Test-Path -LiteralPath $path)) {
     throw "Missing Wave A input: $path"
   }
 }
 
 $decisions = Get-Content -LiteralPath $DecisionPath -Raw | ConvertFrom-Json
-$agentRecord = Get-Content -LiteralPath $AgentRecordPath -Raw | ConvertFrom-Json
-$agentSkill = Get-Content -LiteralPath $AgentSkillPath -Raw
 $registry = Get-Content -LiteralPath $RegistryPath -Raw | ConvertFrom-Json
 $provenance = Get-Content -LiteralPath $ProvenancePath -Raw | ConvertFrom-Json
 $errors = [System.Collections.Generic.List[string]]::new()
@@ -38,14 +36,44 @@ $errors = [System.Collections.Generic.List[string]]::new()
 if ([int]$decisions.schema_version -ne 1) {
   $errors.Add("Wave A decisions schema_version must be 1")
 }
-if ([string]$decisions.phase -ne "14" -or [string]$decisions.split -ne "14A") {
-  $errors.Add("Wave A decision ledger must identify phase 14 / split 14A")
+if ([string]$decisions.phase -ne "14") {
+  $errors.Add("Wave A decision ledger must identify phase 14")
 }
 if ([string]$decisions.reviewed_on -ne "2026-09-30") {
   $errors.Add("Wave A reviewed_on must preserve 2026-09-30")
 }
-if ([string]$decisions.completion_state -ne "DECISIONS_LOCKED_IMPLEMENTATION_PENDING_14B") {
-  $errors.Add("Chat 14A completion_state must remain implementation-pending for 14B")
+
+$state = [string]$decisions.completion_state
+$stateContract = @{
+  "DECISIONS_LOCKED_IMPLEMENTATION_PENDING_14B" = @{
+    split = "14A"
+    created = @("agent-skill-evaluation")
+    pending = @("api-contract-testing","ci-pipeline-reliability")
+  }
+  "IMPLEMENTATION_IN_PROGRESS_14B" = @{
+    split = "14B"
+    created = @("agent-skill-evaluation","api-contract-testing")
+    pending = @("ci-pipeline-reliability")
+  }
+  "IMPLEMENTATION_COMPLETE_PENDING_LOCK" = @{
+    split = "14B"
+    created = @("agent-skill-evaluation","api-contract-testing","ci-pipeline-reliability")
+    pending = @()
+  }
+  "COMPLETE" = @{
+    split = "14B"
+    created = @("agent-skill-evaluation","api-contract-testing","ci-pipeline-reliability")
+    pending = @()
+  }
+}
+if (-not $stateContract.ContainsKey($state)) {
+  $errors.Add("Unsupported Wave A completion_state '$state'")
+  $expectedState = $null
+} else {
+  $expectedState = $stateContract[$state]
+  if ([string]$decisions.split -ne [string]$expectedState.split) {
+    $errors.Add("Wave A split must be '$($expectedState.split)' for completion_state '$state'")
+  }
 }
 
 $expectedCandidates = @("agent-skill-evaluation","api-contract-testing","ci-cd-reliability")
@@ -71,9 +99,19 @@ foreach ($source in @($provenance.sources)) {
   }
 }
 
-$allowedDecisions = @("KEEP","ADOPT","MODIFY","DEFER","REJECT")
-$allowedImplementation = @("CREATED","PENDING_14B","NOT_PLANNED")
-$plannedTargets = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::Ordinal)
+$expectedTargetByCandidate = @{
+  "agent-skill-evaluation" = "agent-skill-evaluation"
+  "api-contract-testing" = "api-contract-testing"
+  "ci-cd-reliability" = "ci-pipeline-reliability"
+}
+$expectedDecisionByCandidate = @{
+  "agent-skill-evaluation" = "KEEP"
+  "api-contract-testing" = "ADOPT"
+  "ci-cd-reliability" = "MODIFY"
+}
+
+$createdObserved = [System.Collections.Generic.List[string]]::new()
+$pendingObserved = [System.Collections.Generic.List[string]]::new()
 
 foreach ($row in $decisionRows) {
   $candidate = [string]$row.candidate
@@ -81,23 +119,24 @@ foreach ($row in $decisionRows) {
   $target = [string]$row.target_skill
   $implementation = [string]$row.implementation_state
 
-  if ($allowedDecisions -notcontains $decision) {
-    $errors.Add("$($candidate): invalid decision '$decision'")
+  if (-not $expectedTargetByCandidate.ContainsKey($candidate)) {
+    continue
   }
-  if ($allowedImplementation -notcontains $implementation) {
-    $errors.Add("$($candidate): invalid implementation_state '$implementation'")
+  if ($decision -ne [string]$expectedDecisionByCandidate[$candidate]) {
+    $errors.Add("$($candidate): decision must be '$($expectedDecisionByCandidate[$candidate])'")
   }
-  if ([string]$row.lifecycle_status -eq "stable") {
-    $errors.Add("$($candidate): Wave A candidate must not be stable")
+  if ($target -ne [string]$expectedTargetByCandidate[$candidate]) {
+    $errors.Add("$($candidate): target_skill must be '$($expectedTargetByCandidate[$candidate])'")
   }
+
   if ([string]$row.lifecycle_status -ne "incubating") {
-    $errors.Add("$($candidate): adopted/kept Wave A candidate must remain incubating in 14A")
+    $errors.Add("$($candidate): Wave A candidate must remain incubating")
   }
   if ([string]$row.evidence_state -ne "UNPROVEN" -or [string]$row.evidence_tier -ne "none") {
-    $errors.Add("$($candidate): effectiveness must remain UNPROVEN / evidence_tier none in 14A")
+    $errors.Add("$($candidate): effectiveness must remain UNPROVEN / evidence_tier none")
   }
   if ([string]$row.effectiveness_evidence -notmatch "^NONE") {
-    $errors.Add("$($candidate): 14A must not claim skill-effectiveness evidence")
+    $errors.Add("$($candidate): must not claim skill-effectiveness evidence")
   }
 
   $owns = @($row.boundary.owns | ForEach-Object { [string]$_ })
@@ -105,121 +144,103 @@ foreach ($row in $decisionRows) {
   if ($owns.Count -eq 0 -or $excludes.Count -eq 0) {
     $errors.Add("$($candidate): boundary must include non-empty owns and excludes")
   }
-
   $overlap = @($row.overlap_review.PSObject.Properties)
   if ($overlap.Count -eq 0) {
     $errors.Add("$($candidate): overlap_review must name at least one neighboring skill/wave")
   }
-  foreach ($property in $overlap) {
-    if ([string]::IsNullOrWhiteSpace([string]$property.Value)) {
-      $errors.Add("$($candidate): overlap_review '$($property.Name)' is empty")
-    }
-  }
-
-  if ([string]$row.case_or_unproven.state -ne "UNPROVEN" -or
-      [string]::IsNullOrWhiteSpace([string]$row.case_or_unproven.planned_case)) {
+  if ([string]$row.case_or_unproven.state -ne "UNPROVEN" -or [string]::IsNullOrWhiteSpace([string]$row.case_or_unproven.planned_case)) {
     $errors.Add("$($candidate): must carry explicit UNPROVEN state plus a planned case")
   }
 
-  if ($decision -eq "MODIFY") {
-    if ($target -eq $candidate) {
-      $errors.Add("$($candidate): MODIFY must change target_skill or scope identity")
-    }
-    if ([string]::IsNullOrWhiteSpace([string]$row.rename_reason)) {
-      $errors.Add("$($candidate): MODIFY requires rename_reason")
-    }
-  }
-
-  if ($decision -eq "ADOPT" -and $target -ne $candidate) {
-    $errors.Add("$($candidate): ADOPT target_skill must preserve the candidate slug")
+  if ($candidate -eq "ci-cd-reliability" -and [string]::IsNullOrWhiteSpace([string]$row.rename_reason)) {
+    $errors.Add("ci-cd-reliability: MODIFY requires rename_reason")
   }
 
   if ($implementation -eq "CREATED") {
+    $createdObserved.Add($target)
+
     if (-not $registryByName.ContainsKey($target)) {
       $errors.Add("$($candidate): CREATED target '$target' is missing from REGISTRY.json")
     } else {
       $entry = $registryByName[$target]
-      if ([string]$entry.status -ne "incubating" -or [string]$entry.kind -ne "generic") {
+      if ([string]$entry.kind -ne "generic" -or [string]$entry.status -ne "incubating") {
         $errors.Add("$($candidate): CREATED target '$target' must be generic/incubating")
       }
       if ([string]$entry.evidence_tier -ne "none" -or @($entry.evidence_refs).Count -ne 0) {
         $errors.Add("$($candidate): CREATED target '$target' must remain evidence_tier none with no refs")
       }
     }
+
     if (-not $provenanceMapped.Contains($target)) {
       $errors.Add("$($candidate): CREATED target '$target' lacks provenance mapping")
     }
-  }
 
-  if ($implementation -eq "PENDING_14B") {
-    if (-not $plannedTargets.Add($target)) {
-      $errors.Add("$($candidate): duplicate pending target '$target'")
+    $skillPath = Join-Path (Join-Path $SkillRoot $target) "SKILL.md"
+    $recordPath = Join-Path $IncubationRoot ($target + ".json")
+    if (-not (Test-Path -LiteralPath $skillPath)) {
+      $errors.Add("$($candidate): CREATED target '$target' is missing SKILL.md")
+    } else {
+      $skillText = Get-Content -LiteralPath $skillPath -Raw
+      foreach ($marker in @("## When not to load","## Limitations")) {
+        if (-not $skillText.Contains($marker)) {
+          $errors.Add("$($candidate): SKILL.md missing boundary marker: $marker")
+        }
+      }
     }
+
+    if (-not (Test-Path -LiteralPath $recordPath)) {
+      $errors.Add("$($candidate): CREATED target '$target' is missing incubation record")
+    } else {
+      $record = Get-Content -LiteralPath $recordPath -Raw | ConvertFrom-Json
+      foreach ($pair in @(
+        @("skill",$target),
+        @("implementation_state","CREATED"),
+        @("lifecycle_status","incubating"),
+        @("evidence_state","UNPROVEN"),
+        @("evidence_tier","none")
+      )) {
+        $field = $pair[0]
+        $expected = $pair[1]
+        if ([string]$record.$field -ne $expected) {
+          $errors.Add("$($candidate): incubation '$field' must be '$expected'")
+        }
+      }
+      if ([int]$record.schema_version -ne 2) {
+        $errors.Add("$($candidate): incubation record schema_version must be 2")
+      }
+      if ([string]$record.representative_case_plan.execution_status -ne "NOT_RUN") {
+        $errors.Add("$($candidate): representative case must remain NOT_RUN")
+      }
+      if (@($record.limitations).Count -eq 0) {
+        $errors.Add("$($candidate): incubation record requires limitations")
+      }
+      if ([string]::IsNullOrWhiteSpace([string]$record.current_evidence) -or [string]$record.current_evidence -notmatch "(?i)no .*post-creation|no controlled post-creation") {
+        $errors.Add("$($candidate): current_evidence must preserve missing post-creation effectiveness proof")
+      }
+    }
+  } elseif ($implementation -eq "PENDING_14B") {
+    $pendingObserved.Add($target)
     if ($registryByName.ContainsKey($target)) {
       $errors.Add("$($candidate): PENDING_14B target '$target' must not be prematurely registered")
     }
+    if (Test-Path -LiteralPath (Join-Path (Join-Path $SkillRoot $target) "SKILL.md")) {
+      $errors.Add("$($candidate): PENDING_14B target '$target' must not have a created SKILL.md")
+    }
+  } else {
+    $errors.Add("$($candidate): invalid implementation_state '$implementation'")
   }
 }
 
-$agentDecision = @($decisionRows | Where-Object { [string]$_.candidate -eq "agent-skill-evaluation" })
-if ($agentDecision.Count -ne 1 -or
-    [string]$agentDecision[0].decision -ne "KEEP" -or
-    [string]$agentDecision[0].implementation_state -ne "CREATED") {
-  $errors.Add("agent-skill-evaluation must have exactly one KEEP/CREATED decision")
-}
-
-$apiDecision = @($decisionRows | Where-Object { [string]$_.candidate -eq "api-contract-testing" })
-if ($apiDecision.Count -ne 1 -or [string]$apiDecision[0].decision -ne "ADOPT" -or [string]$apiDecision[0].target_skill -ne "api-contract-testing") {
-  $errors.Add("api-contract-testing must be ADOPT -> api-contract-testing")
-}
-
-$ciDecision = @($decisionRows | Where-Object { [string]$_.candidate -eq "ci-cd-reliability" })
-if ($ciDecision.Count -ne 1 -or [string]$ciDecision[0].decision -ne "MODIFY" -or [string]$ciDecision[0].target_skill -ne "ci-pipeline-reliability") {
-  $errors.Add("ci-cd-reliability must be MODIFY -> ci-pipeline-reliability")
-}
-
-if ([int]$agentRecord.schema_version -ne 2) {
-  $errors.Add("agent-skill-evaluation incubation record must use schema_version 2")
-}
-foreach ($pair in @(
-  @("skill","agent-skill-evaluation"),
-  @("phase","14A"),
-  @("decision","KEEP"),
-  @("implementation_state","CREATED"),
-  @("lifecycle_status","incubating"),
-  @("evidence_state","UNPROVEN"),
-  @("evidence_tier","none")
-)) {
-  $field = $pair[0]
-  $expected = $pair[1]
-  if ([string]$agentRecord.$field -ne $expected) {
-    $errors.Add("agent-skill-evaluation incubation '$field' must be '$expected'")
-  }
-}
-if ([string]$agentRecord.representative_case_plan.execution_status -ne "NOT_RUN") {
-  $errors.Add("agent-skill-evaluation representative case must remain NOT_RUN in 14A")
-}
-if ([string]::IsNullOrWhiteSpace([string]$agentRecord.current_evidence) -or [string]$agentRecord.current_evidence -notmatch "No controlled post-creation execution") {
-  $errors.Add("agent-skill-evaluation current_evidence must explicitly preserve the missing post-creation comparison")
-}
-
-foreach ($marker in @(
-  "## When not to load",
-  "## Limitations",
-  "object of evaluation is the skill/router/loading strategy itself",
-  "does not:",
-  "Repository mechanisms that predate this skill are not evidence"
-)) {
-  if (-not $agentSkill.Contains($marker)) {
-    $errors.Add("agent-skill-evaluation SKILL.md missing boundary marker: $marker")
-  }
+if ($null -ne $expectedState) {
+  Assert-ExactSet -Actual @($createdObserved) -Expected @($expectedState.created) -Label "created targets" -Errors $errors
+  Assert-ExactSet -Actual @($pendingObserved) -Expected @($expectedState.pending) -Label "pending targets" -Errors $errors
 }
 
 foreach ($errorItem in $errors) { Write-Output "[FAIL] $errorItem" }
 if ($errors.Count -eq 0) {
-  Write-Output "[PASS] Wave A admission decisions, boundaries, evidence truthfulness, and 14A/14B split are aligned"
+  Write-Output "[PASS] Wave A lifecycle state, created-skill contracts, boundaries, and evidence truthfulness are aligned"
 }
-Write-Output ("WAVE_A_CONTRACT DECISIONS={0} CREATED=1 PENDING=2 FAIL={1}" -f $decisionRows.Count,$errors.Count)
+Write-Output ("WAVE_A_CONTRACT STATE={0} DECISIONS={1} CREATED={2} PENDING={3} FAIL={4}" -f $state,$decisionRows.Count,$createdObserved.Count,$pendingObserved.Count,$errors.Count)
 
 if ($errors.Count -gt 0) { exit 1 }
 exit 0

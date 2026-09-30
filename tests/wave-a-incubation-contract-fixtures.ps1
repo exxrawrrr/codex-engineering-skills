@@ -8,67 +8,62 @@ function New-Sandbox {
   param([Parameter(Mandatory = $true)][string]$Name)
 
   $root = Join-Path $tempRoot $Name
-  New-Item -ItemType Directory -Path (Join-Path $root "evidence/incubation") -Force | Out-Null
-  New-Item -ItemType Directory -Path (Join-Path $root "skills/agent-skill-evaluation") -Force | Out-Null
+  $skillRoot = Join-Path $root "skills"
+  $incubationRoot = Join-Path $root "evidence/incubation"
+  New-Item -ItemType Directory -Path $skillRoot -Force | Out-Null
+  New-Item -ItemType Directory -Path $incubationRoot -Force | Out-Null
 
-  Copy-Item -LiteralPath (Join-Path $repoRoot "evidence/incubation/wave-a-decisions-2026-09-30.json") -Destination (Join-Path $root "evidence/incubation/wave-a-decisions-2026-09-30.json")
-  Copy-Item -LiteralPath (Join-Path $repoRoot "evidence/incubation/agent-skill-evaluation.json") -Destination (Join-Path $root "evidence/incubation/agent-skill-evaluation.json")
-  Copy-Item -LiteralPath (Join-Path $repoRoot "skills/agent-skill-evaluation/SKILL.md") -Destination (Join-Path $root "skills/agent-skill-evaluation/SKILL.md")
+  Copy-Item -LiteralPath (Join-Path $repoRoot "evidence/incubation/wave-a-decisions-2026-09-30.json") -Destination (Join-Path $incubationRoot "wave-a-decisions-2026-09-30.json")
   Copy-Item -LiteralPath (Join-Path $repoRoot "REGISTRY.json") -Destination (Join-Path $root "REGISTRY.json")
   Copy-Item -LiteralPath (Join-Path $repoRoot "PROVENANCE.json") -Destination (Join-Path $root "PROVENANCE.json")
 
+  foreach ($target in @("agent-skill-evaluation","api-contract-testing","ci-pipeline-reliability")) {
+    $sourceSkill = Join-Path (Join-Path $repoRoot "skills") $target
+    if (Test-Path -LiteralPath $sourceSkill) {
+      Copy-Item -LiteralPath $sourceSkill -Destination (Join-Path $skillRoot $target) -Recurse
+    }
+    $sourceRecord = Join-Path (Join-Path $repoRoot "evidence/incubation") ($target + ".json")
+    if (Test-Path -LiteralPath $sourceRecord) {
+      Copy-Item -LiteralPath $sourceRecord -Destination (Join-Path $incubationRoot ($target + ".json"))
+    }
+  }
+
   return @{
     Root = $root
-    DecisionPath = Join-Path $root "evidence/incubation/wave-a-decisions-2026-09-30.json"
-    AgentRecordPath = Join-Path $root "evidence/incubation/agent-skill-evaluation.json"
-    AgentSkillPath = Join-Path $root "skills/agent-skill-evaluation/SKILL.md"
+    DecisionPath = Join-Path $incubationRoot "wave-a-decisions-2026-09-30.json"
     RegistryPath = Join-Path $root "REGISTRY.json"
     ProvenancePath = Join-Path $root "PROVENANCE.json"
+    SkillRoot = $skillRoot
+    IncubationRoot = $incubationRoot
   }
 }
 
 function Save-Json {
-  param(
-    [Parameter(Mandatory = $true)][string]$Path,
-    [Parameter(Mandatory = $true)][object]$Value
-  )
-  $Value | ConvertTo-Json -Depth 40 | Set-Content -LiteralPath $Path -Encoding utf8NoBOM
+  param([Parameter(Mandatory = $true)][string]$Path,[Parameter(Mandatory = $true)][object]$Value)
+  $Value | ConvertTo-Json -Depth 50 | Set-Content -LiteralPath $Path -Encoding utf8NoBOM
 }
 
 function Invoke-Contract {
   param([Parameter(Mandatory = $true)][hashtable]$Sandbox)
-
-  $output = & pwsh -NoProfile -File $validator -DecisionPath $Sandbox.DecisionPath -AgentRecordPath $Sandbox.AgentRecordPath -AgentSkillPath $Sandbox.AgentSkillPath -RegistryPath $Sandbox.RegistryPath -ProvenancePath $Sandbox.ProvenancePath 2>&1
-  return @{
-    ExitCode = $LASTEXITCODE
-    Text = (($output | ForEach-Object { [string]$_ }) -join [Environment]::NewLine)
-  }
+  $output = & pwsh -NoProfile -File $validator -DecisionPath $Sandbox.DecisionPath -RegistryPath $Sandbox.RegistryPath -ProvenancePath $Sandbox.ProvenancePath -SkillRoot $Sandbox.SkillRoot -IncubationRoot $Sandbox.IncubationRoot 2>&1
+  return @{ ExitCode = $LASTEXITCODE; Text = (($output | ForEach-Object { [string]$_ }) -join [Environment]::NewLine) }
 }
 
 function Assert-Passes {
   param([Parameter(Mandatory = $true)][hashtable]$Sandbox)
   $result = Invoke-Contract -Sandbox $Sandbox
-  if ($result.ExitCode -ne 0) {
-    throw "Expected Wave A contract to pass. Output: $($result.Text)"
+  if ($result.ExitCode -ne 0) { throw "Expected Wave A contract to pass. Output: $($result.Text)" }
+  if (-not $result.Text.Contains("WAVE_A_CONTRACT STATE=IMPLEMENTATION_IN_PROGRESS_14B DECISIONS=3 CREATED=2 PENDING=1 FAIL=0")) {
+    throw "Wave A contract passed without expected progress summary. Output: $($result.Text)"
   }
-  if (-not $result.Text.Contains("WAVE_A_CONTRACT DECISIONS=3 CREATED=1 PENDING=2 FAIL=0")) {
-    throw "Wave A contract passed without expected summary. Output: $($result.Text)"
-  }
-  Write-Output "[PASS] valid Wave A admission ledger"
+  Write-Output "[PASS] valid Wave A 14B progress ledger"
 }
 
 function Assert-Rejected {
-  param(
-    [Parameter(Mandatory = $true)][hashtable]$Sandbox,
-    [Parameter(Mandatory = $true)][string]$ExpectedText
-  )
+  param([Parameter(Mandatory = $true)][hashtable]$Sandbox,[Parameter(Mandatory = $true)][string]$ExpectedText)
   $result = Invoke-Contract -Sandbox $Sandbox
-  if ($result.ExitCode -eq 0) {
-    throw "Expected Wave A rejection containing '$ExpectedText'. Output: $($result.Text)"
-  }
-  if (-not $result.Text.Contains($ExpectedText)) {
-    throw "Wave A rejected for the wrong reason. Expected '$ExpectedText'. Output: $($result.Text)"
-  }
+  if ($result.ExitCode -eq 0) { throw "Expected Wave A rejection containing '$ExpectedText'. Output: $($result.Text)" }
+  if (-not $result.Text.Contains($ExpectedText)) { throw "Wave A rejected for the wrong reason. Expected '$ExpectedText'. Output: $($result.Text)" }
   Write-Output "[PASS] rejected with '$ExpectedText'"
 }
 
@@ -88,7 +83,7 @@ try {
   $d = Get-Content -LiteralPath $stable.DecisionPath -Raw | ConvertFrom-Json
   (@($d.decisions | Where-Object { $_.candidate -eq "api-contract-testing" })[0]).lifecycle_status = "stable"
   Save-Json -Path $stable.DecisionPath -Value $d
-  Assert-Rejected -Sandbox $stable -ExpectedText "Wave A candidate must not be stable"
+  Assert-Rejected -Sandbox $stable -ExpectedText "Wave A candidate must remain incubating"
 
   $overclaim = New-Sandbox -Name "effectiveness-overclaim"
   $d = Get-Content -LiteralPath $overclaim.DecisionPath -Raw | ConvertFrom-Json
@@ -104,43 +99,35 @@ try {
 
   $badModify = New-Sandbox -Name "bad-modify"
   $d = Get-Content -LiteralPath $badModify.DecisionPath -Raw | ConvertFrom-Json
-  $row = @($d.decisions | Where-Object { $_.candidate -eq "ci-cd-reliability" })[0]
-  $row.target_skill = "ci-cd-reliability"
+  (@($d.decisions | Where-Object { $_.candidate -eq "ci-cd-reliability" })[0]).target_skill = "ci-cd-reliability"
   Save-Json -Path $badModify.DecisionPath -Value $d
-  Assert-Rejected -Sandbox $badModify -ExpectedText "MODIFY must change target_skill or scope identity"
+  Assert-Rejected -Sandbox $badModify -ExpectedText "target_skill must be 'ci-pipeline-reliability'"
 
-  $premature = New-Sandbox -Name "premature-registration"
+  $premature = New-Sandbox -Name "premature-ci-registration"
   $registry = Get-Content -LiteralPath $premature.RegistryPath -Raw | ConvertFrom-Json
-  $newEntry = [pscustomobject]@{
-    name = "api-contract-testing"
-    kind = "generic"
-    path = "skills/api-contract-testing"
-    tags = @("api","contracts")
-    status = "incubating"
-    evidence_tier = "none"
-    evidence_refs = @()
-  }
-  $registry.skills = @($registry.skills) + @($newEntry)
+  $registry.skills = @($registry.skills) + @([pscustomobject]@{
+    name="ci-pipeline-reliability";kind="generic";path="skills/ci-pipeline-reliability";tags=@("ci");status="incubating";evidence_tier="none";evidence_refs=@()
+  })
   Save-Json -Path $premature.RegistryPath -Value $registry
-  Assert-Rejected -Sandbox $premature -ExpectedText "PENDING_14B target 'api-contract-testing' must not be prematurely registered"
+  Assert-Rejected -Sandbox $premature -ExpectedText "PENDING_14B target 'ci-pipeline-reliability' must not be prematurely registered"
 
-  $agentCase = New-Sandbox -Name "agent-case-overclaim"
-  $record = Get-Content -LiteralPath $agentCase.AgentRecordPath -Raw | ConvertFrom-Json
-  $record.representative_case_plan.execution_status = "PASS"
-  Save-Json -Path $agentCase.AgentRecordPath -Value $record
-  Assert-Rejected -Sandbox $agentCase -ExpectedText "representative case must remain NOT_RUN in 14A"
+  $apiCase = New-Sandbox -Name "api-case-overclaim"
+  $recordPath = Join-Path $apiCase.IncubationRoot "api-contract-testing.json"
+  $record = Get-Content -LiteralPath $recordPath -Raw | ConvertFrom-Json
+  $record.representative_case_plan.execution_status = "COMPLETED"
+  Save-Json -Path $recordPath -Value $record
+  Assert-Rejected -Sandbox $apiCase -ExpectedText "representative case must remain NOT_RUN"
 
-  $missingLimit = New-Sandbox -Name "missing-limitations"
-  $skillText = Get-Content -LiteralPath $missingLimit.AgentSkillPath -Raw
+  $missingLimit = New-Sandbox -Name "missing-api-limitations"
+  $skillPath = Join-Path (Join-Path $missingLimit.SkillRoot "api-contract-testing") "SKILL.md"
+  $skillText = Get-Content -LiteralPath $skillPath -Raw
   $skillText = $skillText.Replace("## Limitations","## Notes")
-  Set-Content -LiteralPath $missingLimit.AgentSkillPath -Value $skillText -Encoding utf8NoBOM
+  Set-Content -LiteralPath $skillPath -Value $skillText -Encoding utf8NoBOM
   Assert-Rejected -Sandbox $missingLimit -ExpectedText "SKILL.md missing boundary marker: ## Limitations"
 
-  Write-Output "[PASS] Wave A admission drift and overclaim fixtures are regression-covered"
+  Write-Output "[PASS] Wave A lifecycle, overclaim, pending-registration, and created-skill fixtures are regression-covered"
 } finally {
-  if (Test-Path -LiteralPath $tempRoot) {
-    Remove-Item -LiteralPath $tempRoot -Recurse -Force
-  }
+  if (Test-Path -LiteralPath $tempRoot) { Remove-Item -LiteralPath $tempRoot -Recurse -Force }
 }
 
 exit 0

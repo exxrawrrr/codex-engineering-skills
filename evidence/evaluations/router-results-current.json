@@ -48,6 +48,12 @@
         "sqlite-data-modeling",
         "testing-typescript-systems"
       ]
+    },
+    {
+      "case_id": "generic-api-contract-break",
+      "selected": [
+        "api-contract-testing"
+      ]
     }
   ]
 }

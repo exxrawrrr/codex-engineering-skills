@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "phase": "14",
-  "split": "14A",
+  "split": "14B",
   "reviewed_on": "2026-09-30",
-  "completion_state": "DECISIONS_LOCKED_IMPLEMENTATION_PENDING_14B",
+  "completion_state": "IMPLEMENTATION_IN_PROGRESS_14B",
   "required_candidates": [
     "agent-skill-evaluation",
     "api-contract-testing",
@@ -57,7 +57,7 @@
       "candidate": "api-contract-testing",
       "decision": "ADOPT",
       "target_skill": "api-contract-testing",
-      "implementation_state": "PENDING_14B",
+      "implementation_state": "CREATED",
       "lifecycle_status": "incubating",
       "evidence_state": "UNPROVEN",
       "evidence_tier": "none",
@@ -66,7 +66,7 @@
         "testing-typescript-systems covers test layering and deterministic boundaries but does not define schema compatibility or consumer/provider contract gates.",
         "typescript-node-architecture asks for stable contracts but does not own executable compatibility testing."
       ],
-      "effectiveness_evidence": "NONE_SKILL_NOT_CREATED",
+      "effectiveness_evidence": "NONE_POST_CREATION",
       "boundary": {
         "owns": [
           "machine-readable HTTP/API contract compatibility checks",
@@ -96,7 +96,7 @@
           "reports compatibility result without claiming production safety"
         ]
       },
-      "next_action": "Create as a separate incubating skill in Chat 14B with provenance, routing example, limitations, and explicit NOT_RUN/UNPROVEN evidence."
+      "next_action": "Keep incubating with explicit NOT_RUN behavioral evidence until a controlled post-creation case executes."
     },
     {
       "candidate": "ci-cd-reliability",

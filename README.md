@@ -208,6 +208,7 @@ ya karena memang **ora digawe kanggo kono**.
 | `testing-typescript-systems` | stable | Vitest, MSW, fixtures, durability/fault/restart testing |
 | `agent-skill-authoring` | incubating | bikin, review, package, dan maintain agent skill |
 | `agent-skill-evaluation` | incubating | evaluasi skill/router dengan case, baseline, evidence, dan context-cost discipline |
+| `api-contract-testing` | incubating | compatibility API, schema/provider conformance, consumer-driven contract, dan breaking-change gate |
 | `growthops-engineering` | project | router + engineering contract khusus GrowthOps |
 
 Canonical registry: [REGISTRY.json](REGISTRY.json)
@@ -466,6 +467,7 @@ Its main goals are:
 | `testing-typescript-systems` | Vitest, MSW, fixtures, durability/fault/restart tests, targeted E2E |
 | `agent-skill-authoring` | Meta-skill for creating, reviewing, packaging, and publishing agent skills |
 | `agent-skill-evaluation` | Evidence-backed evaluation of skill/router effectiveness, routing, and context cost |
+| `api-contract-testing` | Machine-readable API compatibility, provider conformance, and consumer/provider contract verification |
 | `growthops-engineering` | Real project-specific router and engineering contract example |
 
 ## Routing model

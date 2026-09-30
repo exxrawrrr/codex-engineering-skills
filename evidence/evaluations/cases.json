@@ -86,6 +86,37 @@
           "description": "Body-size and redirect-count bounds are covered by focused tests."
         }
       ]
+    },
+    {
+      "id": "api-backward-compatibility-breaking-response",
+      "task": "Review a versioned HTTP API response change that removes a field relied on by a known consumer, and define the narrow compatibility evidence required before accepting the change.",
+      "fixture_id": "api-backward-compatibility-breaking-response-v1",
+      "allowed_variants": [
+        "no_skills",
+        "selected_skills",
+        "all_generic_skills"
+      ],
+      "recommended_skills": [
+        "api-contract-testing"
+      ],
+      "acceptance_criteria": [
+        {
+          "id": "breaking_change_identified",
+          "description": "The removed consumer-required response field is identified as a compatibility break for the named consumer/contract."
+        },
+        {
+          "id": "schema_vs_compatibility_separated",
+          "description": "Schema validity is not presented as sufficient proof of backward compatibility."
+        },
+        {
+          "id": "verification_layers_distinguished",
+          "description": "Provider/consumer contract verification is distinguished from ordinary integration testing."
+        },
+        {
+          "id": "limitations_stated",
+          "description": "The result states what remains unproven, including unknown consumers and production behavior."
+        }
+      ]
     }
   ]
 }
