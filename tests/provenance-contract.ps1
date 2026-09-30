@@ -99,10 +99,10 @@ $allowedLicenseByType = @{
   repository_original_synthesis = @("PROJECT_SOURCE")
 }
 
-$sourceIds = New-Object System.Collections.Generic.HashSet[string] ([System.StringComparer]::Ordinal)
-$activeUrls = New-Object System.Collections.Generic.HashSet[string] ([System.StringComparer]::Ordinal)
-$mappedSkills = New-Object System.Collections.Generic.HashSet[string] ([System.StringComparer]::Ordinal)
-$projectMappedSkills = New-Object System.Collections.Generic.HashSet[string] ([System.StringComparer]::Ordinal)
+$sourceIds = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::Ordinal)
+$activeUrls = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::Ordinal)
+$mappedSkills = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::Ordinal)
+$projectMappedSkills = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::Ordinal)
 $publicRepoUrls = New-Object System.Collections.Generic.List[string]
 
 $retiredByUrl = @{}
@@ -148,7 +148,7 @@ foreach ($source in @($provenance.sources)) {
   if ($urls.Count -eq 0) {
     $errors.Add("${id}: at least one URL is required")
   }
-  $localUrls = New-Object System.Collections.Generic.HashSet[string] ([System.StringComparer]::Ordinal)
+  $localUrls = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::Ordinal)
   foreach ($urlTextRaw in $urls) {
     $urlText = $urlTextRaw.Trim()
     $uri = $null
