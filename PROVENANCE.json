@@ -186,6 +186,17 @@
       "informs_skills": [
         "growthops-engineering"
       ]
+    },
+    {
+      "id": "internal-agent-skill-evaluation-framework",
+      "type": "repository_original_synthesis",
+      "urls": [
+        "https://github.com/exxrawrrr/codex-engineering-skills"
+      ],
+      "license_status": "PROJECT_SOURCE",
+      "informs_skills": [
+        "agent-skill-evaluation"
+      ]
     }
   ]
 }
