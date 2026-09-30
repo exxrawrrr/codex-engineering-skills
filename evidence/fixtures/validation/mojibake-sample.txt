@@ -1,0 +1,9 @@
+INTENTIONALLY INVALID FIXTURE — common UTF-8/Windows-1252 mojibake
+
+expected semantic text:
+down arrow: ↓
+tree: ├──
+
+corrupted forms that a future validator regression check must reject:
+down arrow: â†“
+tree: â”œâ”€â”€
