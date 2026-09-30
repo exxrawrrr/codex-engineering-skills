@@ -1,0 +1,3 @@
+﻿INTENTIONALLY INVALID FIXTURE — UTF-8 BOM at byte zero
+
+This file exists only to prove the validator rejects a UTF-8 BOM.

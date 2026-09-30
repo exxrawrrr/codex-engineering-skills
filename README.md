@@ -357,11 +357,11 @@ Validator ngecek hal-hal seperti:
 - frontmatter;
 - skill names;
 - references;
-- UTF-8 BOM, replacement-character, and common mojibake corruption;
+- UTF-8 BOM, replacement-character, dan common mojibake corruption;
 - tool-output contamination;
-- context size;
+- guardrail panjang `SKILL.md` (>500 baris menghasilkan warning);
 - generic/project leakage;
-- registry lifecycle-status values;
+- registry lifecycle-status dan evidence-reference contract;
 - project suite-manifest consistency;
 
 Kalau validator merah:
@@ -497,7 +497,7 @@ powershell -ExecutionPolicy Bypass -File .\install.ps1 -GenericOnly
 powershell -ExecutionPolicy Bypass -File .\validate.ps1
 ```
 
-The validator checks skill metadata, references, context size, project leakage, encoding issues, generated-output contamination, and repository maintenance rules.
+The validator checks skill metadata and registered paths, references, `SKILL.md` length guardrails, generic/project leakage, BOM/U+FFFD/common-mojibake text hygiene, generated-output contamination, registry lifecycle/evidence contracts, and project suite-manifest consistency.
 
 ## Provenance
 

@@ -1,0 +1,5 @@
+INTENTIONALLY INVALID FIXTURE — additional common mojibake families
+
+UTF-8 BOM decoded as text: ï»¿
+Latin text double-decoded: cafÃ©
+emoji prefix double-decoded: ðŸ
