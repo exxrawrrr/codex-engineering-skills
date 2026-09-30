@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "evidence_tiers": {
+    "none": "No auditable real-use or behavioral evidence is recorded.",
+    "observed": "At least one auditable real-use observation exists.",
+    "repeated": "Auditable real-use observations exist across multiple milestones/tasks.",
+    "benchmarked": "At least one reproducible comparative behavioral evaluation exists."
+  },
+  "records": [
+    {
+      "id": "growthops-m01-m04-observational-2026-09-30",
+      "type": "observational",
+      "claim_state": "PARTIALLY_VERIFIED",
+      "claim": "The named skills were used during committed GrowthOps M01-M04 work and the resulting engineering changes/tests align with their guidance.",
+      "does_not_claim": "A controlled skill-on versus skill-off causal improvement.",
+      "public_repository": "exxrawrrr/GrowthOps",
+      "public_commits": [
+        "164680ef9532e4812baa3b68e51b0a7bfb53e296",
+        "599d50228ae5160e3d4509380d07c28c5c43edb0",
+        "dae287f456a7d3d36d3d134d3957dce87c918c67",
+        "80b255b3b051b848cadd023f3aa612bb4600cc9b",
+        "da5b8d9373a409b1cdd51b1b34501ec3b9601774"
+      ],
+      "skill_observations": {
+        "growthops-engineering": "repeated",
+        "typescript-node-architecture": "repeated",
+        "monorepo-typescript": "observed",
+        "sqlite-data-modeling": "repeated",
+        "resilient-crawler-engineering": "repeated",
+        "application-security-local-first": "repeated",
+        "testing-typescript-systems": "repeated"
+      },
+      "privacy": "Public commit/checkpoint facts only; private Codex transcripts and unfinished GrowthOps M05 work are excluded."
+    }
+  ]
+}
