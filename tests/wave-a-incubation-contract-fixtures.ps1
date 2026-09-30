@@ -53,10 +53,10 @@ function Assert-Passes {
   param([Parameter(Mandatory = $true)][hashtable]$Sandbox)
   $result = Invoke-Contract -Sandbox $Sandbox
   if ($result.ExitCode -ne 0) { throw "Expected Wave A contract to pass. Output: $($result.Text)" }
-  if (-not $result.Text.Contains("WAVE_A_CONTRACT STATE=IMPLEMENTATION_COMPLETE_PENDING_LOCK DECISIONS=3 CREATED=3 PENDING=0 FAIL=0")) {
+  if (-not $result.Text.Contains("WAVE_A_CONTRACT STATE=COMPLETE DECISIONS=3 CREATED=3 PENDING=0 FAIL=0")) {
     throw "Wave A contract passed without expected progress summary. Output: $($result.Text)"
   }
-  Write-Output "[PASS] valid Wave A fully implemented pre-lock ledger"
+  Write-Output "[PASS] valid locked Wave A ledger"
 }
 
 function Assert-Rejected {
@@ -72,6 +72,12 @@ try {
 
   $valid = New-Sandbox -Name "valid"
   Assert-Passes -Sandbox $valid
+
+  $missingLockDate = New-Sandbox -Name "missing-lock-date"
+  $d = Get-Content -LiteralPath $missingLockDate.DecisionPath -Raw | ConvertFrom-Json
+  $d.locked_on = $null
+  Save-Json -Path $missingLockDate.DecisionPath -Value $d
+  Assert-Rejected -Sandbox $missingLockDate -ExpectedText "COMPLETE state requires locked_on=2026-09-30"
 
   $missingCandidate = New-Sandbox -Name "missing-candidate"
   $d = Get-Content -LiteralPath $missingCandidate.DecisionPath -Raw | ConvertFrom-Json
