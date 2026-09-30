@@ -228,6 +228,43 @@ try {
   Write-EvidenceIndex -Path $unsupportedSchema.EvidencePath -SchemaVersion 2
   Assert-Rejected -Case $unsupportedSchema -ExpectedText "Unsupported evidence index schema_version"
 
+  $tierVocabularyDrift = New-EvidenceCase -Name "tier-vocabulary-drift"
+  Write-Registry -Path $tierVocabularyDrift.RegistryPath
+  [ordered]@{
+    schema_version = 1
+    evidence_tiers = [ordered]@{
+      none = "none"
+      observed = "observed"
+      repeated = "repeated"
+      proven = "invented tier"
+    }
+    records = @()
+  } | ConvertTo-Json -Depth 12 | Set-Content -Path $tierVocabularyDrift.EvidencePath -Encoding utf8NoBOM
+  Assert-Rejected -Case $tierVocabularyDrift -ExpectedText "evidence_tiers must declare exactly none, observed, repeated, benchmarked"
+
+  $nonObjectObservations = New-EvidenceCase -Name "non-object-observations"
+  Write-Registry -Path $nonObjectObservations.RegistryPath -Tier "observed" -Refs @("record-1")
+  [ordered]@{
+    schema_version = 1
+    evidence_tiers = [ordered]@{
+      none = "none"
+      observed = "observed"
+      repeated = "repeated"
+      benchmarked = "benchmarked"
+    }
+    records = @(
+      [ordered]@{
+        id = "record-1"
+        type = "observational"
+        claim_state = "PARTIALLY_VERIFIED"
+        claim = "Fixture evidence claim."
+        does_not_claim = "No broader causal claim."
+        skill_observations = @("example", "observed")
+      }
+    )
+  } | ConvertTo-Json -Depth 12 | Set-Content -Path $nonObjectObservations.EvidencePath -Encoding utf8NoBOM
+  Assert-Rejected -Case $nonObjectObservations -ExpectedText "skill_observations must be an object mapping skill names to tiers"
+
   Write-Output "[PASS] evidence tier and claim contracts are regression-covered"
 } finally {
   if (Test-Path $tempRoot) {
