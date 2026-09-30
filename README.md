@@ -345,6 +345,8 @@ Validator ngecek hal-hal seperti:
 - tool-output contamination;
 - context size;
 - generic/project leakage;
+- registry lifecycle-status values;
+- project suite-manifest consistency;
 
 Kalau validator merah:
 
