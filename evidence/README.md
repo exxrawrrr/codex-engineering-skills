@@ -19,6 +19,8 @@ The Phase 01 fixtures were intentionally inert when first captured. Later phases
 
 Current schema version: `1`.
 
+The `evidence_tiers` vocabulary is part of that schema and must declare exactly: `none`, `observed`, `repeated`, and `benchmarked`. The validator does not auto-aggregate several lower-tier records into a higher tier; a referenced record must explicitly support the skill at the claimed tier.
+
 Each evidence record must have:
 
 - a unique non-empty `id`;
