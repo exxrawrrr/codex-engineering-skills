@@ -330,7 +330,7 @@ Default target:
 %USERPROFILE%\.codex\skills
 ```
 
-Existing matching folders dibackup before replacement. By default backups live in the sibling directory:
+Existing matching folders are staged, validated, backed up, swapped, and verified before the install is considered successful. If a swap or post-install verification fails, the previous skill is restored automatically. Identical reinstalls report `UNCHANGED` and do not create redundant backups. By default backups live in the sibling directory:
 
 ```text
 %USERPROFILE%\.codex\skills-backups
