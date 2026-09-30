@@ -63,6 +63,13 @@ Used for machine-readable HTTP API description semantics, versioning, schema/too
 
 Used for provider/consumer contract terminology, isolated interaction verification, provider verification, and version-aware contract evidence.
 
+### GitHub Actions
+- https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax
+- https://docs.github.com/en/actions/concepts/workflows-and-actions/dependency-caching
+- https://docs.github.com/en/actions/concepts/workflows-and-actions/workflow-artifacts
+
+Used for workflow trigger/permission/matrix/failure semantics, cache behavior, artifact behavior, and CI signal-integrity guidance.
+
 ### OWASP
 - https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html
 - https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html
