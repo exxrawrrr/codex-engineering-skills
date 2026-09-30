@@ -177,7 +177,7 @@ The router corpus is a **static contract evaluation**, not a runtime-agent execu
 - registered `required`, `allowed`, and `forbidden` skill sets;
 - `max_selected`.
 
-For the current corpus, `exact_required` means the documented selection must equal the required skill set exactly. Merely staying inside an allowed superset is not enough. This makes “minimal relevant skills” machine-checkable rather than subjective.
+For the current corpus, `exact_required` means `allowed` must equal `required`, `max_selected` must equal the required count, and the documented selection must equal that same set exactly. This makes “minimal relevant skills” machine-checkable rather than subjective.
 
 Scope rules are explicit:
 
