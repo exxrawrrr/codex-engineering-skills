@@ -1,0 +1,68 @@
+{
+  "schema_version": 2,
+  "evaluation_type": "context_cost",
+  "measurement": "UTF-8 byte size of SKILL.md entrypoints only; references are excluded because they are conditionally loaded.",
+  "treatment_contract": {
+    "no_skills": "No repository skill entrypoint is loaded.",
+    "selected_skills": "Exactly the case recommended_skills entrypoints are loaded.",
+    "all_generic_skills": "Exactly all registry skills whose kind is generic are loaded; project-specific routers are excluded."
+  },
+  "all_generic_skill_names": [
+    "typescript-node-architecture",
+    "monorepo-typescript",
+    "sqlite-data-modeling",
+    "resilient-crawler-engineering",
+    "application-security-local-first",
+    "testing-typescript-systems",
+    "agent-skill-authoring",
+    "agent-skill-evaluation"
+  ],
+  "all_generic_entrypoint_bytes": 29964,
+  "comparisons": [
+    {
+      "case_id": "typescript-package-boundary",
+      "no_skills_bytes": 0,
+      "selected_skills_bytes": 7079,
+      "all_generic_skills_bytes": 29964,
+      "selected_skills": [
+        "typescript-node-architecture",
+        "testing-typescript-systems"
+      ],
+      "selected_skill_count": 2,
+      "generic_skill_count": 8
+    },
+    {
+      "case_id": "sqlite-migration-safety",
+      "no_skills_bytes": 0,
+      "selected_skills_bytes": 10050,
+      "all_generic_skills_bytes": 29964,
+      "selected_skills": [
+        "sqlite-data-modeling",
+        "testing-typescript-systems",
+        "typescript-node-architecture"
+      ],
+      "selected_skill_count": 3,
+      "generic_skill_count": 8
+    },
+    {
+      "case_id": "crawler-network-boundary",
+      "no_skills_bytes": 0,
+      "selected_skills_bytes": 14213,
+      "all_generic_skills_bytes": 29964,
+      "selected_skills": [
+        "resilient-crawler-engineering",
+        "application-security-local-first",
+        "testing-typescript-systems"
+      ],
+      "selected_skill_count": 3,
+      "generic_skill_count": 8
+    }
+  ],
+  "runtime_metrics": {
+    "input_tokens": "NOT_AVAILABLE",
+    "tool_calls": "NOT_RUN",
+    "elapsed_ms": "NOT_RUN"
+  },
+  "behavioral_quality": "NOT_RUN",
+  "claim_limit": "This proves deterministic entrypoint byte differences for the documented treatments only. It does not prove token, latency, tool-call, behavioral-quality, or causal improvement."
+}
