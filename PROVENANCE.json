@@ -1,11 +1,24 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
+  "reviewed_on": "2026-09-30",
   "canonical_human_sources": [
     "SOURCES.md",
     "ATTRIBUTION.md",
     "NOTICE"
   ],
-  "policy": "This file maps sources to skills for maintenance validation. It does not replace human-readable attribution or auto-assert licenses.",
+  "policy": "This file is the canonical machine-readable source-to-skill maintenance map. Human-readable attribution remains required, license claims must carry evidence, and network review is a dated snapshot rather than a CI-time availability guarantee.",
+  "maintenance": {
+    "network_checks": "MANUAL_SNAPSHOT_NOT_CI",
+    "deterministic_ci_checks": "schema, source IDs/types, canonical URLs, license evidence shape, registry mappings, human-document parity, retired URLs, and exact-duplicate provenance files"
+  },
+  "retired_urls": [
+    {
+      "url": "https://cheatsheetseries.owasp.org/cheatsheets/Path_Traversal_Cheat_Sheet.html",
+      "retired_on": "2026-09-30",
+      "reason": "The previous OWASP Cheat Sheet Series path no longer resolved during the source review.",
+      "replacement": "https://wstg.owasp.org/latest/4-Web_Application_Security_Testing/05-Authorization/01-Directory_Traversal_File_Include/"
+    }
+  ],
   "sources": [
     {
       "id": "official-typescript",
@@ -15,6 +28,11 @@
         "https://www.typescriptlang.org/tsconfig/exactOptionalPropertyTypes.html",
         "https://www.typescriptlang.org/tsconfig/noUncheckedIndexedAccess.html"
       ],
+      "url_review": {
+        "reviewed_on": "2026-09-30",
+        "status": "RESOLVED",
+        "method": "manual_network_review"
+      },
       "license_status": "NOT_APPLICABLE_DOCUMENTATION_REFERENCE",
       "informs_skills": [
         "typescript-node-architecture"
@@ -29,6 +47,11 @@
         "https://pnpm.io/package-sources",
         "https://pnpm.io/cli/audit"
       ],
+      "url_review": {
+        "reviewed_on": "2026-09-30",
+        "status": "RESOLVED",
+        "method": "manual_network_review"
+      },
       "license_status": "NOT_APPLICABLE_DOCUMENTATION_REFERENCE",
       "informs_skills": [
         "monorepo-typescript"
@@ -43,6 +66,11 @@
         "https://www.sqlite.org/foreignkeys.html",
         "https://www.sqlite.org/lang_transaction.html"
       ],
+      "url_review": {
+        "reviewed_on": "2026-09-30",
+        "status": "RESOLVED",
+        "method": "manual_network_review"
+      },
       "license_status": "NOT_APPLICABLE_DOCUMENTATION_REFERENCE",
       "informs_skills": [
         "sqlite-data-modeling"
@@ -56,6 +84,11 @@
         "https://vitest.dev/guide/mocking.html",
         "https://vitest.dev/guide/mocking/timers"
       ],
+      "url_review": {
+        "reviewed_on": "2026-09-30",
+        "status": "RESOLVED",
+        "method": "manual_network_review"
+      },
       "license_status": "NOT_APPLICABLE_DOCUMENTATION_REFERENCE",
       "informs_skills": [
         "testing-typescript-systems"
@@ -67,6 +100,11 @@
       "urls": [
         "https://mswjs.io/"
       ],
+      "url_review": {
+        "reviewed_on": "2026-09-30",
+        "status": "RESOLVED",
+        "method": "manual_network_review"
+      },
       "license_status": "NOT_APPLICABLE_DOCUMENTATION_REFERENCE",
       "informs_skills": [
         "testing-typescript-systems"
@@ -79,6 +117,11 @@
         "https://playwright.dev/docs/intro",
         "https://playwright.dev/docs/test-assertions"
       ],
+      "url_review": {
+        "reviewed_on": "2026-09-30",
+        "status": "RESOLVED",
+        "method": "manual_network_review"
+      },
       "license_status": "NOT_APPLICABLE_DOCUMENTATION_REFERENCE",
       "informs_skills": [
         "testing-typescript-systems"
@@ -90,9 +133,29 @@
       "urls": [
         "https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html",
         "https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html",
-        "https://cheatsheetseries.owasp.org/cheatsheets/LLM_Prompt_Injection_Prevention_Cheat_Sheet.html",
-        "https://cheatsheetseries.owasp.org/cheatsheets/Path_Traversal_Cheat_Sheet.html"
+        "https://cheatsheetseries.owasp.org/cheatsheets/LLM_Prompt_Injection_Prevention_Cheat_Sheet.html"
       ],
+      "url_review": {
+        "reviewed_on": "2026-09-30",
+        "status": "RESOLVED",
+        "method": "manual_network_review"
+      },
+      "license_status": "NOT_APPLICABLE_DOCUMENTATION_REFERENCE",
+      "informs_skills": [
+        "application-security-local-first"
+      ]
+    },
+    {
+      "id": "official-owasp-wstg-path-traversal",
+      "type": "official_documentation",
+      "urls": [
+        "https://wstg.owasp.org/latest/4-Web_Application_Security_Testing/05-Authorization/01-Directory_Traversal_File_Include/"
+      ],
+      "url_review": {
+        "reviewed_on": "2026-09-30",
+        "status": "RESOLVED",
+        "method": "manual_network_review"
+      },
       "license_status": "NOT_APPLICABLE_DOCUMENTATION_REFERENCE",
       "informs_skills": [
         "application-security-local-first"
@@ -104,7 +167,19 @@
       "urls": [
         "https://github.com/brendonboshell/supercrawler"
       ],
+      "url_review": {
+        "reviewed_on": "2026-09-30",
+        "status": "RESOLVED",
+        "method": "repository_access"
+      },
       "license_status": "VERIFIED_APACHE_2_0",
+      "license_evidence": {
+        "kind": "repository_file",
+        "reviewed_on": "2026-09-30",
+        "path": "LICENSE",
+        "blob_sha": "2df8c87fda4e00fd552766016915a97205de740d",
+        "observed_license": "Apache-2.0"
+      },
       "informs_skills": [
         "resilient-crawler-engineering"
       ]
@@ -115,7 +190,19 @@
       "urls": [
         "https://github.com/timothy-nishimura/crawl"
       ],
+      "url_review": {
+        "reviewed_on": "2026-09-30",
+        "status": "RESOLVED",
+        "method": "repository_access"
+      },
       "license_status": "VERIFIED_MIT",
+      "license_evidence": {
+        "kind": "repository_file",
+        "reviewed_on": "2026-09-30",
+        "path": "LICENSE",
+        "blob_sha": "417cb7992f6b44dd7c884a57d9daad814905ea43",
+        "observed_license": "MIT"
+      },
       "informs_skills": [
         "resilient-crawler-engineering",
         "application-security-local-first"
@@ -127,7 +214,19 @@
       "urls": [
         "https://github.com/alfa546/Crawler"
       ],
+      "url_review": {
+        "reviewed_on": "2026-09-30",
+        "status": "RESOLVED",
+        "method": "repository_access"
+      },
       "license_status": "VERIFIED_MIT",
+      "license_evidence": {
+        "kind": "repository_file",
+        "reviewed_on": "2026-09-30",
+        "path": "LICENSE",
+        "blob_sha": "f413851ccacd9f81acd252cb5c0683f6ae523907",
+        "observed_license": "MIT"
+      },
       "informs_skills": [
         "resilient-crawler-engineering"
       ]
@@ -138,7 +237,19 @@
       "urls": [
         "https://github.com/Jean-W-FE/nextjs-monorepo-agent-skill"
       ],
+      "url_review": {
+        "reviewed_on": "2026-09-30",
+        "status": "RESOLVED",
+        "method": "repository_access"
+      },
       "license_status": "VERIFIED_MIT",
+      "license_evidence": {
+        "kind": "repository_file",
+        "reviewed_on": "2026-09-30",
+        "path": "LICENSE",
+        "blob_sha": "a1b166f58c99d1991df5f2a8af086ea1caab0e7f",
+        "observed_license": "MIT"
+      },
       "informs_skills": [
         "agent-skill-authoring"
       ]
@@ -149,7 +260,19 @@
       "urls": [
         "https://github.com/ersinkoc/project-bootstrap"
       ],
+      "url_review": {
+        "reviewed_on": "2026-09-30",
+        "status": "RESOLVED",
+        "method": "repository_access"
+      },
       "license_status": "VERIFIED_MIT",
+      "license_evidence": {
+        "kind": "repository_file",
+        "reviewed_on": "2026-09-30",
+        "path": "LICENSE",
+        "blob_sha": "9d405e0f1f2306c828a15994c527cd85c48c10a7",
+        "observed_license": "MIT"
+      },
       "informs_skills": [
         "agent-skill-authoring"
       ]
@@ -160,7 +283,24 @@
       "urls": [
         "https://github.com/trailofbits/claude-code-config"
       ],
+      "url_review": {
+        "reviewed_on": "2026-09-30",
+        "status": "RESOLVED",
+        "method": "repository_access"
+      },
       "license_status": "UNVERIFIED_NO_REDISTRIBUTION_CLAIM",
+      "license_evidence": {
+        "kind": "manual_root_check",
+        "reviewed_on": "2026-09-30",
+        "result": "NOT_FOUND",
+        "checked_paths": [
+          "LICENSE",
+          "LICENSE.md",
+          "LICENSE.txt",
+          "COPYING",
+          "COPYING.md"
+        ]
+      },
       "informs_skills": [
         "typescript-node-architecture"
       ]
@@ -171,7 +311,19 @@
       "urls": [
         "https://github.com/jezweb/claude-skills"
       ],
+      "url_review": {
+        "reviewed_on": "2026-09-30",
+        "status": "RESOLVED",
+        "method": "repository_access"
+      },
       "license_status": "VERIFIED_MIT",
+      "license_evidence": {
+        "kind": "repository_file",
+        "reviewed_on": "2026-09-30",
+        "path": "LICENSE",
+        "blob_sha": "6ea2e76c813f12b078e82823703d58033a04fee2",
+        "observed_license": "MIT"
+      },
       "informs_skills": [
         "testing-typescript-systems"
       ]
@@ -182,7 +334,16 @@
       "urls": [
         "https://github.com/exxrawrrr/GrowthOps"
       ],
+      "url_review": {
+        "reviewed_on": "2026-09-30",
+        "status": "RESOLVED",
+        "method": "repository_access"
+      },
       "license_status": "PROJECT_SOURCE",
+      "license_evidence": {
+        "kind": "repository_owned_source",
+        "reviewed_on": "2026-09-30"
+      },
       "informs_skills": [
         "growthops-engineering"
       ]
@@ -193,7 +354,16 @@
       "urls": [
         "https://github.com/exxrawrrr/codex-engineering-skills"
       ],
+      "url_review": {
+        "reviewed_on": "2026-09-30",
+        "status": "RESOLVED",
+        "method": "repository_access"
+      },
       "license_status": "PROJECT_SOURCE",
+      "license_evidence": {
+        "kind": "repository_owned_source",
+        "reviewed_on": "2026-09-30"
+      },
       "informs_skills": [
         "agent-skill-evaluation"
       ]

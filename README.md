@@ -538,6 +538,7 @@ See:
 - [ATTRIBUTION.md](ATTRIBUTION.md)
 - [NOTICE](NOTICE)
 - [SOURCES.md](SOURCES.md)
+- [PROVENANCE.json](PROVENANCE.json) — canonical machine-readable source → skill mapping
 
 ## Authoring
 

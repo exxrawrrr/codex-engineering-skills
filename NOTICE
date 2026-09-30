@@ -14,5 +14,5 @@ and official documentation. Acknowledged public references include:
 - @trailofbits — claude-code-config (public reference)
 - @jezweb — claude-skills (MIT)
 
-See ATTRIBUTION.md and SOURCES.md for detailed provenance.
+See PROVENANCE.json for the canonical machine-readable source map and dated license-review evidence. See ATTRIBUTION.md and SOURCES.md for human-readable provenance.
 No endorsement or affiliation is implied.

@@ -93,3 +93,6 @@ jobs:
       - name: Validate provenance mappings
         shell: pwsh
         run: ./tests/provenance-contract.ps1
+      - name: Validate provenance maintenance fixtures
+        shell: pwsh
+        run: ./tests/provenance-contract-fixtures.ps1
