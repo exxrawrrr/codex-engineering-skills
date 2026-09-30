@@ -19,28 +19,28 @@ jobs:
       - uses: actions/checkout@v7.0.1
       - name: Validate skill suite
         shell: pwsh
-        run: .\validate.ps1 -SkillsRoot .\skills
+        run: ./validate.ps1 -SkillsRoot ./skills
       - name: Prove text-hygiene negative fixture
         shell: pwsh
-        run: .\validate.ps1 -ExpectTextHygieneFailurePath .\evidence\fixtures\validation\mojibake-sample.txt
+        run: ./validate.ps1 -ExpectTextHygieneFailurePath ./evidence/fixtures/validation/mojibake-sample.txt
       - name: Prove registry negative fixtures
         shell: pwsh
-        run: .\tests\validator-fixtures.ps1
+        run: ./tests/validator-fixtures.ps1
       - name: Validate behavioral evaluation records
         shell: pwsh
-        run: .\tests\evaluation-harness.ps1
+        run: ./tests/evaluation-harness.ps1
       - name: Measure selective-loading context
         shell: pwsh
-        run: .\tests\context-benchmark.ps1
+        run: ./tests/context-benchmark.ps1
       - name: Validate router selection contract
         shell: pwsh
-        run: .\tests\router-evaluation.ps1
+        run: ./tests/router-evaluation.ps1
       - name: Validate GrowthOps observational case study
         shell: pwsh
-        run: .\tests\growthops-case-study.ps1
+        run: ./tests/growthops-case-study.ps1
       - name: Validate installer selection and backup root
         shell: pwsh
-        run: .\tests\installer-selection.ps1
+        run: ./tests/installer-selection.ps1
       - name: Validate installer staging rollback and idempotency
         shell: pwsh
-        run: .\tests\installer-transaction.ps1
+        run: ./tests/installer-transaction.ps1
