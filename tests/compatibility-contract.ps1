@@ -26,7 +26,7 @@ foreach ($envItem in $matrix.environments) {
     continue
   }
   if ([string]::IsNullOrWhiteSpace([string]$envItem.evidence)) {
-    $errors.Add("$id: evidence text is required")
+    $errors.Add("${id}: evidence text is required")
   }
   $byId[$id] = $envItem
 }
@@ -45,7 +45,7 @@ foreach ($id in $expected.Keys) {
     continue
   }
   if ([string]$byId[$id].tested_execution -ne [string]$expected[$id]) {
-    $errors.Add("$id: tested_execution must be '$($expected[$id])'")
+    $errors.Add("${id}: tested_execution must be '$($expected[$id])'")
   }
 }
 
