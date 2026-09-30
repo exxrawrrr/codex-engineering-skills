@@ -96,7 +96,7 @@ Assert-True ($mojibakeText.Contains("corrupted forms")) "Mojibake fixture lost c
 $invalidStatusFixture = Join-Path $repoRoot "evidence/fixtures/validation/invalid-status-registry.json"
 Assert-True (Test-Path $invalidStatusFixture) "Missing invalid-status registry fixture"
 $invalidStatus = Get-Content $invalidStatusFixture -Raw | ConvertFrom-Json
-Assert-Equal @($invalidStatus.skills).Count 1 "Invalid-status fixture skill count drifted"
+Assert-Equal (@($invalidStatus.skills).Count) 1 "Invalid-status fixture skill count drifted"
 Assert-Equal $invalidStatus.skills[0].name "fixture-skill" "Invalid-status fixture name drifted"
 Assert-Equal $invalidStatus.skills[0].status "totally-stable" "Invalid-status fixture no longer encodes the audited defect"
 
