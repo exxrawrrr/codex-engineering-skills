@@ -19,7 +19,8 @@
         "599d50228ae5160e3d4509380d07c28c5c43edb0",
         "dae287f456a7d3d36d3d134d3957dce87c918c67",
         "80b255b3b051b848cadd023f3aa612bb4600cc9b",
-        "da5b8d9373a409b1cdd51b1b34501ec3b9601774"
+        "da5b8d9373a409b1cdd51b1b34501ec3b9601774",
+        "b1bee1c9b80ad85d533fbd3fc3d102e489f49801"
       ],
       "skill_observations": {
         "growthops-engineering": "repeated",
@@ -30,7 +31,7 @@
         "application-security-local-first": "repeated",
         "testing-typescript-systems": "repeated"
       },
-      "privacy": "Public commit/checkpoint facts only; private Codex transcripts and unfinished GrowthOps M05 work are excluded.",
+      "privacy": "Public GrowthOps M01-M04 commit/checkpoint facts only; private Codex transcripts and all M05-and-later work are excluded.",
       "case_data_path": "evidence/cases/growthops-m01-m04.json",
       "case_study_path": "docs/case-study-growthops-m01-m04.md"
     }

@@ -56,6 +56,9 @@ jobs:
       - name: Validate GrowthOps observational case study
         shell: pwsh
         run: ./tests/growthops-case-study.ps1
+      - name: Validate GrowthOps case-study negative contracts
+        shell: pwsh
+        run: ./tests/growthops-case-study-contract.ps1
       - name: Validate installer selection and backup root
         shell: pwsh
         run: ./tests/installer-selection.ps1
