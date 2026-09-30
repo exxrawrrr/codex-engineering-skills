@@ -82,81 +82,81 @@ foreach ($row in $decisionRows) {
   $implementation = [string]$row.implementation_state
 
   if ($allowedDecisions -notcontains $decision) {
-    $errors.Add("$candidate: invalid decision '$decision'")
+    $errors.Add("$($candidate): invalid decision '$decision'")
   }
   if ($allowedImplementation -notcontains $implementation) {
-    $errors.Add("$candidate: invalid implementation_state '$implementation'")
+    $errors.Add("$($candidate): invalid implementation_state '$implementation'")
   }
   if ([string]$row.lifecycle_status -eq "stable") {
-    $errors.Add("$candidate: Wave A candidate must not be stable")
+    $errors.Add("$($candidate): Wave A candidate must not be stable")
   }
   if ([string]$row.lifecycle_status -ne "incubating") {
-    $errors.Add("$candidate: adopted/kept Wave A candidate must remain incubating in 14A")
+    $errors.Add("$($candidate): adopted/kept Wave A candidate must remain incubating in 14A")
   }
   if ([string]$row.evidence_state -ne "UNPROVEN" -or [string]$row.evidence_tier -ne "none") {
-    $errors.Add("$candidate: effectiveness must remain UNPROVEN / evidence_tier none in 14A")
+    $errors.Add("$($candidate): effectiveness must remain UNPROVEN / evidence_tier none in 14A")
   }
   if ([string]$row.effectiveness_evidence -notmatch "^NONE") {
-    $errors.Add("$candidate: 14A must not claim skill-effectiveness evidence")
+    $errors.Add("$($candidate): 14A must not claim skill-effectiveness evidence")
   }
 
   $owns = @($row.boundary.owns | ForEach-Object { [string]$_ })
   $excludes = @($row.boundary.excludes | ForEach-Object { [string]$_ })
   if ($owns.Count -eq 0 -or $excludes.Count -eq 0) {
-    $errors.Add("$candidate: boundary must include non-empty owns and excludes")
+    $errors.Add("$($candidate): boundary must include non-empty owns and excludes")
   }
 
   $overlap = @($row.overlap_review.PSObject.Properties)
   if ($overlap.Count -eq 0) {
-    $errors.Add("$candidate: overlap_review must name at least one neighboring skill/wave")
+    $errors.Add("$($candidate): overlap_review must name at least one neighboring skill/wave")
   }
   foreach ($property in $overlap) {
     if ([string]::IsNullOrWhiteSpace([string]$property.Value)) {
-      $errors.Add("$candidate: overlap_review '$($property.Name)' is empty")
+      $errors.Add("$($candidate): overlap_review '$($property.Name)' is empty")
     }
   }
 
   if ([string]$row.case_or_unproven.state -ne "UNPROVEN" -or
       [string]::IsNullOrWhiteSpace([string]$row.case_or_unproven.planned_case)) {
-    $errors.Add("$candidate: must carry explicit UNPROVEN state plus a planned case")
+    $errors.Add("$($candidate): must carry explicit UNPROVEN state plus a planned case")
   }
 
   if ($decision -eq "MODIFY") {
     if ($target -eq $candidate) {
-      $errors.Add("$candidate: MODIFY must change target_skill or scope identity")
+      $errors.Add("$($candidate): MODIFY must change target_skill or scope identity")
     }
     if ([string]::IsNullOrWhiteSpace([string]$row.rename_reason)) {
-      $errors.Add("$candidate: MODIFY requires rename_reason")
+      $errors.Add("$($candidate): MODIFY requires rename_reason")
     }
   }
 
   if ($decision -eq "ADOPT" -and $target -ne $candidate) {
-    $errors.Add("$candidate: ADOPT target_skill must preserve the candidate slug")
+    $errors.Add("$($candidate): ADOPT target_skill must preserve the candidate slug")
   }
 
   if ($implementation -eq "CREATED") {
     if (-not $registryByName.ContainsKey($target)) {
-      $errors.Add("$candidate: CREATED target '$target' is missing from REGISTRY.json")
+      $errors.Add("$($candidate): CREATED target '$target' is missing from REGISTRY.json")
     } else {
       $entry = $registryByName[$target]
       if ([string]$entry.status -ne "incubating" -or [string]$entry.kind -ne "generic") {
-        $errors.Add("$candidate: CREATED target '$target' must be generic/incubating")
+        $errors.Add("$($candidate): CREATED target '$target' must be generic/incubating")
       }
       if ([string]$entry.evidence_tier -ne "none" -or @($entry.evidence_refs).Count -ne 0) {
-        $errors.Add("$candidate: CREATED target '$target' must remain evidence_tier none with no refs")
+        $errors.Add("$($candidate): CREATED target '$target' must remain evidence_tier none with no refs")
       }
     }
     if (-not $provenanceMapped.Contains($target)) {
-      $errors.Add("$candidate: CREATED target '$target' lacks provenance mapping")
+      $errors.Add("$($candidate): CREATED target '$target' lacks provenance mapping")
     }
   }
 
   if ($implementation -eq "PENDING_14B") {
     if (-not $plannedTargets.Add($target)) {
-      $errors.Add("$candidate: duplicate pending target '$target'")
+      $errors.Add("$($candidate): duplicate pending target '$target'")
     }
     if ($registryByName.ContainsKey($target)) {
-      $errors.Add("$candidate: PENDING_14B target '$target' must not be prematurely registered")
+      $errors.Add("$($candidate): PENDING_14B target '$target' must not be prematurely registered")
     }
   }
 }
