@@ -163,3 +163,40 @@ Run:
 ./tests/context-benchmark.ps1
 ./tests/context-benchmark-contract.ps1
 ~~~
+
+
+## Router selection evaluation
+
+The router corpus is a **static contract evaluation**, not a runtime-agent execution.
+
+`router-cases.json` schema version `2` defines each routing case with:
+
+- a bounded task description;
+- explicit `scope: generic | unrelated | project`;
+- `selection_mode: exact_required`;
+- registered `required`, `allowed`, and `forbidden` skill sets;
+- `max_selected`.
+
+For the current corpus, `exact_required` means the documented selection must equal the required skill set exactly. Merely staying inside an allowed superset is not enough. This makes “minimal relevant skills” machine-checkable rather than subjective.
+
+Scope rules are explicit:
+
+- generic cases may require/allow only generic repository skills and must explicitly forbid every registered project skill;
+- unrelated cases require and allow zero skills and forbid every registered skill;
+- project cases must require at least one project skill.
+
+`router-results-current.json` schema version `2` stores **documented selections**, not observed agent runs. It therefore requires:
+
+- `evaluation_type: documented_router_contract`;
+- `runtime_obedience: NOT_RUN`;
+- a non-empty `claim_limit`;
+- no runtime/model/execution provenance fields.
+
+A passing router contract proves only that repository routing expectations are internally consistent with the case corpus. It does not prove that a model or runtime will obey those instructions.
+
+Run:
+
+~~~powershell
+./tests/router-evaluation.ps1
+./tests/router-evaluation-contract.ps1
+~~~
