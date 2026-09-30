@@ -277,11 +277,15 @@ foreach ($retiredUrl in $retiredByUrl.Keys) {
   }
 }
 
-foreach ($url in $activeUrls) {
-  $count = ([regex]::Matches($sourcesText,[regex]::Escape($url))).Count
-  if ($count -ne 1) {
-    $errors.Add("SOURCES.md must contain active provenance URL exactly once ($count observed): $url")
-  }
+$sourceDocUrls = @(
+  [regex]::Matches($sourcesText, "(?m)^\s*-\s+(https://\S+)\s*$") |
+    ForEach-Object { Normalize-Url $_.Groups[1].Value }
+)
+if (@($sourceDocUrls | Sort-Object -Unique -CaseSensitive).Count -ne $sourceDocUrls.Count) {
+  $errors.Add("SOURCES.md contains duplicate source URLs")
+}
+if (-not (Test-ExactStringSet -Actual $sourceDocUrls -Expected @($activeUrls))) {
+  $errors.Add("SOURCES.md source URL set must exactly match active PROVENANCE URLs")
 }
 
 $attributionRepoUrls = @(
@@ -291,12 +295,6 @@ $attributionRepoUrls = @(
 )
 if (-not (Test-ExactStringSet -Actual $attributionRepoUrls -Expected @($publicRepoUrls))) {
   $errors.Add("ATTRIBUTION.md public repository URLs must exactly match PROVENANCE public_repository_reference URLs")
-}
-
-foreach ($url in @($publicRepoUrls)) {
-  if (([regex]::Matches($sourcesText,[regex]::Escape($url))).Count -ne 1) {
-    $errors.Add("Public repository URL must appear exactly once in SOURCES.md: $url")
-  }
 }
 
 foreach ($source in @($provenance.sources | Where-Object { [string]$_.type -eq "public_repository_reference" })) {
