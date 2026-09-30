@@ -136,6 +136,21 @@
       "evidence_refs": []
     },
     {
+      "name": "api-contract-testing",
+      "kind": "generic",
+      "path": "skills/api-contract-testing",
+      "tags": [
+        "api",
+        "contracts",
+        "openapi",
+        "compatibility",
+        "provider-consumer"
+      ],
+      "status": "incubating",
+      "evidence_tier": "none",
+      "evidence_refs": []
+    },
+    {
       "name": "growthops-engineering",
       "kind": "project",
       "path": "skills/growthops-engineering",
