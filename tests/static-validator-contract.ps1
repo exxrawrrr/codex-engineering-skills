@@ -28,6 +28,12 @@ fixture-body
 
   [ordered]@{
     schema_version = 1
+    evidence_tiers = [ordered]@{
+      none = "none"
+      observed = "observed"
+      repeated = "repeated"
+      benchmarked = "benchmarked"
+    }
     records = @()
   } | ConvertTo-Json -Depth 10 | Set-Content -Path $evidencePath -Encoding utf8NoBOM
 
