@@ -144,7 +144,7 @@ It compares the same three treatment names used by the behavioral harness:
 
 Project-specific routers such as `growthops-engineering` are intentionally excluded from the `all_generic_skills` denominator. This makes the denominator match the treatment name and prevents a project router from inflating generic context cost.
 
-The measurement is deliberately narrow: raw UTF-8 bytes of `SKILL.md` entrypoints only. Conditionally loaded references are excluded. Byte counts are recomputed from the repository on every CI run and compared with `context-current.json`; stale stored numbers fail CI.
+The measurement is deliberately narrow: canonical UTF-8 bytes of `SKILL.md` entrypoints only, after CRLF/CR line endings are normalized to LF. This avoids Windows-versus-Linux checkout differences changing the benchmark. Conditionally loaded references are excluded. Byte counts are recomputed from the repository on every CI run and compared with `context-current.json`; stale stored numbers fail CI.
 
 The original `context-baseline-2026-09-30.json` and `results/phase06-context-variants.json` are preserved as historical Phase 06 evidence. Their original `all skills` treatment included every registered skill at that time, including the project-specific GrowthOps router, so they are **not** the current generic-only contract and must not be used as the current denominator. The current artifact supersedes that treatment definition without rewriting the historical measurements.
 
