@@ -2,6 +2,10 @@
 
 This suite is a curated synthesis. It is not a verbatim copy of any single upstream skill.
 
+Machine-readable source-to-skill maintenance map: [`PROVENANCE.json`](PROVENANCE.json).
+
+`PROVENANCE.json` supports validation and drift control. It does not replace this human-readable source record, `ATTRIBUTION.md`, `NOTICE`, or upstream license review.
+
 ## Primary official references
 
 ### TypeScript

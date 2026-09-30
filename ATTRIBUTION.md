@@ -4,6 +4,8 @@ This repository is a **curated synthesis and re-authoring**, not a wholesale cop
 
 The referenced projects and official docs were studied to compare engineering patterns. The resulting skills were rewritten, combined, narrowed, extended, and organized around progressive disclosure and agent-oriented usage.
 
+For the canonical machine-readable source-to-skill mapping used by repository validation, see [`PROVENANCE.json`](PROVENANCE.json). Human-readable attribution and license caveats remain authoritative here.
+
 ## Public repository references
 
 ### @brendonboshell / supercrawler

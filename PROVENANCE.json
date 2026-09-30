@@ -1,0 +1,191 @@
+{
+  "schema_version": 1,
+  "canonical_human_sources": [
+    "SOURCES.md",
+    "ATTRIBUTION.md",
+    "NOTICE"
+  ],
+  "policy": "This file maps sources to skills for maintenance validation. It does not replace human-readable attribution or auto-assert licenses.",
+  "sources": [
+    {
+      "id": "official-typescript",
+      "type": "official_documentation",
+      "urls": [
+        "https://www.typescriptlang.org/tsconfig/",
+        "https://www.typescriptlang.org/tsconfig/exactOptionalPropertyTypes.html",
+        "https://www.typescriptlang.org/tsconfig/noUncheckedIndexedAccess.html"
+      ],
+      "license_status": "NOT_APPLICABLE_DOCUMENTATION_REFERENCE",
+      "informs_skills": [
+        "typescript-node-architecture"
+      ]
+    },
+    {
+      "id": "official-pnpm",
+      "type": "official_documentation",
+      "urls": [
+        "https://pnpm.io/",
+        "https://pnpm.io/workspaces",
+        "https://pnpm.io/package-sources",
+        "https://pnpm.io/cli/audit"
+      ],
+      "license_status": "NOT_APPLICABLE_DOCUMENTATION_REFERENCE",
+      "informs_skills": [
+        "monorepo-typescript"
+      ]
+    },
+    {
+      "id": "official-sqlite",
+      "type": "official_documentation",
+      "urls": [
+        "https://www.sqlite.org/wal.html",
+        "https://www.sqlite.org/pragma.html",
+        "https://www.sqlite.org/foreignkeys.html",
+        "https://www.sqlite.org/lang_transaction.html"
+      ],
+      "license_status": "NOT_APPLICABLE_DOCUMENTATION_REFERENCE",
+      "informs_skills": [
+        "sqlite-data-modeling"
+      ]
+    },
+    {
+      "id": "official-vitest",
+      "type": "official_documentation",
+      "urls": [
+        "https://vitest.dev/guide/",
+        "https://vitest.dev/guide/mocking.html",
+        "https://vitest.dev/guide/mocking/timers"
+      ],
+      "license_status": "NOT_APPLICABLE_DOCUMENTATION_REFERENCE",
+      "informs_skills": [
+        "testing-typescript-systems"
+      ]
+    },
+    {
+      "id": "official-msw",
+      "type": "official_documentation",
+      "urls": [
+        "https://mswjs.io/"
+      ],
+      "license_status": "NOT_APPLICABLE_DOCUMENTATION_REFERENCE",
+      "informs_skills": [
+        "testing-typescript-systems"
+      ]
+    },
+    {
+      "id": "official-playwright",
+      "type": "official_documentation",
+      "urls": [
+        "https://playwright.dev/docs/intro",
+        "https://playwright.dev/docs/test-assertions"
+      ],
+      "license_status": "NOT_APPLICABLE_DOCUMENTATION_REFERENCE",
+      "informs_skills": [
+        "testing-typescript-systems"
+      ]
+    },
+    {
+      "id": "official-owasp-cheatsheets",
+      "type": "official_documentation",
+      "urls": [
+        "https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html",
+        "https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html",
+        "https://cheatsheetseries.owasp.org/cheatsheets/LLM_Prompt_Injection_Prevention_Cheat_Sheet.html",
+        "https://cheatsheetseries.owasp.org/cheatsheets/Path_Traversal_Cheat_Sheet.html"
+      ],
+      "license_status": "NOT_APPLICABLE_DOCUMENTATION_REFERENCE",
+      "informs_skills": [
+        "application-security-local-first"
+      ]
+    },
+    {
+      "id": "repo-brendonboshell-supercrawler",
+      "type": "public_repository_reference",
+      "urls": [
+        "https://github.com/brendonboshell/supercrawler"
+      ],
+      "license_status": "VERIFIED_APACHE_2_0",
+      "informs_skills": [
+        "resilient-crawler-engineering"
+      ]
+    },
+    {
+      "id": "repo-timothy-nishimura-crawl",
+      "type": "public_repository_reference",
+      "urls": [
+        "https://github.com/timothy-nishimura/crawl"
+      ],
+      "license_status": "VERIFIED_MIT",
+      "informs_skills": [
+        "resilient-crawler-engineering",
+        "application-security-local-first"
+      ]
+    },
+    {
+      "id": "repo-alfa546-crawler",
+      "type": "public_repository_reference",
+      "urls": [
+        "https://github.com/alfa546/Crawler"
+      ],
+      "license_status": "VERIFIED_MIT",
+      "informs_skills": [
+        "resilient-crawler-engineering"
+      ]
+    },
+    {
+      "id": "repo-jean-w-fe-nextjs-monorepo-agent-skill",
+      "type": "public_repository_reference",
+      "urls": [
+        "https://github.com/Jean-W-FE/nextjs-monorepo-agent-skill"
+      ],
+      "license_status": "VERIFIED_MIT",
+      "informs_skills": [
+        "agent-skill-authoring"
+      ]
+    },
+    {
+      "id": "repo-ersinkoc-project-bootstrap",
+      "type": "public_repository_reference",
+      "urls": [
+        "https://github.com/ersinkoc/project-bootstrap"
+      ],
+      "license_status": "VERIFIED_MIT",
+      "informs_skills": [
+        "agent-skill-authoring"
+      ]
+    },
+    {
+      "id": "repo-trailofbits-claude-code-config",
+      "type": "public_repository_reference",
+      "urls": [
+        "https://github.com/trailofbits/claude-code-config"
+      ],
+      "license_status": "UNVERIFIED_NO_REDISTRIBUTION_CLAIM",
+      "informs_skills": [
+        "typescript-node-architecture"
+      ]
+    },
+    {
+      "id": "repo-jezweb-claude-skills",
+      "type": "public_repository_reference",
+      "urls": [
+        "https://github.com/jezweb/claude-skills"
+      ],
+      "license_status": "VERIFIED_MIT",
+      "informs_skills": [
+        "testing-typescript-systems"
+      ]
+    },
+    {
+      "id": "project-growthops-canonical-blueprint",
+      "type": "project_specific_source",
+      "urls": [
+        "https://github.com/exxrawrrr/GrowthOps"
+      ],
+      "license_status": "PROJECT_SOURCE",
+      "informs_skills": [
+        "growthops-engineering"
+      ]
+    }
+  ]
+}
