@@ -252,24 +252,26 @@ if ((Test-SameOrChildPath -Candidate $backupFull -Root $sourceFull) -or
 
 $TargetRoot = $targetFull
 $BackupRoot = $backupFull
+$targetRootExisted = Test-Path -LiteralPath $TargetRoot
 
-if (-not (Test-Path -LiteralPath $TargetRoot)) {
-  if ($DryRun) {
-    Write-Output "[DRY RUN] Would create $TargetRoot"
-  } else {
-    New-Item -ItemType Directory -Path $TargetRoot -Force | Out-Null
-  }
+if (-not $targetRootExisted -and -not $DryRun) {
+  New-Item -ItemType Directory -Path $TargetRoot -Force | Out-Null
+} elseif (-not $targetRootExisted -and $DryRun) {
+  Write-Output "[DRY RUN] Would create $TargetRoot"
 }
 
 $backupRunId = (Get-Date -Format "yyyyMMdd-HHmmss-fff") + "-" + [guid]::NewGuid().ToString("N")
 $backupRunRoot = Join-Path $BackupRoot $backupRunId
 $stagingRoot = Join-Path $targetParent (".skill-install-staging-" + [guid]::NewGuid().ToString("N"))
+$plans = New-Object System.Collections.Generic.List[object]
 
 try {
   if (-not $DryRun) {
     New-Item -ItemType Directory -Path $stagingRoot -Force | Out-Null
   }
 
+  # Phase 1: compute every changed skill and fully stage/verify it before any
+  # installed skill directory is removed or replaced.
   foreach ($entry in $entries) {
     $name = [string]$entry.name
     $src = [string]$sourcePathByName[$name]
@@ -296,60 +298,145 @@ try {
     }
 
     $stagePath = Join-Path $stagingRoot $name
-    if (Test-Path -LiteralPath $stagePath) { Remove-Item -LiteralPath $stagePath -Recurse -Force }
-    Copy-Item -LiteralPath $src -Destination $stagePath -Recurse -Force
+    if (Test-Path -LiteralPath $stagePath) {
+      Remove-Item -LiteralPath $stagePath -Recurse -Force
+    }
 
+    Copy-Item -LiteralPath $src -Destination $stagePath -Recurse -Force
     Assert-SkillBundle -Path $stagePath -ExpectedName $name
+
     if ((Get-DirectoryFingerprint -Path $stagePath) -ne $sourceFingerprint) {
       throw "Staging verification failed for $name"
     }
 
-    $backupPath = $null
-    if (Test-Path -LiteralPath $dst) {
-      New-Item -ItemType Directory -Path $backupRunRoot -Force | Out-Null
-      $backupPath = Join-Path $backupRunRoot $name
-      Copy-Item -LiteralPath $dst -Destination $backupPath -Recurse -Force
+    $plans.Add([pscustomobject]@{
+      Name = $name
+      Destination = $dst
+      StagePath = $stagePath
+      SourceFingerprint = $sourceFingerprint
+      DestinationFingerprint = $destinationFingerprint
+      HadDestination = ($null -ne $destinationFingerprint)
+      BackupPath = $null
+    })
+  }
 
-      if ((Get-DirectoryFingerprint -Path $backupPath) -ne $destinationFingerprint) {
-        throw "Backup verification failed for $name"
+  if ($DryRun) {
+    Write-Output "Done."
+    return
+  }
+
+  # Phase 2: create and verify every required backup before the first target
+  # mutation. If backup preparation fails, discard this run's backup directory
+  # because no destination has changed yet.
+  try {
+    foreach ($plan in $plans) {
+      if (-not $plan.HadDestination) { continue }
+
+      New-Item -ItemType Directory -Path $backupRunRoot -Force | Out-Null
+      $backupPath = Join-Path $backupRunRoot $plan.Name
+      Copy-Item -LiteralPath $plan.Destination -Destination $backupPath -Recurse -Force
+
+      if ((Get-DirectoryFingerprint -Path $backupPath) -ne $plan.DestinationFingerprint) {
+        throw "Backup verification failed for $($plan.Name)"
       }
+
+      $plan.BackupPath = $backupPath
+    }
+  } catch {
+    $backupError = $_
+
+    if (Test-Path -LiteralPath $backupRunRoot) {
+      Remove-Item -LiteralPath $backupRunRoot -Recurse -Force -ErrorAction SilentlyContinue
     }
 
-    try {
-      if (Test-Path -LiteralPath $dst) { Remove-Item -LiteralPath $dst -Recurse -Force }
-      Move-Item -LiteralPath $stagePath -Destination $dst
+    throw "Backup preparation failed before target mutation. Original error: $($backupError.Exception.Message)"
+  }
 
-      Assert-SkillBundle -Path $dst -ExpectedName $name
-      if ((Get-DirectoryFingerprint -Path $dst) -ne $sourceFingerprint) {
-        throw "Installed verification failed for $name"
+  # Phase 3: apply the prepared transaction. Any swap or post-install
+  # verification failure rolls back every destination already attempted in this
+  # invocation, including successful earlier skills.
+  $attempted = New-Object System.Collections.Generic.List[object]
+
+  try {
+    foreach ($plan in $plans) {
+      $attempted.Add($plan)
+
+      if (Test-Path -LiteralPath $plan.Destination) {
+        Remove-Item -LiteralPath $plan.Destination -Recurse -Force
       }
 
-      Write-Output "[INSTALLED] $name"
-    } catch {
-      $installError = $_
+      Move-Item -LiteralPath $plan.StagePath -Destination $plan.Destination
+      Assert-SkillBundle -Path $plan.Destination -ExpectedName $plan.Name
+
+      if ((Get-DirectoryFingerprint -Path $plan.Destination) -ne $plan.SourceFingerprint) {
+        throw "Installed verification failed for $($plan.Name)"
+      }
+
+      Write-Output "[INSTALLED] $($plan.Name)"
+    }
+  } catch {
+    $installError = $_
+    $rollbackErrors = New-Object System.Collections.Generic.List[string]
+
+    for ($index = $attempted.Count - 1; $index -ge 0; $index--) {
+      $plan = $attempted[$index]
 
       try {
-        if (Test-Path -LiteralPath $dst) { Remove-Item -LiteralPath $dst -Recurse -Force }
+        if (Test-Path -LiteralPath $plan.Destination) {
+          Remove-Item -LiteralPath $plan.Destination -Recurse -Force
+        }
 
-        if ($null -ne $backupPath -and (Test-Path -LiteralPath $backupPath)) {
-          Copy-Item -LiteralPath $backupPath -Destination $dst -Recurse -Force
-          if ((Get-DirectoryFingerprint -Path $dst) -ne $destinationFingerprint) {
-            throw "Restored content verification failed for $name"
+        if ($plan.HadDestination) {
+          if ([string]::IsNullOrWhiteSpace([string]$plan.BackupPath) -or
+              -not (Test-Path -LiteralPath $plan.BackupPath)) {
+            throw "Verified backup is unavailable for $($plan.Name)"
           }
-          Write-Output "[RESTORED] $name"
+
+          Copy-Item -LiteralPath $plan.BackupPath -Destination $plan.Destination -Recurse -Force
+          if ((Get-DirectoryFingerprint -Path $plan.Destination) -ne $plan.DestinationFingerprint) {
+            throw "Restored content verification failed for $($plan.Name)"
+          }
+
+          Write-Output "[RESTORED] $($plan.Name)"
+        } else {
+          Write-Output "[ROLLED BACK] $($plan.Name) (fresh install removed)"
         }
       } catch {
-        throw "Install failed for '$name' and automatic restore also failed. Original error: $($installError.Exception.Message). Restore error: $($_.Exception.Message)"
-      }
+        $rollbackError = $_
 
-      throw $installError
-    } finally {
-      if (Test-Path -LiteralPath $stagePath) { Remove-Item -LiteralPath $stagePath -Recurse -Force }
+        # A failed restore must not be left looking like a valid active skill.
+        try {
+          if (Test-Path -LiteralPath $plan.Destination) {
+            Remove-Item -LiteralPath $plan.Destination -Recurse -Force -ErrorAction Stop
+          }
+        } catch {
+          $rollbackErrors.Add("$($plan.Name): restore error '$($rollbackError.Exception.Message)'; cleanup error '$($_.Exception.Message)'")
+          continue
+        }
+
+        $rollbackErrors.Add("$($plan.Name): $($rollbackError.Exception.Message)")
+      }
     }
+
+    if ($rollbackErrors.Count -gt 0) {
+      $recoveryHint = if (Test-Path -LiteralPath $backupRunRoot) { $backupRunRoot } else { "<no verified backup directory>" }
+      throw "Install transaction failed and automatic rollback was incomplete. Original error: $($installError.Exception.Message). Rollback errors: $($rollbackErrors -join ' | '). Verified backups: $recoveryHint"
+    }
+
+    throw "Install transaction failed; all applied changes were rolled back. Original error: $($installError.Exception.Message)"
   }
 } finally {
   if (-not $DryRun -and (Test-Path -LiteralPath $stagingRoot)) {
     Remove-Item -LiteralPath $stagingRoot -Recurse -Force
+  }
+
+  # If this invocation created an otherwise-empty target root and then failed
+  # before leaving any installed skill behind, restore the pre-run absence.
+  if (-not $targetRootExisted -and -not $DryRun -and (Test-Path -LiteralPath $TargetRoot)) {
+    $remaining = @(Get-ChildItem -LiteralPath $TargetRoot -Force -ErrorAction SilentlyContinue)
+    if ($remaining.Count -eq 0) {
+      Remove-Item -LiteralPath $TargetRoot -Force -ErrorAction SilentlyContinue
+    }
   }
 }
 
