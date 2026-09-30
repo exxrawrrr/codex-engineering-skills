@@ -1,0 +1,66 @@
+{
+  "schema_version": 2,
+  "skill": "ci-pipeline-reliability",
+  "phase": "14B",
+  "reviewed_on": "2026-09-30",
+  "decision": "MODIFY",
+  "original_candidate": "ci-cd-reliability",
+  "implementation_state": "CREATED",
+  "lifecycle_status": "incubating",
+  "evidence_state": "UNPROVEN",
+  "evidence_tier": "none",
+  "problem": "The suite needs a specialist for CI signal integrity: required triggers/jobs/matrix legs must execute under known runtime assumptions and fail visibly instead of being silently skipped or soft-failed.",
+  "triggers": [
+    "CI matrix or runner coverage changes",
+    "required validation is skipped or soft-failed",
+    "workflow trigger/permission bugs",
+    "cache/artifact correctness problems",
+    "flaky-test retry policy or hosted-runner reproducibility issues"
+  ],
+  "boundary": {
+    "owns": [
+      "CI trigger/permission and job reachability",
+      "matrix/runner/runtime coverage",
+      "failure propagation and no-soft-fail guarantees",
+      "cache/artifact pipeline correctness",
+      "flaky-test handling and CI diagnostics"
+    ],
+    "does_not_own": [
+      "application test design",
+      "production rollout/rollback strategy",
+      "release promotion policy",
+      "supply-chain security policy",
+      "production observability"
+    ]
+  },
+  "overlap_review": "Narrowed from ci-cd-reliability to ci-pipeline-reliability so it stops at trustworthy pre-deployment validation. testing-typescript-systems owns what to test; this skill owns whether CI executes/reports those tests reliably. Wave B release/rollback owns production promotion and recovery.",
+  "current_evidence": "Phase 11 PR #26 demonstrated the CI problem class before this skill existed. No controlled post-creation behavioral execution has tested whether loading ci-pipeline-reliability improves CI review/repair outcomes.",
+  "representative_case_plan": {
+    "id": "ci-matrix-silent-skip",
+    "fixture_id": "ci-matrix-silent-skip-v1",
+    "required_variants": [
+      "no_skills",
+      "selected_skills"
+    ],
+    "minimum_criteria": [
+      "missing required matrix leg or command is identified",
+      "soft-fail/conditional-skip risk is identified",
+      "workflow/configuration failure is separated from test failure",
+      "solution remains pre-deployment and does not claim rollout/rollback safety"
+    ],
+    "execution_status": "NOT_RUN"
+  },
+  "limitations": [
+    "CI can only prove checks that actually executed",
+    "hosted runner/infrastructure failures can still occur",
+    "green pre-deployment CI does not prove deployment or rollback safety",
+    "this skill does not own dependency or action supply-chain policy"
+  ],
+  "promotion_requirements": [
+    "execute at least one controlled post-creation CI reliability case",
+    "show value beyond general testing/debugging guidance",
+    "preserve boundary from release/rollback and supply-chain skills",
+    "cross-platform repository validation remains green"
+  ],
+  "rejection_condition": "Merge into testing guidance or retire if real use shows CI signal-integrity guidance is not independently useful."
+}
