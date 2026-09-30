@@ -17,13 +17,13 @@
     "agent-skill-authoring",
     "agent-skill-evaluation"
   ],
-  "all_generic_entrypoint_bytes": 29964,
+  "all_generic_entrypoint_bytes": 30991,
   "comparisons": [
     {
       "case_id": "typescript-package-boundary",
       "no_skills_bytes": 0,
       "selected_skills_bytes": 7079,
-      "all_generic_skills_bytes": 29964,
+      "all_generic_skills_bytes": 30991,
       "selected_skills": [
         "typescript-node-architecture",
         "testing-typescript-systems"
@@ -35,7 +35,7 @@
       "case_id": "sqlite-migration-safety",
       "no_skills_bytes": 0,
       "selected_skills_bytes": 10050,
-      "all_generic_skills_bytes": 29964,
+      "all_generic_skills_bytes": 30991,
       "selected_skills": [
         "sqlite-data-modeling",
         "testing-typescript-systems",
@@ -48,7 +48,7 @@
       "case_id": "crawler-network-boundary",
       "no_skills_bytes": 0,
       "selected_skills_bytes": 14213,
-      "all_generic_skills_bytes": 29964,
+      "all_generic_skills_bytes": 30991,
       "selected_skills": [
         "resilient-crawler-engineering",
         "application-security-local-first",

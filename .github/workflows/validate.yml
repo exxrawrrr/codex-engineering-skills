@@ -96,3 +96,9 @@ jobs:
       - name: Validate provenance maintenance fixtures
         shell: pwsh
         run: ./tests/provenance-contract-fixtures.ps1
+      - name: Validate Wave A incubation decisions
+        shell: pwsh
+        run: ./tests/wave-a-incubation-contract.ps1
+      - name: Validate Wave A incubation fixtures
+        shell: pwsh
+        run: ./tests/wave-a-incubation-contract-fixtures.ps1
