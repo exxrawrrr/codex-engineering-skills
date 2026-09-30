@@ -187,6 +187,7 @@ if ($workflow -notmatch 'CI_RUNTIME OS=') {
   $errors.Add("Workflow no longer emits runtime evidence")
 }
 
+$tick = [char]0x60
 $docMarkers = @(
   "Format",
   "Architecture",
@@ -198,7 +199,7 @@ $docMarkers = @(
   "macOS runtime loading: NOT RUN",
   "36686190812",
   "7a361791aa310fc3cf0e54e9a5a5a499abb9b3d8",
-  "PowerShell `7.6.6`",
+  ("PowerShell " + $tick + "7.6.6" + $tick),
   "PowerShell Core 7+",
   "does not launch a Codex runtime",
   "not a blanket claim",
@@ -210,7 +211,26 @@ foreach ($marker in $docMarkers) {
   }
 }
 
-foreach ($staleMarker in @("36667646038","PR #12 run","Windows + PowerShell + filesystem `SKILL.md` loading","Ubuntu Linux + PowerShell + filesystem `SKILL.md` loading")) {
+$expectedRows = @(
+  "| GitHub-hosted Windows + PowerShell Core repository tooling | COMPATIBLE_BY_FORMAT | COMPATIBLE_BY_DESIGN | **TESTED** | **NOT RUN** |",
+  "| GitHub-hosted Ubuntu + PowerShell Core repository tooling | COMPATIBLE_BY_FORMAT | COMPATIBLE_BY_DESIGN | **TESTED** | **NOT RUN** |",
+  ("| macOS + PowerShell + filesystem " + $tick + "SKILL.md" + $tick + " convention | COMPATIBLE_BY_FORMAT | COMPATIBLE_BY_DESIGN | **NOT RUN** | **NOT RUN** |"),
+  "| Other agent using a compatible filesystem skill convention | LIKELY_COMPATIBLE | COMPATIBLE_BY_DESIGN | **NOT RUN** | **NOT RUN** |",
+  "| Agent requiring different frontmatter/index/packaging/discovery/routing conventions | ADAPTATION_REQUIRED | ADAPTABLE | NOT_APPLICABLE | NOT_APPLICABLE |"
+)
+foreach ($row in $expectedRows) {
+  if (-not $doc.Contains($row)) {
+    $errors.Add("COMPATIBILITY.md matrix row drifted: $row")
+  }
+}
+
+$staleMarkers = @(
+  "36667646038",
+  "PR #12 run",
+  ("Windows + PowerShell + filesystem " + $tick + "SKILL.md" + $tick + " loading"),
+  ("Ubuntu Linux + PowerShell + filesystem " + $tick + "SKILL.md" + $tick + " loading")
+)
+foreach ($staleMarker in $staleMarkers) {
   if ($doc.Contains($staleMarker)) {
     $errors.Add("COMPATIBILITY.md contains stale/ambiguous compatibility marker: $staleMarker")
   }
