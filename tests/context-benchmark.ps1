@@ -19,6 +19,14 @@ function Test-SameStringSet {
   return (($actualNormalized -join [char]0x001F) -eq ($expectedNormalized -join [char]0x001F))
 }
 
+function Get-CanonicalUtf8ByteCount {
+  param([Parameter(Mandatory = $true)][string]$Path)
+
+  $text = [System.IO.File]::ReadAllText($Path)
+  $normalized = $text.Replace("`r`n", "`n").Replace("`r", "`n")
+  return [System.Text.UTF8Encoding]::new($false).GetByteCount($normalized)
+}
+
 if (-not (Test-Path $RegistryPath)) { throw "Missing registry: $RegistryPath" }
 if (-not (Test-Path $CasesPath)) { throw "Missing cases: $CasesPath" }
 if (-not (Test-Path $SkillsRoot)) { throw "Missing skills root: $SkillsRoot" }
@@ -33,6 +41,10 @@ if ([int]$expected.schema_version -ne 2) {
 }
 if ([string]$expected.evaluation_type -ne "context_cost") {
   throw "Current context artifact evaluation_type must be 'context_cost'"
+}
+$expectedMeasurement = "Canonical UTF-8 byte size of SKILL.md entrypoints after CRLF/CR to LF normalization; references are excluded because they are conditionally loaded."
+if ([string]$expected.measurement -ne $expectedMeasurement) {
+  throw "Current context artifact measurement definition is stale"
 }
 if ([string]$expected.behavioral_quality -ne "NOT_RUN") {
   throw "Current context artifact behavioral_quality must remain NOT_RUN"
@@ -67,7 +79,7 @@ foreach ($entry in @($registry.skills)) {
     throw "Missing SKILL.md for context measurement: $name"
   }
 
-  $bytesBySkill[$name] = [System.IO.File]::ReadAllBytes($skillPath).Length
+  $bytesBySkill[$name] = Get-CanonicalUtf8ByteCount -Path $skillPath
   $kindBySkill[$name] = $kind
 
   if ($kind -eq "generic") {
