@@ -122,6 +122,13 @@ if ($fail.Count -eq 0) {
       $fail.Add("$($name): invalid status '$status'")
     }
 
+    if ($kind -eq "project" -and $status -ne "project") {
+      $fail.Add("$($name): kind/status mismatch; project skills must use status 'project'")
+    }
+    if ($kind -eq "generic" -and $status -eq "project") {
+      $fail.Add("$($name): kind/status mismatch; generic skills cannot use status 'project'")
+    }
+
     $evidenceTier = [string]$entry.evidence_tier
     $evidenceRefs = @($entry.evidence_refs | ForEach-Object { [string]$_ })
     if ($evidenceTier -notin @("none","observed","repeated","benchmarked")) {
@@ -139,8 +146,12 @@ if ($fail.Count -eq 0) {
       }
     }
 
-    $relativeSkillPath = $relativePath -replace '^[\\/]*skills[\\/]', ''
-    $dir = Join-Path $SkillsRoot $relativeSkillPath
+    $expectedRegistryPath = "skills/$name"
+    if ($relativePath -ne $expectedRegistryPath) {
+      $fail.Add("$($name): non-canonical registered path '$relativePath'; expected '$expectedRegistryPath'")
+    }
+
+    $dir = Join-Path $SkillsRoot $name
     if (-not (Test-Path $dir)) {
       $fail.Add("$($name): registered path missing -> $relativePath")
       continue
@@ -155,14 +166,21 @@ if ($fail.Count -eq 0) {
     $raw = Get-Content $skill -Raw
     $lines = Get-Content $skill
 
-    if (-not $raw.StartsWith("---")) {
-      $fail.Add("$($name): missing YAML frontmatter opener")
-    }
-    if ($raw -notmatch "(?m)^name:\s+$([regex]::Escape($name))\s*$") {
-      $fail.Add("$($name): frontmatter name does not match registry/directory")
-    }
-    if ($raw -notmatch "(?m)^description:\s+.+$") {
-      $fail.Add("$($name): missing description")
+    $frontmatterMatch = [regex]::Match(
+      $raw,
+      '\A---\r?\n(?<frontmatter>[\s\S]*?)\r?\n---(?:\r?\n|$)'
+    )
+
+    if (-not $frontmatterMatch.Success) {
+      $fail.Add("$($name): invalid YAML frontmatter block; expected opening and closing '---' delimiters")
+    } else {
+      $frontmatter = $frontmatterMatch.Groups["frontmatter"].Value
+      if ($frontmatter -notmatch "(?m)^name:\s+$([regex]::Escape($name))\s*$") {
+        $fail.Add("$($name): frontmatter name does not match registry/directory")
+      }
+      if ($frontmatter -notmatch "(?m)^description:\s+.+$") {
+        $fail.Add("$($name): missing description in frontmatter")
+      }
     }
     if ($lines.Count -gt 500) {
       $warn.Add("$($name): SKILL.md exceeds 500 lines ($($lines.Count))")

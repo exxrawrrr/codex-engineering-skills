@@ -18,6 +18,14 @@ Every skill requires:
 skills/<name>/SKILL.md
 ```
 
+The registry path is canonical and must resolve to that same directory:
+
+```json
+"path": "skills/<name>"
+```
+
+Do not use path aliases such as `..` segments to reach an equivalent directory.
+
 Optional:
 
 ```
@@ -34,6 +42,13 @@ name: exact-directory-name
 description: "Specific problem class + trigger conditions."
 ---
 ```
+
+Both `---` delimiters are required, and `name` / `description` must be inside the frontmatter block. Body text does not satisfy missing frontmatter metadata.
+
+Registry class/status consistency is enforced:
+
+- `kind: generic` may use `stable`, `incubating`, or `reference`;
+- `kind: project` uses `status: project`.
 
 ## 4. Progressive disclosure
 
