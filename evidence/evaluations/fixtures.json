@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "fixtures": [
+    {
+      "id": "typescript-package-boundary-v1",
+      "case_id": "typescript-package-boundary",
+      "description": "Deterministic workspace-boundary scenario for a small TypeScript package and one consuming app.",
+      "initial_state": {
+        "package": "@fixture/domain",
+        "public_entry": "packages/domain/src/index.ts",
+        "internal_module": "packages/domain/src/internal/normalize.ts",
+        "consumer": "apps/web/src/user-id.ts",
+        "dependency_edges": [
+          "apps/web -> @fixture/domain"
+        ],
+        "requested_change": "Expose normalized user-id behavior to the app without deep imports or a new dependency."
+      },
+      "constraints": [
+        "The consumer may import only the package public entrypoint.",
+        "Packages must not import from apps.",
+        "Do not add a third-party dependency for this change.",
+        "Report focused type/test verification for the changed package."
+      ]
+    },
+    {
+      "id": "sqlite-migration-safety-v1",
+      "case_id": "sqlite-migration-safety",
+      "description": "Deterministic SQLite v1-to-v2 migration scenario with preserved rows and injected failure.",
+      "initial_state": {
+        "schema_version": 1,
+        "table": "users(id INTEGER PRIMARY KEY, name TEXT NOT NULL)",
+        "rows": [
+          {
+            "id": 1,
+            "name": "Ada"
+          },
+          {
+            "id": 2,
+            "name": "Lin"
+          }
+        ],
+        "target_change": "Add nullable email TEXT column and advance schema version to 2.",
+        "injected_failure": "Abort the migration after the schema-change statement but before version advancement."
+      },
+      "constraints": [
+        "Fresh initialization must produce schema version 2.",
+        "Upgrade from version 1 must preserve both existing rows.",
+        "A failed migration must not leave the database claiming schema version 2.",
+        "Verification must cover fresh, upgrade, and injected-failure paths."
+      ]
+    },
+    {
+      "id": "crawler-network-boundary-v1",
+      "case_id": "crawler-network-boundary",
+      "description": "Deterministic public-web crawler transport scenario with unsafe redirect and bounded response cases.",
+      "initial_state": {
+        "start_url": "https://public.example.test/start",
+        "destination_classes": {
+          "public.example.test": "public",
+          "127.0.0.1": "loopback",
+          "10.0.0.5": "private"
+        },
+        "redirect_case": "https://public.example.test/start -> http://127.0.0.1/admin",
+        "oversized_body_bytes": 1048577,
+        "body_limit_bytes": 1048576,
+        "redirect_chain_length": 6,
+        "redirect_limit": 5
+      },
+      "constraints": [
+        "Initial and redirect destinations must be validated before connection.",
+        "Loopback/private destinations must be rejected in public-web mode.",
+        "Response-body limit must be enforced.",
+        "Redirect-count limit must be enforced with focused tests."
+      ]
+    }
+  ]
+}
