@@ -214,6 +214,12 @@ try {
   Write-Results -Path (Join-Path $validCompleted.ResultsRoot "result.json") -Results @((New-CompletedResult))
   Assert-Passes -Sandbox $validCompleted -ExpectedText "[PASS] case-1 / selected_skills"
 
+  $validNoSkills = New-Sandbox -Name "valid-no-skills"
+  Write-Results -Path (Join-Path $validNoSkills.ResultsRoot "result.json") -Results @(
+    (New-CompletedResult -Variant "no_skills" -SkillsLoaded @())
+  )
+  Assert-Passes -Sandbox $validNoSkills -ExpectedText "[PASS] case-1 / no_skills"
+
   $failedOutcome = New-Sandbox -Name "failed-outcome"
   Write-Results -Path (Join-Path $failedOutcome.ResultsRoot "result.json") -Results @(
     (New-CompletedResult -CriterionB $false)
@@ -270,6 +276,16 @@ try {
   $fixtureDoc | ConvertTo-Json -Depth 15 | Set-Content -Path $fixtureMismatch.FixturesPath -Encoding utf8NoBOM
   Write-Results -Path (Join-Path $fixtureMismatch.ResultsRoot "result.json") -Results @((New-NotRunResult))
   Assert-Rejected -Sandbox $fixtureMismatch -ExpectedText "belongs to case 'some-other-case', not 'case-1'"
+
+  $emptyCorpus = New-Sandbox -Name "empty-corpus"
+  Write-Results -Path (Join-Path $emptyCorpus.ResultsRoot "result.json") -Results @()
+  Assert-Rejected -Sandbox $emptyCorpus -ExpectedText "Evaluation corpus contains no result records"
+
+  $missingSkillsLoaded = New-Sandbox -Name "missing-skills-loaded"
+  $missingSkillsResult = New-NotRunResult
+  $missingSkillsResult.Remove("skills_loaded")
+  Write-Results -Path (Join-Path $missingSkillsLoaded.ResultsRoot "result.json") -Results @($missingSkillsResult)
+  Assert-Rejected -Sandbox $missingSkillsLoaded -ExpectedText "skills_loaded is required"
 
   Write-Output "[PASS] behavioral evaluation harness contract is regression-covered"
 } finally {
