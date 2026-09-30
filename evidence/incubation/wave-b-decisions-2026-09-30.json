@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "phase": "15",
-  "split": "15A",
+  "split": "15B",
   "reviewed_on": "2026-09-30",
-  "completion_state": "DECISIONS_LOCKED_IMPLEMENTATION_PENDING_15B",
+  "completion_state": "IMPLEMENTATION_IN_PROGRESS_15B",
   "required_candidates": [
     "observability-diagnostics",
     "dependency-upgrade-engineering",
@@ -82,7 +82,7 @@
       "candidate": "compatibility-engineering",
       "decision": "MODIFY",
       "target_skill": "runtime-compatibility-engineering",
-      "implementation_state": "PENDING_15B",
+      "implementation_state": "CREATED",
       "lifecycle_status": "incubating",
       "evidence_state": "UNPROVEN",
       "evidence_tier": "none",
@@ -91,7 +91,7 @@
         "PR #27 and its compatibility overclaim fixtures showed that support claims can drift even when repository tooling remains green.",
         "api-contract-testing owns API/provider-consumer compatibility, leaving host/runtime/toolchain compatibility as a separate bounded concern."
       ],
-      "effectiveness_evidence": "NONE_SKILL_NOT_CREATED",
+      "effectiveness_evidence": "NONE_POST_CREATION",
       "rename_reason": "The original compatibility-engineering scope is too broad and would overlap API contracts, dependency upgrades, database migrations, and release engineering. runtime-compatibility-engineering narrows ownership to host/runtime/toolchain/format compatibility claims and their evidence.",
       "boundary": {
         "owns": [
@@ -123,7 +123,7 @@
           "states adaptation-required boundaries for incompatible conventions"
         ]
       },
-      "next_action": "Create runtime-compatibility-engineering as an incubating skill in Chat 15B."
+      "next_action": "Keep incubating with explicit NOT_RUN behavioral evidence until a controlled post-creation compatibility case executes."
     },
     {
       "candidate": "release-rollback-engineering",
