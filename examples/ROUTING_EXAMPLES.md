@@ -85,3 +85,14 @@ Also load `ci-pipeline-reliability` only when the task includes whether the comp
 Do not load `api-contract-testing` unless the compatibility question is specifically about an HTTP/provider-consumer contract.
 
 Do not infer untested macOS, Linux distribution, architecture, or runtime-loading support from a different environment's successful run.
+
+## Third-party CI/build input integrity review
+
+Load:
+- software-supply-chain-integrity
+
+Also load `ci-pipeline-reliability` only when the task includes whether the integrity/provenance gate actually executes and fails visibly.
+
+Use `application-security-local-first` for runtime/application security, not as a substitute for dependency/action/artifact provenance.
+
+Do not treat a version tag, lockfile, checksum, SBOM, or attestation file as sufficient evidence unless the relevant identity/integrity/provenance verification actually occurs.
