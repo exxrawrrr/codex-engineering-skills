@@ -316,13 +316,27 @@ Generic skills only:
 powershell -ExecutionPolicy Bypass -File .\install.ps1 -GenericOnly
 ```
 
+Install only selected skills:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\install.ps1 -SkillName "sqlite-data-modeling,testing-typescript-systems"
+```
+
+`-GenericOnly` and `-SkillName` are intentionally mutually exclusive so selection behavior stays unambiguous.
+
 Default target:
 
 ```text
 %USERPROFILE%\.codex\skills
 ```
 
-Existing matching folders dibackup sebelum replacement.
+Existing matching folders dibackup before replacement. By default backups live in the sibling directory:
+
+```text
+%USERPROFILE%\.codex\skills-backups
+```
+
+—not inside the active skill-discovery root. A custom `-BackupRoot` is allowed only when it is outside `-TargetRoot`.
 
 Karena installer yang merasa paling tahu lalu nimpa file tanpa backup itu bukan automation.
 
