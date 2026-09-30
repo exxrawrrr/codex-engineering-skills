@@ -21,12 +21,18 @@ function Get-TextHygieneIssues {
     $issues.Add("Unicode replacement character U+FFFD")
   }
 
-  # Build markers from code points so PowerShell never parses mojibake curly quotes as string delimiters.
+  # Build markers from code points so PowerShell never parses mojibake punctuation as source delimiters.
+  # These are narrow signatures of common UTF-8 bytes decoded as Windows-1252/Latin-1 text.
   $mojibakeMarkers = @(
-    ([string]([char]0x00E2) + [string]([char]0x2020)),
-    ([string]([char]0x00E2) + [string]([char]0x201D)),
-    ([string]([char]0x00E2) + [string]([char]0x20AC)),
-    ([string]([char]0x00C2) + [string]([char]0x00A0))
+    ([string]([char]0x00E2) + [string]([char]0x2020)), # â†  (arrows)
+    ([string]([char]0x00E2) + [string]([char]0x201D)), # â”  (box drawing)
+    ([string]([char]0x00E2) + [string]([char]0x20AC)), # â€  (quotes/dashes)
+    ([string]([char]0x00C2) + [string]([char]0x00A0)), # Â   (NBSP)
+    ([string]([char]0x00EF) + [string]([char]0x00BB) + [string]([char]0x00BF)), # ï»¿
+    ([string]([char]0x00C3) + [string]([char]0x00A9)), # Ã©
+    ([string]([char]0x00C3) + [string]([char]0x00B1)), # Ã±
+    ([string]([char]0x00C3) + [string]([char]0x00BC)), # Ã¼
+    ([string]([char]0x00F0) + [string]([char]0x0178))  # ðŸ  (emoji mojibake prefix)
   )
   foreach ($marker in $mojibakeMarkers) {
     if ($text.Contains($marker)) {
