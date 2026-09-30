@@ -1,16 +1,17 @@
 # Compatibility
 
-Compatibility in this repository is described across three separate dimensions:
+Compatibility in this repository is deliberately split into four different questions:
 
-- **Format** — can the runtime consume the Markdown / `SKILL.md` folder representation?
-- **Architecture** — can the runtime represent selective loading, project routers, specialist skills, and references?
-- **Tested execution** — has this repository's executable validator/installer/test workflow actually passed in that environment?
+- **Format** — is the Markdown / `SKILL.md` folder representation structurally compatible?
+- **Architecture** — can the target convention represent selective loading, project routers, specialist skills, and references?
+- **Tested execution** — has this repository's executable validator/installer/test workflow passed in the named host environment?
+- **Runtime loading** — has a named agent/runtime actually discovered and loaded these `SKILL.md` folders with the intended semantics?
 
-Do not collapse those into one vague "portable" claim.
+Do not collapse those into one vague "portable" or "supported" claim.
 
 ## Repository format
 
-The canonical layout is intentionally simple:
+The canonical repository layout is intentionally simple:
 
 ```text
 skills/<skill-name>/SKILL.md
@@ -18,80 +19,115 @@ skills/<skill-name>/references/*.md
 skills/<skill-name>/scripts/*
 ```
 
-The skill content is predominantly Markdown. Executable repository maintenance tooling is PowerShell-first.
+The skill content is predominantly Markdown. Repository maintenance and installation tooling is PowerShell-first.
 
-## Tested environments
+Structural simplicity is useful portability evidence, but it is not execution evidence by itself.
 
-| Environment | Format | Architecture | Tested execution |
-| --- | --- | --- | --- |
-| Windows + PowerShell + filesystem `SKILL.md` loading | COMPATIBLE | COMPATIBLE | **TESTED** |
-| Ubuntu Linux + PowerShell + filesystem `SKILL.md` loading | COMPATIBLE | COMPATIBLE | **TESTED** |
-| macOS + PowerShell + filesystem `SKILL.md` loading | COMPATIBLE_BY_FORMAT | COMPATIBLE_BY_DESIGN | **NOT RUN** |
-| Other agent using a compatible filesystem skill convention | LIKELY_COMPATIBLE | COMPATIBLE_BY_DESIGN | **NOT RUN** |
-| Agent requiring different frontmatter/index/packaging conventions | ADAPTATION_REQUIRED | ADAPTABLE | NOT_APPLICABLE |
+## Compatibility matrix
 
-Machine-readable matrix: [`evidence/compatibility/2026-09-30.json`](evidence/compatibility/2026-09-30.json).
+| Environment | Format | Architecture | Tested execution | Runtime loading |
+| --- | --- | --- | --- | --- |
+| GitHub-hosted Windows + PowerShell Core repository tooling | COMPATIBLE_BY_FORMAT | COMPATIBLE_BY_DESIGN | **TESTED** | **NOT RUN** |
+| GitHub-hosted Ubuntu + PowerShell Core repository tooling | COMPATIBLE_BY_FORMAT | COMPATIBLE_BY_DESIGN | **TESTED** | **NOT RUN** |
+| macOS + PowerShell + filesystem `SKILL.md` convention | COMPATIBLE_BY_FORMAT | COMPATIBLE_BY_DESIGN | **NOT RUN** | **NOT RUN** |
+| Other agent using a compatible filesystem skill convention | LIKELY_COMPATIBLE | COMPATIBLE_BY_DESIGN | **NOT RUN** | **NOT RUN** |
+| Agent requiring different frontmatter/index/packaging/discovery/routing conventions | ADAPTATION_REQUIRED | ADAPTABLE | NOT_APPLICABLE | NOT_APPLICABLE |
 
-### What "TESTED" means here
+Machine-readable source: [`evidence/compatibility/2026-09-30.json`](evidence/compatibility/2026-09-30.json).
 
-For Windows and Ubuntu, GitHub Actions PR #12 run `36667646038` executed the complete repository suite, including:
+## Current tested-execution evidence
+
+The current compatibility evidence snapshot is based on:
+
+- repository commit: `7a361791aa310fc3cf0e54e9a5a5a499abb9b3d8`;
+- PR: **#26 — Phase 11 cross-platform PowerShell CI re-audit**;
+- GitHub Actions run: `36686190812`;
+- matrix runners: `windows-latest` and `ubuntu-latest`;
+- both jobs: **success**;
+- observed runtime on both jobs: `PSEdition=Core`, PowerShell `7.6.6`.
+
+That run executed the current shared repository suite, including:
 
 - static skill validation;
-- negative encoding/registry fixtures;
-- behavioral-evaluation record validation;
-- context-footprint benchmark;
-- router-selection contract validation;
-- GrowthOps evidence case validation;
-- installer selection/backup-root tests;
-- installer staging, idempotency, rollback, and fault-injection tests.
+- baseline, encoding, registry, and static-validator contracts;
+- evidence-model checks;
+- behavioral-evaluation validation and negative contracts;
+- context benchmark and drift contracts;
+- router-selection contracts;
+- GrowthOps observational case-study contracts;
+- installer selection/path-safety tests;
+- invocation-wide staging/backup/rollback/idempotency fault injection;
+- compatibility contract checks;
+- provenance checks.
 
-Both `windows-latest` and `ubuntu-latest` completed successfully.
+This is strong evidence for **repository tooling execution on those two GitHub-hosted OS environments**.
 
-This proves the repository maintenance/install workflow on those CI environments. It does **not** prove that every third-party agent runtime loads skills identically.
+It does **not** prove:
 
-## Codex
+- automatic `SKILL.md` discovery/loading by Codex or any other agent runtime;
+- macOS executable support;
+- support for arbitrary Linux distributions or self-hosted runners;
+- identical behavior in systems with different frontmatter, packaging, discovery, or routing conventions.
 
-The primary local installation target remains:
+The observed PowerShell `7.6.6` values are evidence from that run, not a promise that future hosted runners must use that exact patch release. The workflow contract requires PowerShell Core 7+.
+
+## Windows
+
+The current repository validator, evidence checks, installer selection/path tests, and installer transaction tests passed on GitHub-hosted `windows-latest` with PowerShell Core 7.6.6 in run `36686190812`.
+
+The primary local Codex installation example remains:
 
 ```text
 %USERPROFILE%\.codex\skills
 ```
 
-The included PowerShell installer supports filesystem skill roots directly and accepts a custom `-TargetRoot`.
+The included installer accepts a custom `-TargetRoot` for compatible filesystem destinations.
 
-The Windows Codex layout is therefore a primary supported use case, not the only possible representation of the Markdown content.
+This supports a **repository tooling** claim for the tested Windows runner. It does not independently prove that every Windows-hosted agent discovers that directory or interprets the skill format identically.
 
-## Linux
+## Ubuntu Linux
 
-The PowerShell validator, evidence checks, router checks, and installer tests now have successful Ubuntu CI execution.
+The same shared suite passed on GitHub-hosted `ubuntu-latest` with PowerShell Core 7.6.6 in run `36686190812`.
 
-That is a tested repository-tooling claim.
+This is a tested repository-tooling claim for that hosted Ubuntu environment.
 
-It is not a claim that every Linux-hosted agent automatically discovers `SKILL.md` folders in the same location or with the same semantics.
+It is not a blanket claim for:
+
+- every Linux distribution;
+- every PowerShell build;
+- every filesystem or shell configuration;
+- automatic skill discovery by arbitrary Linux-hosted agents.
 
 ## macOS
 
-The Markdown format is not OS-specific, and the current PowerShell tooling is designed without an intentional Windows-only implementation dependency.
+The Markdown representation is not intrinsically Windows-specific, and the current tooling is designed around PowerShell Core conventions rather than Windows PowerShell-only APIs.
 
 However:
 
-**macOS execution is NOT RUN.**
+**macOS tested execution: NOT RUN.**
 
-vNext explicitly defers a macOS CI runner until there is a concrete need. Do not report macOS installer/validator support as tested.
+**macOS runtime loading: NOT RUN.**
 
-## Other agents
+There is no macOS CI runner in the current validation workflow. Do not report macOS installer/validator execution as tested until a real macOS run exists.
+
+## Codex and other agent runtimes
+
+This repository's CI validates files, contracts, and installer behavior. It does not launch a Codex runtime or another agent runtime and prove skill discovery/loading semantics.
+
+For Codex, the Windows filesystem layout above is the primary local target used by this repository's installer examples. Treat that as an installation convention, not as a universal runtime-loading proof.
 
 Other systems may require:
 
 - a different skills directory;
 - different frontmatter fields;
-- a generated wrapper/index;
+- a generated wrapper or index;
 - different routing metadata;
-- manual or runtime-specific skill selection.
+- runtime-specific discovery/registration;
+- manual selection.
 
-When those differences exist, adapt the packaging layer rather than rewriting the engineering guidance unnecessarily.
+If the runtime convention differs, adapt the packaging layer rather than silently calling the repository drop-in compatible.
 
-Use `-TargetRoot` only when the target runtime actually supports a compatible filesystem-based skill directory.
+Use `-TargetRoot` only when the target runtime actually supports a compatible filesystem skill convention.
 
 ## Supporting skills
 
@@ -105,15 +141,19 @@ Some routing examples reference external/supporting skills such as:
 
 These are recommended integrations, not bundled dependencies.
 
-Their availability is separate from this repository's OS/runtime compatibility.
+Their availability is independent of this repository's host-OS tooling compatibility.
 
-## Claim discipline
+## Claim vocabulary
 
 Use these terms deliberately:
 
-- **TESTED** — an executable repository workflow passed in that environment.
-- **NOT RUN** — plausible or designed support exists, but no successful execution is claimed.
-- **ADAPTATION_REQUIRED** — the runtime convention differs and needs a wrapper/index/frontmatter or packaging adaptation.
-- **COMPATIBLE_BY_FORMAT / COMPATIBLE_BY_DESIGN** — structural compatibility only, not execution evidence.
+- **TESTED** — the executable repository workflow passed in the named host environment.
+- **NOT RUN** — no successful execution/loading evidence is recorded for that dimension.
+- **COMPATIBLE_BY_FORMAT** — the representation is structurally compatible; no execution claim follows.
+- **COMPATIBLE_BY_DESIGN** — the architecture appears representable by the convention; no execution claim follows.
+- **LIKELY_COMPATIBLE** — structural similarity exists, but the named/unspecified runtime has not been executed.
+- **ADAPTATION_REQUIRED** — the runtime convention differs and needs a wrapper/index/frontmatter/packaging adaptation.
+- **ADAPTABLE** — the architecture can plausibly be mapped after adaptation; this is not drop-in support.
+- **NOT_APPLICABLE** — the dimension is not meaningful until the required adaptation exists.
 
-If an environment is absent from the tested matrix, do not upgrade it to "supported" from intuition alone.
+If evidence is absent for a dimension, do not upgrade that dimension to "supported" from intuition alone.
