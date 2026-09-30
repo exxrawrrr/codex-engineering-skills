@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "captured_on": "2026-09-30",
+  "repository": "exxrawrrr/codex-engineering-skills",
+  "baseline_commit": "244955ffe24734784d26c36315f4933ec2d34252",
+  "audit_source_head": "2229aed83f0dd09e2237854da4af855d19992e03",
+  "registry_version": "1.1.1",
+  "repository_surface": {
+    "registered_skills": 8,
+    "stable_generic": 6,
+    "incubating_generic": 1,
+    "project_skills": 1,
+    "workflows": 1
+  },
+  "ci": {
+    "workflow": ".github/workflows/validate.yml",
+    "tested_runner": "windows-latest",
+    "prd_validation_run_id": 36664649310,
+    "prd_validation_conclusion": "success"
+  },
+  "observed_static_validator": {
+    "validates": [
+      "registry_json_parse",
+      "unique_skill_names",
+      "kind_generic_or_project",
+      "registered_path",
+      "SKILL.md_presence",
+      "frontmatter_name",
+      "description",
+      "U+FFFD",
+      "broken_references",
+      "tool_output_contamination",
+      "SKILL.md_line_warning",
+      "GrowthOps_text_in_generic_skill_warning",
+      "unregistered_skill_directory_warning"
+    ],
+    "does_not_validate": [
+      "status_values",
+      "behavioral_effectiveness",
+      "skill_on_vs_off",
+      "router_selection_quality",
+      "context_or_token_cost",
+      "installer_rollback",
+      "common_mojibake_sequences"
+    ]
+  },
+  "known_gaps": [
+    {
+      "id": "encoding-mojibake",
+      "state": "VERIFIED",
+      "note": "GrowthOps project skill/reference text contains visible mojibake not caught by the U+FFFD-only check."
+    },
+    {
+      "id": "duplicate-growthops-validator",
+      "state": "VERIFIED",
+      "note": "skills/growthops-engineering/scripts/validate-suite.ps1 duplicates the root validator blob and is not a behavioral suite."
+    },
+    {
+      "id": "installer-partial-failure",
+      "state": "VERIFIED",
+      "note": "Installer backs up, removes the destination, then copies replacement without restore-on-copy-failure."
+    },
+    {
+      "id": "backup-inside-discovery-root",
+      "state": "INFERRED_RISK",
+      "note": "Default backupRoot is below TargetRoot; no active local _skill-backups directory was observed during audit."
+    },
+    {
+      "id": "windows-only-ci",
+      "state": "VERIFIED",
+      "note": "Current repository validation workflow runs only on windows-latest."
+    },
+    {
+      "id": "behavioral-evaluation",
+      "state": "VERIFIED_GAP",
+      "note": "No repository-level behavioral evaluation or skill-on/off benchmark exists."
+    }
+  ],
+  "growthops_evidence_scope": {
+    "included": "committed M01-M04 evidence",
+    "excluded": "active uncommitted M05 workspace work"
+  },
+  "local_full_growthops_verify": "NOT_RUN_RESULT_UNAVAILABLE_REMOTE_TIMEOUT"
+}
