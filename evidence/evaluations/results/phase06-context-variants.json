@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "results": [
+    {
+      "case_id": "typescript-package-boundary",
+      "variant": "no_skill",
+      "execution_status": "NOT_RUN",
+      "skills_loaded": [],
+      "criteria": {},
+      "evidence": {},
+      "context_bytes": 0,
+      "notes": "Context measured; behavioral execution not run."
+    },
+    {
+      "case_id": "typescript-package-boundary",
+      "variant": "selected_skills",
+      "execution_status": "NOT_RUN",
+      "skills_loaded": [],
+      "criteria": {},
+      "evidence": {},
+      "context_bytes": 7079,
+      "notes": "Context measured; behavioral execution not run."
+    },
+    {
+      "case_id": "typescript-package-boundary",
+      "variant": "all_skills",
+      "execution_status": "NOT_RUN",
+      "skills_loaded": [],
+      "criteria": {},
+      "evidence": {},
+      "context_bytes": 31390,
+      "notes": "Context measured; behavioral execution not run."
+    },
+    {
+      "case_id": "sqlite-migration-safety",
+      "variant": "no_skill",
+      "execution_status": "NOT_RUN",
+      "skills_loaded": [],
+      "criteria": {},
+      "evidence": {},
+      "context_bytes": 0,
+      "notes": "Context measured; behavioral execution not run."
+    },
+    {
+      "case_id": "sqlite-migration-safety",
+      "variant": "selected_skills",
+      "execution_status": "NOT_RUN",
+      "skills_loaded": [],
+      "criteria": {},
+      "evidence": {},
+      "context_bytes": 10050,
+      "notes": "Context measured; behavioral execution not run."
+    },
+    {
+      "case_id": "sqlite-migration-safety",
+      "variant": "all_skills",
+      "execution_status": "NOT_RUN",
+      "skills_loaded": [],
+      "criteria": {},
+      "evidence": {},
+      "context_bytes": 31390,
+      "notes": "Context measured; behavioral execution not run."
+    },
+    {
+      "case_id": "crawler-network-boundary",
+      "variant": "no_skill",
+      "execution_status": "NOT_RUN",
+      "skills_loaded": [],
+      "criteria": {},
+      "evidence": {},
+      "context_bytes": 0,
+      "notes": "Context measured; behavioral execution not run."
+    },
+    {
+      "case_id": "crawler-network-boundary",
+      "variant": "selected_skills",
+      "execution_status": "NOT_RUN",
+      "skills_loaded": [],
+      "criteria": {},
+      "evidence": {},
+      "context_bytes": 14213,
+      "notes": "Context measured; behavioral execution not run."
+    },
+    {
+      "case_id": "crawler-network-boundary",
+      "variant": "all_skills",
+      "execution_status": "NOT_RUN",
+      "skills_loaded": [],
+      "criteria": {},
+      "evidence": {},
+      "context_bytes": 31390,
+      "notes": "Context measured; behavioral execution not run."
+    }
+  ]
+}

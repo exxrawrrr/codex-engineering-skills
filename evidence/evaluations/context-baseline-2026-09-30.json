@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "measured_on": "2026-09-30",
+  "repository_commit": "0b1abb688d895359a3966a79e7ea6357a8e9e68e",
+  "measurement": "UTF-8 byte size of SKILL.md entrypoints only; references are loaded conditionally and excluded from this baseline.",
+  "all_skill_entrypoint_bytes": 31390,
+  "comparisons": [
+    {
+      "case_id": "typescript-package-boundary",
+      "no_skill_bytes": 0,
+      "selected_skill_bytes": 7079,
+      "all_skills_bytes": 31390,
+      "selected_skills": [
+        "typescript-node-architecture",
+        "testing-typescript-systems"
+      ]
+    },
+    {
+      "case_id": "sqlite-migration-safety",
+      "no_skill_bytes": 0,
+      "selected_skill_bytes": 10050,
+      "all_skills_bytes": 31390,
+      "selected_skills": [
+        "sqlite-data-modeling",
+        "testing-typescript-systems",
+        "typescript-node-architecture"
+      ]
+    },
+    {
+      "case_id": "crawler-network-boundary",
+      "no_skill_bytes": 0,
+      "selected_skill_bytes": 14213,
+      "all_skills_bytes": 31390,
+      "selected_skills": [
+        "resilient-crawler-engineering",
+        "application-security-local-first",
+        "testing-typescript-systems"
+      ]
+    }
+  ],
+  "runtime_metrics": {
+    "input_tokens": "NOT_AVAILABLE",
+    "tool_calls": "NOT_RUN",
+    "elapsed_ms": "NOT_RUN"
+  },
+  "behavioral_quality": "NOT_RUN",
+  "conclusion": "Selective entrypoint loading uses less context than loading all registered entrypoints for all three cases. No quality-improvement claim is made by this measurement."
+}
