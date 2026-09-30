@@ -12,8 +12,8 @@ function New-Sandbox {
   New-Item -ItemType Directory -Path $skillsRoot -Force | Out-Null
 
   foreach ($skill in @(
-    @{ name = "skill-a"; kind = "generic"; body = "alpha" },
-    @{ name = "skill-b"; kind = "generic"; body = "bravo-charlie" },
+    @{ name = "skill-a"; kind = "generic"; body = "alpha`r`nbeta" },
+    @{ name = "skill-b"; kind = "generic"; body = "bravo`r`ncharlie" },
     @{ name = "project-router"; kind = "project"; body = "project-only-content" }
   )) {
     $dir = Join-Path $skillsRoot $skill.name
@@ -52,20 +52,20 @@ function New-Sandbox {
   [ordered]@{
     schema_version = 2
     evaluation_type = "context_cost"
-    measurement = "UTF-8 byte size of SKILL.md entrypoints only; references are excluded because they are conditionally loaded."
+    measurement = "Canonical UTF-8 byte size of SKILL.md entrypoints after CRLF/CR to LF normalization; references are excluded because they are conditionally loaded."
     treatment_contract = [ordered]@{
       no_skills = "none"
       selected_skills = "selected"
       all_generic_skills = "generic only"
     }
     all_generic_skill_names = @("skill-a","skill-b")
-    all_generic_entrypoint_bytes = 18
+    all_generic_entrypoint_bytes = 23
     comparisons = @(
       [ordered]@{
         case_id = "case-a"
         no_skills_bytes = 0
-        selected_skills_bytes = 5
-        all_generic_skills_bytes = 18
+        selected_skills_bytes = 10
+        all_generic_skills_bytes = 23
         selected_skills = @("skill-a")
         selected_skill_count = 1
         generic_skill_count = 2
@@ -140,7 +140,7 @@ try {
   New-Item -ItemType Directory -Path $tempRoot -Force | Out-Null
 
   $valid = New-Sandbox -Name "valid"
-  Assert-Passes -Sandbox $valid -ExpectedText "GENERIC_SKILLS=2 ALL_GENERIC_BYTES=18"
+  Assert-Passes -Sandbox $valid -ExpectedText "GENERIC_SKILLS=2 ALL_GENERIC_BYTES=23"
 
   $staleBytes = New-Sandbox -Name "stale-bytes"
   $doc = Get-Content $staleBytes.ExpectedPath -Raw | ConvertFrom-Json
