@@ -51,10 +51,10 @@ function Assert-Passes {
   param([Parameter(Mandatory = $true)][hashtable]$Sandbox)
   $result = Invoke-Contract -Sandbox $Sandbox
   if ($result.ExitCode -ne 0) { throw "Expected Wave B contract to pass. Output: $($result.Text)" }
-  if (-not $result.Text.Contains("WAVE_B_CONTRACT STATE=DECISIONS_LOCKED_IMPLEMENTATION_PENDING_15B DECISIONS=5 CREATED=0 PENDING=2 DEFERRED=3 FAIL=0")) {
+  if (-not $result.Text.Contains("WAVE_B_CONTRACT STATE=IMPLEMENTATION_IN_PROGRESS_15B DECISIONS=5 CREATED=1 PENDING=1 DEFERRED=3 FAIL=0")) {
     throw "Wave B contract passed without expected admission summary. Output: $($result.Text)"
   }
-  Write-Output "[PASS] valid Wave B admission ledger"
+  Write-Output "[PASS] valid Wave B 15B progress ledger"
 }
 
 function Assert-Rejected {
@@ -111,10 +111,17 @@ try {
   $premature = New-Sandbox -Name "premature-registration"
   $registry = Get-Content -LiteralPath $premature.RegistryPath -Raw | ConvertFrom-Json
   $registry.skills = @($registry.skills) + @([pscustomobject]@{
-    name="runtime-compatibility-engineering";kind="generic";path="skills/runtime-compatibility-engineering";tags=@("compatibility");status="incubating";evidence_tier="none";evidence_refs=@()
+    name="software-supply-chain-integrity";kind="generic";path="skills/software-supply-chain-integrity";tags=@("supply-chain");status="incubating";evidence_tier="none";evidence_refs=@()
   })
   Save-Json -Path $premature.RegistryPath -Value $registry
-  Assert-Rejected -Sandbox $premature -ExpectedText "PENDING_15B target 'runtime-compatibility-engineering' must not be prematurely registered"
+  Assert-Rejected -Sandbox $premature -ExpectedText "PENDING_15B target 'software-supply-chain-integrity' must not be prematurely registered"
+
+  $runtimeCase = New-Sandbox -Name "runtime-case-overclaim"
+  $recordPath = Join-Path $runtimeCase.IncubationRoot "runtime-compatibility-engineering.json"
+  $record = Get-Content -LiteralPath $recordPath -Raw | ConvertFrom-Json
+  $record.representative_case_plan.execution_status = "COMPLETED"
+  Save-Json -Path $recordPath -Value $record
+  Assert-Rejected -Sandbox $runtimeCase -ExpectedText "representative case must remain NOT_RUN"
 
   $badState = New-Sandbox -Name "bad-state"
   $d = Get-Content -LiteralPath $badState.DecisionPath -Raw | ConvertFrom-Json
