@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "suite": "codex-engineering-skills",
   "version": "1.1.1",
   "skills": [
@@ -13,7 +13,11 @@
         "architecture",
         "backend"
       ],
-      "status": "stable"
+      "status": "stable",
+      "evidence_tier": "repeated",
+      "evidence_refs": [
+        "growthops-m01-m04-observational-2026-09-30"
+      ]
     },
     {
       "name": "monorepo-typescript",
@@ -25,7 +29,11 @@
         "monorepo",
         "workspaces"
       ],
-      "status": "stable"
+      "status": "stable",
+      "evidence_tier": "observed",
+      "evidence_refs": [
+        "growthops-m01-m04-observational-2026-09-30"
+      ]
     },
     {
       "name": "sqlite-data-modeling",
@@ -38,7 +46,11 @@
         "migrations",
         "durability"
       ],
-      "status": "stable"
+      "status": "stable",
+      "evidence_tier": "repeated",
+      "evidence_refs": [
+        "growthops-m01-m04-observational-2026-09-30"
+      ]
     },
     {
       "name": "resilient-crawler-engineering",
@@ -52,7 +64,11 @@
         "robots",
         "sitemap"
       ],
-      "status": "stable"
+      "status": "stable",
+      "evidence_tier": "repeated",
+      "evidence_refs": [
+        "growthops-m01-m04-observational-2026-09-30"
+      ]
     },
     {
       "name": "application-security-local-first",
@@ -65,7 +81,11 @@
         "filesystem",
         "prompt-injection"
       ],
-      "status": "stable"
+      "status": "stable",
+      "evidence_tier": "repeated",
+      "evidence_refs": [
+        "growthops-m01-m04-observational-2026-09-30"
+      ]
     },
     {
       "name": "testing-typescript-systems",
@@ -79,7 +99,11 @@
         "fault-injection",
         "e2e"
       ],
-      "status": "stable"
+      "status": "stable",
+      "evidence_tier": "repeated",
+      "evidence_refs": [
+        "growthops-m01-m04-observational-2026-09-30"
+      ]
     },
     {
       "name": "agent-skill-authoring",
@@ -92,7 +116,9 @@
         "validation",
         "provenance"
       ],
-      "status": "incubating"
+      "status": "incubating",
+      "evidence_tier": "none",
+      "evidence_refs": []
     },
     {
       "name": "growthops-engineering",
@@ -104,7 +130,11 @@
         "project-contract",
         "milestones"
       ],
-      "status": "project"
+      "status": "project",
+      "evidence_tier": "repeated",
+      "evidence_refs": [
+        "growthops-m01-m04-observational-2026-09-30"
+      ]
     }
   ]
 }
