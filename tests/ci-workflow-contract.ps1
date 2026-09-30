@@ -78,7 +78,9 @@ $requiredCommands = @(
   "./tests/provenance-contract.ps1",
   "./tests/provenance-contract-fixtures.ps1",
   "./tests/wave-a-incubation-contract.ps1",
-  "./tests/wave-a-incubation-contract-fixtures.ps1"
+  "./tests/wave-a-incubation-contract-fixtures.ps1",
+  "./tests/wave-b-incubation-contract.ps1",
+  "./tests/wave-b-incubation-contract-fixtures.ps1"
 )
 
 foreach ($command in $requiredCommands) {
@@ -101,8 +103,8 @@ foreach ($match in $runSteps) {
   }
 }
 
-if ($runStepCount -lt 24) {
-  throw "Expected at least 24 PowerShell run steps in the current full validation workflow; observed $runStepCount"
+if ($runStepCount -lt 26) {
+  throw "Expected at least 26 PowerShell run steps in the current full validation workflow; observed $runStepCount"
 }
 
 if ($workflow -match '(?m)^\s*run:\s*\.\\') {

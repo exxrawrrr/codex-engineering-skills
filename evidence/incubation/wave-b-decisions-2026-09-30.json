@@ -1,0 +1,207 @@
+{
+  "schema_version": 1,
+  "phase": "15",
+  "split": "15A",
+  "reviewed_on": "2026-09-30",
+  "completion_state": "DECISIONS_LOCKED_IMPLEMENTATION_PENDING_15B",
+  "required_candidates": [
+    "observability-diagnostics",
+    "dependency-upgrade-engineering",
+    "compatibility-engineering",
+    "release-rollback-engineering",
+    "supply-chain-security"
+  ],
+  "policy": [
+    "Wave B candidates require a bounded trigger and non-overlapping ownership before implementation.",
+    "A clear idea without a real repository problem case is insufficient for ADOPT.",
+    "Problem evidence may justify incubation but is not skill-effectiveness evidence.",
+    "DEFER means absent from REGISTRY.json and skills/ until a later real case justifies reconsideration.",
+    "MODIFY means the original candidate scope/name is too broad and must be narrowed before implementation.",
+    "Any created Wave B skill must start incubating, UNPROVEN, evidence_tier none."
+  ],
+  "decisions": [
+    {
+      "candidate": "observability-diagnostics",
+      "decision": "DEFER",
+      "target_skill": null,
+      "implementation_state": "NOT_PLANNED_15B",
+      "evidence_state": "INSUFFICIENT_PROBLEM_EVIDENCE",
+      "problem_evidence": [
+        "Phases 01-14 contain no bounded repository case centered on logs/metrics/traces or production incident diagnosis.",
+        "Existing testing and CI skills already own test/CI failure diagnosis; a new generic observability skill would currently be mostly speculative."
+      ],
+      "boundary_review": {
+        "potential_ownership": [
+          "correlating logs, metrics, traces, and runtime symptoms",
+          "production diagnostic hypothesis testing"
+        ],
+        "overlap_risk": [
+          "testing-typescript-systems for deterministic failure reproduction",
+          "ci-pipeline-reliability for hosted CI diagnostics",
+          "generic debugging workflows not owned by this repository"
+        ]
+      },
+      "representative_case_status": "NOT_AVAILABLE",
+      "reconsider_when": [
+        "a real runtime incident requires multi-signal diagnosis",
+        "the repository has a concrete service observability stack or incident artifact to evaluate"
+      ],
+      "next_action": "Do not create a skill in Chat 15B."
+    },
+    {
+      "candidate": "dependency-upgrade-engineering",
+      "decision": "DEFER",
+      "target_skill": null,
+      "implementation_state": "NOT_PLANNED_15B",
+      "evidence_state": "INSUFFICIENT_PROBLEM_EVIDENCE",
+      "problem_evidence": [
+        "The current repository has package/workspace guidance and compatibility/testing machinery, but no bounded dependency-upgrade migration case with recorded breakage/recovery evidence.",
+        "Creating a generic upgrade skill now would substantially overlap monorepo-typescript, testing-typescript-systems, api-contract-testing, and future runtime compatibility guidance."
+      ],
+      "boundary_review": {
+        "potential_ownership": [
+          "dependency version migration planning",
+          "changelog/deprecation-driven compatibility review",
+          "lockfile and transitive-upgrade verification"
+        ],
+        "overlap_risk": [
+          "monorepo-typescript for workspace/package-manager mechanics",
+          "testing-typescript-systems for regression verification",
+          "api-contract-testing for API compatibility",
+          "software-supply-chain-integrity for trust/provenance of dependencies"
+        ]
+      },
+      "representative_case_status": "NOT_AVAILABLE",
+      "reconsider_when": [
+        "a real major-version dependency migration produces a bounded compatibility case",
+        "upgrade work requires reusable sequencing beyond package-manager/test guidance"
+      ],
+      "next_action": "Do not create a skill in Chat 15B."
+    },
+    {
+      "candidate": "compatibility-engineering",
+      "decision": "MODIFY",
+      "target_skill": "runtime-compatibility-engineering",
+      "implementation_state": "PENDING_15B",
+      "lifecycle_status": "incubating",
+      "evidence_state": "UNPROVEN",
+      "evidence_tier": "none",
+      "problem_evidence": [
+        "Phase 12 re-audit required an explicit distinction between format compatibility, architecture compatibility, tested host execution, and runtime loading.",
+        "PR #27 and its compatibility overclaim fixtures showed that support claims can drift even when repository tooling remains green.",
+        "api-contract-testing owns API/provider-consumer compatibility, leaving host/runtime/toolchain compatibility as a separate bounded concern."
+      ],
+      "effectiveness_evidence": "NONE_SKILL_NOT_CREATED",
+      "rename_reason": "The original compatibility-engineering scope is too broad and would overlap API contracts, dependency upgrades, database migrations, and release engineering. runtime-compatibility-engineering narrows ownership to host/runtime/toolchain/format compatibility claims and their evidence.",
+      "boundary": {
+        "owns": [
+          "host OS/runtime/toolchain compatibility matrices",
+          "format/design/execution/runtime-loading claim separation",
+          "minimum-version and environment support evidence",
+          "cross-platform compatibility regressions and adaptation boundaries"
+        ],
+        "excludes": [
+          "HTTP/API provider-consumer compatibility",
+          "dependency upgrade sequencing",
+          "database/schema migration compatibility",
+          "production release rollout/rollback",
+          "application feature testing"
+        ]
+      },
+      "overlap_review": {
+        "api-contract-testing": "API contract compatibility remains owned by api-contract-testing; this target owns host/runtime/toolchain compatibility.",
+        "ci-pipeline-reliability": "CI may execute compatibility checks; this target defines the compatibility claim/evidence model rather than workflow signal integrity.",
+        "testing-typescript-systems": "Testing supplies execution evidence; this target decides what environment/version support claim that evidence justifies."
+      },
+      "case_or_unproven": {
+        "state": "UNPROVEN",
+        "planned_case": "runtime-host-support-overclaim-v1",
+        "minimum_criteria": [
+          "distinguishes format/design compatibility from tested execution",
+          "does not infer macOS or arbitrary Linux support from Windows/Ubuntu evidence",
+          "records runtime/tool versions and environment scope",
+          "states adaptation-required boundaries for incompatible conventions"
+        ]
+      },
+      "next_action": "Create runtime-compatibility-engineering as an incubating skill in Chat 15B."
+    },
+    {
+      "candidate": "release-rollback-engineering",
+      "decision": "DEFER",
+      "target_skill": null,
+      "implementation_state": "NOT_PLANNED_15B",
+      "evidence_state": "INSUFFICIENT_PROBLEM_EVIDENCE",
+      "problem_evidence": [
+        "Phase 10 proves installer rollback semantics, not production release promotion/rollback.",
+        "Phase 14 deliberately excluded production rollout/rollback from ci-pipeline-reliability, but no real release incident or deployment strategy has yet been evaluated in this repository.",
+        "Phase 17 release readiness is future work and should not be backfilled as evidence before execution."
+      ],
+      "boundary_review": {
+        "potential_ownership": [
+          "release promotion gates",
+          "canary/blue-green/rolling rollout strategy",
+          "rollback decision and recovery verification"
+        ],
+        "overlap_risk": [
+          "ci-pipeline-reliability for pre-deployment validation",
+          "installer transaction logic for local skill installation",
+          "future Phase 17 release-readiness evidence"
+        ]
+      },
+      "representative_case_status": "NOT_AVAILABLE",
+      "reconsider_when": [
+        "Phase 17 or another real deployment/release produces a bounded rollout/rollback case",
+        "a production release failure/recovery exposes reusable decision rules"
+      ],
+      "next_action": "Do not create a skill in Chat 15B."
+    },
+    {
+      "candidate": "supply-chain-security",
+      "decision": "MODIFY",
+      "target_skill": "software-supply-chain-integrity",
+      "implementation_state": "PENDING_15B",
+      "lifecycle_status": "incubating",
+      "evidence_state": "UNPROVEN",
+      "evidence_tier": "none",
+      "problem_evidence": [
+        "Phase 13 established source/license provenance because external-source trust claims require explicit evidence.",
+        "Phase 11 CI executes third-party actions and Phase 14 ci-pipeline-reliability explicitly excludes supply-chain policy, leaving dependency/action/artifact trust without a specialist owner.",
+        "Installer/repository evidence already distinguishes checksums, provenance, and trusted source boundaries, but no skill currently owns software supply-chain integrity as a reusable concern."
+      ],
+      "effectiveness_evidence": "NONE_SKILL_NOT_CREATED",
+      "rename_reason": "The original supply-chain-security label is broad enough to include vendor governance and organizational policy. software-supply-chain-integrity narrows scope to technical trust of source dependencies, actions, build artifacts, provenance, and verification evidence.",
+      "boundary": {
+        "owns": [
+          "dependency/action/source provenance and integrity verification",
+          "immutable or deliberately versioned third-party build inputs",
+          "artifact digest/attestation/checksum evidence",
+          "lockfile and dependency-source trust boundaries",
+          "technical supply-chain verification gates"
+        ],
+        "excludes": [
+          "application authorization/SSRF/XSS security",
+          "general CI workflow reliability",
+          "release rollout/rollback strategy",
+          "organizational vendor-risk governance",
+          "license legal advice"
+        ]
+      },
+      "overlap_review": {
+        "application-security-local-first": "Application security owns runtime/application trust boundaries; this target owns build/dependency/artifact provenance and integrity.",
+        "ci-pipeline-reliability": "CI may enforce supply-chain gates, but this target defines what must be trusted/verified.",
+        "provenance-contract": "Repository source attribution/licensing is evidence input; this target generalizes technical integrity rules without turning attribution into security proof."
+      },
+      "case_or_unproven": {
+        "state": "UNPROVEN",
+        "planned_case": "ci-third-party-input-integrity-v1",
+        "minimum_criteria": [
+          "identifies mutable/unverified third-party build input",
+          "separates version pinning from integrity/provenance evidence",
+          "requires an explicit verification mechanism for critical artifacts/dependencies",
+          "does not claim application security or release safety from supply-chain checks alone"
+        ]
+      },
+      "next_action": "Create software-supply-chain-integrity as an incubating skill in Chat 15B."
+    }
+  ]
+}
