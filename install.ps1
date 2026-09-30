@@ -165,7 +165,7 @@ if ($hasExplicitSelection) {
     }
   }
 
-  $requestedNames = @($requestedNames | Sort-Object -Unique -CaseSensitive)
+  $requestedNames = @($requestedNames | Sort-Object -Unique)
   if ($requestedNames.Count -eq 0) {
     throw "SkillName was provided but no skill names were supplied"
   }
@@ -181,11 +181,11 @@ if ($GenericOnly) {
 
 if ($hasExplicitSelection) {
   $knownNames = @($registry.skills | ForEach-Object { [string]$_.name })
-  $unknownNames = @($requestedNames | Where-Object { $knownNames -cnotcontains $_ })
+  $unknownNames = @($requestedNames | Where-Object { $knownNames -notcontains $_ })
   if ($unknownNames.Count -gt 0) {
     throw "Unknown skill name(s): $($unknownNames -join ', ')"
   }
-  $entries = @($entries | Where-Object { $requestedNames -ccontains [string]$_.name })
+  $entries = @($entries | Where-Object { $requestedNames -contains [string]$_.name })
 }
 
 $sourceFull = Get-NormalizedFullPath -Path $sourceRoot -Label "Source skill root"
