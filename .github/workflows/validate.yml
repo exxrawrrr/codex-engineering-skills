@@ -102,3 +102,9 @@ jobs:
       - name: Validate Wave A incubation fixtures
         shell: pwsh
         run: ./tests/wave-a-incubation-contract-fixtures.ps1
+      - name: Validate Wave B admission decisions
+        shell: pwsh
+        run: ./tests/wave-b-incubation-contract.ps1
+      - name: Validate Wave B admission fixtures
+        shell: pwsh
+        run: ./tests/wave-b-incubation-contract-fixtures.ps1
