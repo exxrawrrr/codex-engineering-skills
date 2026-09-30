@@ -91,5 +91,6 @@
       "context_bytes": 31390,
       "notes": "Context measured; behavioral execution not run."
     }
-  ]
+  ],
+  "evaluation_type": "context_cost"
 }
