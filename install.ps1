@@ -1,7 +1,9 @@
 param(
   [switch]$DryRun,
   [switch]$GenericOnly,
-  [string]$TargetRoot = "$env:USERPROFILE\.codex\skills"
+  [string[]]$SkillName,
+  [string]$TargetRoot = "$env:USERPROFILE\.codex\skills",
+  [string]$BackupRoot
 )
 
 $ErrorActionPreference = "Stop"
@@ -14,8 +16,56 @@ if (-not (Test-Path $registryPath)) {
 
 $registry = Get-Content $registryPath -Raw | ConvertFrom-Json
 $entries = @($registry.skills)
+
+$hasExplicitSelection = $PSBoundParameters.ContainsKey("SkillName")
+$requestedNames = @()
+if ($hasExplicitSelection) {
+  foreach ($rawName in @($SkillName)) {
+    foreach ($part in ([string]$rawName -split ",")) {
+      $name = $part.Trim()
+      if (-not [string]::IsNullOrWhiteSpace($name)) {
+        $requestedNames += $name
+      }
+    }
+  }
+  $requestedNames = @($requestedNames | Sort-Object -Unique)
+  if ($requestedNames.Count -eq 0) {
+    throw "SkillName was provided but no skill names were supplied"
+  }
+}
+
+if ($GenericOnly -and $hasExplicitSelection) {
+  throw "Use either -GenericOnly or -SkillName, not both"
+}
+
 if ($GenericOnly) {
   $entries = @($entries | Where-Object { $_.kind -eq "generic" })
+}
+
+if ($hasExplicitSelection) {
+  $knownNames = @($registry.skills | ForEach-Object { [string]$_.name })
+  $unknownNames = @($requestedNames | Where-Object { $knownNames -notcontains $_ })
+  if ($unknownNames.Count -gt 0) {
+    throw "Unknown skill name(s): $($unknownNames -join ', ')"
+  }
+  $entries = @($entries | Where-Object { $requestedNames -contains [string]$_.name })
+}
+
+$targetFull = [System.IO.Path]::GetFullPath($TargetRoot)
+if ([string]::IsNullOrWhiteSpace($BackupRoot)) {
+  $targetParent = Split-Path $targetFull -Parent
+  $targetLeaf = Split-Path $targetFull -Leaf
+  if ([string]::IsNullOrWhiteSpace($targetParent) -or [string]::IsNullOrWhiteSpace($targetLeaf)) {
+    throw "TargetRoot must have a parent directory so backups can live outside the skill discovery root"
+  }
+  $BackupRoot = Join-Path $targetParent ($targetLeaf + "-backups")
+}
+
+$backupFull = [System.IO.Path]::GetFullPath($BackupRoot)
+$separator = [System.IO.Path]::DirectorySeparatorChar
+$targetPrefix = $targetFull.TrimEnd([char[]]@([System.IO.Path]::DirectorySeparatorChar, [System.IO.Path]::AltDirectorySeparatorChar)) + $separator
+if ($backupFull -eq $targetFull -or $backupFull.StartsWith($targetPrefix, [System.StringComparison]::OrdinalIgnoreCase)) {
+  throw "BackupRoot must be outside TargetRoot so backups are not discoverable as active skills"
 }
 
 if (-not (Test-Path $TargetRoot)) {
@@ -26,8 +76,8 @@ if (-not (Test-Path $TargetRoot)) {
   }
 }
 
-$stamp = Get-Date -Format "yyyyMMdd-HHmmss"
-$backupRoot = Join-Path $TargetRoot "_skill-backups\$stamp"
+$stamp = Get-Date -Format "yyyyMMdd-HHmmss-fff"
+$backupRunRoot = Join-Path $BackupRoot $stamp
 
 foreach ($entry in $entries) {
   $name = [string]$entry.name
@@ -40,10 +90,10 @@ foreach ($entry in $entries) {
 
   if (Test-Path $dst) {
     if ($DryRun) {
-      Write-Output "[DRY RUN] Would back up $dst -> $backupRoot"
+      Write-Output "[DRY RUN] Would back up $dst -> $backupRunRoot"
     } else {
-      New-Item -ItemType Directory -Path $backupRoot -Force | Out-Null
-      Copy-Item $dst (Join-Path $backupRoot $name) -Recurse -Force
+      New-Item -ItemType Directory -Path $backupRunRoot -Force | Out-Null
+      Copy-Item $dst (Join-Path $backupRunRoot $name) -Recurse -Force
     }
   }
 
