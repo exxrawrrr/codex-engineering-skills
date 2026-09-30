@@ -51,6 +51,18 @@ Used for network-level request mocking guidance instead of business-function mon
 
 Used for targeted browser/E2E verification guidance.
 
+### OpenAPI
+- https://spec.openapis.org/oas/v3.2.1.html
+- https://spec.openapis.org/oas/
+
+Used for machine-readable HTTP API description semantics, versioning, schema/tooling boundaries, and the distinction between specification validity and broader compatibility claims.
+
+### Pact
+- https://docs.pact.io/
+- https://docs.pact.io/provider
+
+Used for provider/consumer contract terminology, isolated interaction verification, provider verification, and version-aware contract evidence.
+
 ### OWASP
 - https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html
 - https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html
