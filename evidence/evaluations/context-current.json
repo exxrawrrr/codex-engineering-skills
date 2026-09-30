@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
   "evaluation_type": "context_cost",
-  "measurement": "UTF-8 byte size of SKILL.md entrypoints only; references are excluded because they are conditionally loaded.",
+  "measurement": "Canonical UTF-8 byte size of SKILL.md entrypoints after CRLF/CR to LF normalization; references are excluded because they are conditionally loaded.",
   "treatment_contract": {
     "no_skills": "No repository skill entrypoint is loaded.",
     "selected_skills": "Exactly the case recommended_skills entrypoints are loaded.",
