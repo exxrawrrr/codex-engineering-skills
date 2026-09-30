@@ -3,7 +3,7 @@
   "phase": "15",
   "split": "15B",
   "reviewed_on": "2026-09-30",
-  "completion_state": "IMPLEMENTATION_IN_PROGRESS_15B",
+  "completion_state": "IMPLEMENTATION_COMPLETE_PENDING_LOCK",
   "required_candidates": [
     "observability-diagnostics",
     "dependency-upgrade-engineering",
@@ -159,7 +159,7 @@
       "candidate": "supply-chain-security",
       "decision": "MODIFY",
       "target_skill": "software-supply-chain-integrity",
-      "implementation_state": "PENDING_15B",
+      "implementation_state": "CREATED",
       "lifecycle_status": "incubating",
       "evidence_state": "UNPROVEN",
       "evidence_tier": "none",
@@ -168,7 +168,7 @@
         "Phase 11 CI executes third-party actions and Phase 14 ci-pipeline-reliability explicitly excludes supply-chain policy, leaving dependency/action/artifact trust without a specialist owner.",
         "Installer/repository evidence already distinguishes checksums, provenance, and trusted source boundaries, but no skill currently owns software supply-chain integrity as a reusable concern."
       ],
-      "effectiveness_evidence": "NONE_SKILL_NOT_CREATED",
+      "effectiveness_evidence": "NONE_POST_CREATION",
       "rename_reason": "The original supply-chain-security label is broad enough to include vendor governance and organizational policy. software-supply-chain-integrity narrows scope to technical trust of source dependencies, actions, build artifacts, provenance, and verification evidence.",
       "boundary": {
         "owns": [
@@ -201,7 +201,7 @@
           "does not claim application security or release safety from supply-chain checks alone"
         ]
       },
-      "next_action": "Create software-supply-chain-integrity as an incubating skill in Chat 15B."
+      "next_action": "Keep incubating with explicit NOT_RUN behavioral evidence until a controlled post-creation supply-chain case executes."
     }
   ]
 }
