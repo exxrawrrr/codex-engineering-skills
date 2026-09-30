@@ -40,6 +40,8 @@ This remains a historical M01-M04 evidence window. M05 and later work are outsid
 
 ## M01 — Repository Foundation
 
+Checkpoint source: `docs/implementation/M01_CHECKPOINT.md`
+
 GrowthOps M01 records `growthops-engineering`, `monorepo-typescript`, and `testing-typescript-systems` among the repository skills used.
 
 Implementation source:
@@ -59,6 +61,8 @@ A useful counterexample to “skill as absolute authority” also appears here: 
 That is desirable behavior. Repository source-of-truth won.
 
 ## M02 — Domain + SQLite Foundation
+
+Checkpoint source: `docs/implementation/M02_CHECKPOINT.md`
 
 Recorded repository skills:
 
@@ -81,6 +85,8 @@ Observed evidence includes:
 The implementation used explicit SQL and a small migration mechanism. It did not add an ORM merely because the task involved persistence.
 
 ## M03 — Persistent Job Engine
+
+Checkpoint source: `docs/implementation/M03_CHECKPOINT.md`
 
 Recorded repository skills:
 
@@ -105,6 +111,9 @@ The strongest evidence in this milestone is failure-first verification:
 That does not prove a skill caused the fix. It does show the documented workflow and resulting implementation were consistent with the suite's durability and testing guidance.
 
 ## M04 — Safe Crawler Network + Discovery
+
+Checkpoint source: `docs/implementation/M04_CHECKPOINT.md`  
+Supporting progress source: `docs/implementation/M04_PROGRESS.md`
 
 Recorded repository skills across the M04 evidence:
 
