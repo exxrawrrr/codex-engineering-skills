@@ -1,6 +1,7 @@
 param(
   [string]$SkillsRoot = "$PSScriptRoot\skills",
   [string]$RegistryPath = "$PSScriptRoot\REGISTRY.json",
+  [string]$EvidenceIndexPath = "$PSScriptRoot\evidence\INDEX.json",
   [string]$ExpectTextHygieneFailurePath
 )
 
@@ -63,7 +64,30 @@ if (-not (Test-Path $RegistryPath)) {
   }
 }
 
+$evidenceRecordIds = New-Object System.Collections.Generic.HashSet[string]
+if (-not (Test-Path $EvidenceIndexPath)) {
+  $fail.Add("Missing evidence index: $EvidenceIndexPath")
+} else {
+  try {
+    $evidenceIndex = Get-Content $EvidenceIndexPath -Raw | ConvertFrom-Json
+    foreach ($record in $evidenceIndex.records) {
+      $recordId = [string]$record.id
+      if ([string]::IsNullOrWhiteSpace($recordId)) {
+        $fail.Add("Evidence record has empty id")
+      } elseif (-not $evidenceRecordIds.Add($recordId)) {
+        $fail.Add("Duplicate evidence record id: $recordId")
+      }
+    }
+  } catch {
+    $fail.Add("Evidence index is not valid JSON: $($_.Exception.Message)")
+  }
+}
+
 if ($fail.Count -eq 0) {
+  if ([int]$registry.schema_version -lt 2) {
+    $fail.Add("Registry schema_version must be at least 2 for evidence metadata")
+  }
+
   $names = New-Object System.Collections.Generic.HashSet[string]
   $registryByName = @{}
 
@@ -90,6 +114,23 @@ if ($fail.Count -eq 0) {
 
     if ($status -notin @("stable","incubating","reference","project")) {
       $fail.Add("$($name): invalid status '$status'")
+    }
+
+    $evidenceTier = [string]$entry.evidence_tier
+    $evidenceRefs = @($entry.evidence_refs | ForEach-Object { [string]$_ })
+    if ($evidenceTier -notin @("none","observed","repeated","benchmarked")) {
+      $fail.Add("$($name): invalid evidence_tier '$evidenceTier'")
+    }
+    if ($evidenceTier -eq "none" -and $evidenceRefs.Count -gt 0) {
+      $fail.Add("$($name): evidence_tier 'none' cannot have evidence_refs")
+    }
+    if ($evidenceTier -ne "none" -and $evidenceRefs.Count -eq 0) {
+      $fail.Add("$($name): evidence_tier '$evidenceTier' requires at least one evidence_ref")
+    }
+    foreach ($evidenceRef in $evidenceRefs) {
+      if (-not $evidenceRecordIds.Contains($evidenceRef)) {
+        $fail.Add("$($name): unknown evidence_ref '$evidenceRef'")
+      }
     }
 
     $relativeSkillPath = $relativePath -replace '^[\\/]*skills[\\/]', ''
