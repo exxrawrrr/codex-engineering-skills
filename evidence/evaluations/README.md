@@ -130,3 +130,36 @@ Causal or comparative claims require matched comparative executions and must obe
 Phase 05 keeps the three seed executions as `NOT_RUN`. The harness proves the format and scorer contract without fabricating an agent run.
 
 Raw private agent transcripts are not required. Prefer compact evidence such as public commit references, exact validation commands/results, or sanitized artifacts. The harness validates structure and treatment identity; a human reviewer still decides whether a supplied evidence string is substantively credible.
+
+
+## Context efficiency benchmark
+
+The current deterministic context-cost artifact is `context-current.json`.
+
+It compares the same three treatment names used by the behavioral harness:
+
+- `no_skills`: zero repository skill entrypoint bytes;
+- `selected_skills`: exactly the case `recommended_skills`;
+- `all_generic_skills`: every registry skill whose `kind` is `generic`.
+
+Project-specific routers such as `growthops-engineering` are intentionally excluded from the `all_generic_skills` denominator. This makes the denominator match the treatment name and prevents a project router from inflating generic context cost.
+
+The measurement is deliberately narrow: canonical UTF-8 bytes of `SKILL.md` entrypoints only, after CRLF/CR line endings are normalized to LF. This avoids Windows-versus-Linux checkout differences changing the benchmark. Conditionally loaded references are excluded. Byte counts are recomputed from the repository on every CI run and compared with `context-current.json`; stale stored numbers fail CI.
+
+The original `context-baseline-2026-09-30.json` and `results/phase06-context-variants.json` are preserved as historical Phase 06 evidence. Their original `all skills` treatment included every registered skill at that time, including the project-specific GrowthOps router, so they are **not** the current generic-only contract and must not be used as the current denominator. The current artifact supersedes that treatment definition without rewriting the historical measurements.
+
+Runtime metrics remain intentionally explicit:
+
+- `input_tokens: NOT_AVAILABLE`;
+- `tool_calls: NOT_RUN`;
+- `elapsed_ms: NOT_RUN`;
+- `behavioral_quality: NOT_RUN`.
+
+Do not infer token, latency, tool-call, or behavioral savings from byte-size differences.
+
+Run:
+
+~~~powershell
+./tests/context-benchmark.ps1
+./tests/context-benchmark-contract.ps1
+~~~
