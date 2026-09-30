@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "evaluation_type": "documented_router_contract",
+  "claim_limit": "Confirms the repository's documented routing contract matches these cases; does not prove an agent will follow the router at runtime.",
+  "results": [
+    {
+      "case_id": "generic-typescript-backend-refactor",
+      "selected": [
+        "typescript-node-architecture",
+        "testing-typescript-systems"
+      ]
+    },
+    {
+      "case_id": "generic-sqlite-migration",
+      "selected": [
+        "sqlite-data-modeling",
+        "testing-typescript-systems",
+        "typescript-node-architecture"
+      ]
+    },
+    {
+      "case_id": "generic-crawler-retry-bug",
+      "selected": [
+        "resilient-crawler-engineering",
+        "application-security-local-first",
+        "testing-typescript-systems"
+      ]
+    },
+    {
+      "case_id": "generic-report-xss",
+      "selected": [
+        "application-security-local-first",
+        "testing-typescript-systems",
+        "typescript-node-architecture"
+      ]
+    },
+    {
+      "case_id": "unrelated-readme-edit",
+      "selected": []
+    },
+    {
+      "case_id": "growthops-crawler-milestone",
+      "selected": [
+        "growthops-engineering",
+        "resilient-crawler-engineering",
+        "application-security-local-first",
+        "sqlite-data-modeling",
+        "testing-typescript-systems"
+      ]
+    }
+  ]
+}
