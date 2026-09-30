@@ -83,7 +83,7 @@ function New-Sandbox {
 function Write-Results {
   param(
     [Parameter(Mandatory = $true)][string]$Path,
-    [Parameter(Mandatory = $true)][object[]]$Results,
+    [Parameter(Mandatory = $true)][AllowEmptyCollection()][object[]]$Results,
     [int]$SchemaVersion = 2,
     [string]$EvaluationType = "behavioral_execution"
   )
