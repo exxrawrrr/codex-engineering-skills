@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "cases": [
+    {
+      "id": "typescript-package-boundary",
+      "task": "Refactor a small TypeScript workspace change without leaking internal package implementation details or adding unnecessary dependencies.",
+      "recommended_skills": [
+        "typescript-node-architecture",
+        "testing-typescript-systems"
+      ],
+      "acceptance_criteria": [
+        {
+          "id": "public_api_only",
+          "description": "Consumers use the package public API rather than deep internal imports."
+        },
+        {
+          "id": "dependency_direction_valid",
+          "description": "Package dependency direction remains acyclic and apps are not imported by packages."
+        },
+        {
+          "id": "focused_verification",
+          "description": "Focused type/test verification for the changed package is reported."
+        }
+      ]
+    },
+    {
+      "id": "sqlite-migration-safety",
+      "task": "Implement a versioned SQLite schema change that preserves existing data and remains safe on fresh and upgraded databases.",
+      "recommended_skills": [
+        "sqlite-data-modeling",
+        "testing-typescript-systems",
+        "typescript-node-architecture"
+      ],
+      "acceptance_criteria": [
+        {
+          "id": "fresh_initialization_passes",
+          "description": "A fresh database reaches the expected schema."
+        },
+        {
+          "id": "upgrade_preserves_data",
+          "description": "Representative previous-version data survives migration."
+        },
+        {
+          "id": "failed_migration_does_not_advance_version",
+          "description": "Injected migration failure does not falsely advance schema version."
+        }
+      ]
+    },
+    {
+      "id": "crawler-network-boundary",
+      "task": "Implement or repair a bounded HTTP crawler transport that blocks unsafe network destinations across initial requests and redirects.",
+      "recommended_skills": [
+        "resilient-crawler-engineering",
+        "application-security-local-first",
+        "testing-typescript-systems"
+      ],
+      "acceptance_criteria": [
+        {
+          "id": "unsafe_destination_blocked",
+          "description": "Private/loopback/special destinations are rejected before connection in public-web mode."
+        },
+        {
+          "id": "redirect_revalidated",
+          "description": "Each redirect target is reparsed and revalidated before the next connection."
+        },
+        {
+          "id": "body_and_redirect_bounds_tested",
+          "description": "Body-size and redirect-count bounds are covered by focused tests."
+        }
+      ]
+    }
+  ]
+}

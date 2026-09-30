@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "results": [
+    {
+      "case_id": "typescript-package-boundary",
+      "variant": "selected_skills",
+      "execution_status": "NOT_RUN",
+      "skills_loaded": [],
+      "criteria": {},
+      "evidence": {},
+      "notes": "Harness seed only; no behavioral claim."
+    },
+    {
+      "case_id": "sqlite-migration-safety",
+      "variant": "selected_skills",
+      "execution_status": "NOT_RUN",
+      "skills_loaded": [],
+      "criteria": {},
+      "evidence": {},
+      "notes": "Harness seed only; no behavioral claim."
+    },
+    {
+      "case_id": "crawler-network-boundary",
+      "variant": "selected_skills",
+      "execution_status": "NOT_RUN",
+      "skills_loaded": [],
+      "criteria": {},
+      "evidence": {},
+      "notes": "Harness seed only; no behavioral claim."
+    }
+  ]
+}
