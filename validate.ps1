@@ -20,7 +20,13 @@ function Get-TextHygieneIssues {
     $issues.Add("Unicode replacement character U+FFFD")
   }
 
-  $mojibakeMarkers = @("â†", "â”", "â€“", "â€”", "â€™", "â€œ", "â€", "Â ")
+  # Build markers from code points so PowerShell never parses mojibake curly quotes as string delimiters.
+  $mojibakeMarkers = @(
+    ([string]([char]0x00E2) + [string]([char]0x2020)),
+    ([string]([char]0x00E2) + [string]([char]0x201D)),
+    ([string]([char]0x00E2) + [string]([char]0x20AC)),
+    ([string]([char]0x00C2) + [string]([char]0x00A0))
+  )
   foreach ($marker in $mojibakeMarkers) {
     if ($text.Contains($marker)) {
       $issues.Add("common mojibake marker '$marker'")
