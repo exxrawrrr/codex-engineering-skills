@@ -1,30 +1,60 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "skill": "agent-skill-evaluation",
   "phase": "14A",
-  "decision": "ADOPT",
+  "reviewed_on": "2026-09-30",
+  "decision": "KEEP",
+  "implementation_state": "CREATED",
   "lifecycle_status": "incubating",
   "evidence_state": "UNPROVEN",
   "evidence_tier": "none",
-  "problem": "The suite can author and statically validate skills but needs a reusable discipline for comparative skill/router evaluation, evidence claims, and context-cost measurement.",
+  "problem": "The suite needs a reusable discipline for comparative evaluation of skills/routers, evidence claims, and context-cost measurements without confusing static quality with behavioral effectiveness.",
+  "triggers": [
+    "designing skill-on versus no-skill comparisons",
+    "evaluating router/loading strategies",
+    "reviewing criterion-level evidence for skill effectiveness",
+    "deciding whether evidence justifies lifecycle/evidence changes"
+  ],
   "boundary": {
     "owns": [
       "skill-on versus skill-off case design",
       "router/context comparison design",
-      "criterion-level evidence reporting",
+      "criterion-level skill/router evidence reporting",
       "effectiveness-claim and evidence-tier discipline"
     ],
     "does_not_own": [
       "writing or restructuring SKILL.md artifacts (agent-skill-authoring)",
-      "application/system test strategy (testing-typescript-systems)",
-      "general debugging procedure (external systematic-debugging)"
+      "ordinary application/system test strategy (testing-typescript-systems)",
+      "CI pipeline reliability or workflow repair",
+      "general debugging procedure"
     ]
   },
-  "overlap_review": "Boundary is distinct enough to justify a separate skill: authoring creates the instruction artifact; evaluation measures claims about the artifact.",
-  "current_evidence": "No post-creation behavioral run has yet demonstrated that loading agent-skill-evaluation improves evaluation work.",
+  "limitations": [
+    "agent/model execution remains nondeterministic",
+    "one run does not establish generalized effectiveness",
+    "unavailable token/latency/tool-call metrics must remain NOT_AVAILABLE",
+    "repository evaluation machinery created before this skill does not prove skill-loaded effectiveness"
+  ],
+  "overlap_review": "Boundary remains distinct: authoring creates the instruction artifact, application testing verifies product behavior, while this skill evaluates claims about the skill/router/loading treatment itself.",
+  "current_evidence": "No controlled post-creation execution has compared evaluation work with this skill loaded versus not loaded. Effectiveness therefore remains UNPROVEN and registry evidence_tier remains none.",
+  "representative_case_plan": {
+    "id": "skill-evaluation-review-quality-v1",
+    "claim": "Loading agent-skill-evaluation improves discipline when reviewing a proposed skill-effectiveness claim.",
+    "required_variants": [
+      "no_skills",
+      "selected_skills"
+    ],
+    "minimum_criteria": [
+      "distinguishes observational from comparative evidence",
+      "rejects causal claims without a no-skill comparison",
+      "marks unavailable cost metrics NOT_AVAILABLE rather than estimating them",
+      "states remaining limitations"
+    ],
+    "execution_status": "NOT_RUN"
+  },
   "promotion_requirements": [
-    "at least one reproducible evaluation task using this skill",
-    "criterion-level evidence showing useful behavior beyond existing authoring/testing guidance",
+    "at least one reproducible post-creation evaluation task using this skill",
+    "criterion-level evidence showing useful behavior beyond authoring/testing guidance",
     "no material routing overlap regression",
     "cross-platform repository validation remains green"
   ],
