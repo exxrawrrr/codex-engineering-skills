@@ -17,6 +17,25 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v7.0.1
+      - name: Report PowerShell runtime
+        shell: pwsh
+        run: |
+          if ($PSVersionTable.PSEdition -ne "Core") {
+            throw "CI requires PowerShell Core (pwsh); observed $($PSVersionTable.PSEdition)"
+          }
+          if ($PSVersionTable.PSVersion.Major -lt 7) {
+            throw "CI requires PowerShell 7+; observed $($PSVersionTable.PSVersion)"
+          }
+          $runtime = "CI_RUNTIME OS=$env:RUNNER_OS PSEdition=$($PSVersionTable.PSEdition) PowerShell=$($PSVersionTable.PSVersion) Runner=$env:RUNNER_NAME"
+          Write-Output $runtime
+          if (-not [string]::IsNullOrWhiteSpace($env:GITHUB_STEP_SUMMARY)) {
+            Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Value "### PowerShell runtime"
+            Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Value ""
+            Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY -Value ("`" + $runtime + "`")
+          }
+      - name: Validate CI workflow contract
+        shell: pwsh
+        run: ./tests/ci-workflow-contract.ps1
       - name: Validate skill suite
         shell: pwsh
         run: ./validate.ps1 -SkillsRoot ./skills
