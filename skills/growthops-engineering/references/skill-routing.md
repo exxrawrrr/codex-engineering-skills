@@ -1,4 +1,4 @@
-﻿# Skill routing
+# Skill routing
 
 Always load `growthops-engineering` first.
 
