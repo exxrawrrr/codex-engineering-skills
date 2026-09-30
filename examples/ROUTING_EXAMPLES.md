@@ -46,3 +46,13 @@ Load:
 - verification-loop
 
 The project router owns scope; specialist skills own technical depth.
+
+
+## Skill effectiveness / promotion review
+
+Load:
+- agent-skill-evaluation
+
+Also load `agent-skill-authoring` only when the task includes editing the skill itself.
+
+Do not use ordinary application testing guidance as a substitute for skill-on/skill-off evidence.
