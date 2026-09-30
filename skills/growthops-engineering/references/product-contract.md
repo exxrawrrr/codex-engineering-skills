@@ -1,4 +1,4 @@
-﻿# Product contract
+# Product contract
 
 ## V0.1 included
 
@@ -56,9 +56,9 @@ Human-facing shape:
 
 ```
 GrowthOps
-â”œâ”€â”€ Web App
-â”œâ”€â”€ CLI
-â””â”€â”€ Local API
+├── Web App
+├── CLI
+└── Local API
 ```
 
 The local API is an internal/integration boundary, not permission to build remote/cloud platform behavior.

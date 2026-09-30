@@ -1,4 +1,4 @@
-﻿---
+---
 name: growthops-engineering
 description: "Project contract and skill router for GrowthOps. Use for any GrowthOps implementation, architecture, refactor, test, review, milestone, or repository-structure task. Enforces canonical product scope, Evidence -> Finding -> Action -> Verification semantics, local-first/deterministic/restart-safe invariants, milestone discipline, source-of-truth precedence, and selective loading of specialist skills."
 ---
@@ -73,19 +73,19 @@ Every feature should fit:
 
 ```
 COLLECT
-  â†“
+  ↓
 NORMALIZE
-  â†“
+  ↓
 CHECK
-  â†“
+  ↓
 FIND
-  â†“
+  ↓
 PRIORITIZE
-  â†“
+  ↓
 ACT
-  â†“
+  ↓
 VERIFY
-  â†“
+  ↓
 MEASURE
 ```
 
@@ -93,17 +93,17 @@ The central traceability chain is:
 
 ```
 Evidence
-  â†“
+  ↓
 Finding
-  â†“
+  ↓
 Priority
-  â†“
+  ↓
 Action
-  â†“
+  ↓
 Verification
-  â†“
+  ↓
 Result
-  â†“
+  ↓
 History
 ```
 
@@ -140,10 +140,10 @@ This rule is mandatory:
 > A failed optional subsystem must not take down the core product.
 
 Examples:
-- AI unavailable â†’ deterministic audit still works.
-- Browser unavailable â†’ static crawler still works.
-- one URL fails â†’ scan continues.
-- HTML report fails â†’ durable findings/evidence should remain intact.
+- AI unavailable → deterministic audit still works.
+- Browser unavailable → static crawler still works.
+- one URL fails → scan continues.
+- HTML report fails → durable findings/evidence should remain intact.
 
 ## Technical-decision rule
 

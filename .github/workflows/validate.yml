@@ -16,3 +16,6 @@ jobs:
       - name: Validate skill suite
         shell: pwsh
         run: .\validate.ps1 -SkillsRoot .\skills
+      - name: Prove text-hygiene negative fixture
+        shell: pwsh
+        run: .\validate.ps1 -ExpectTextHygieneFailurePath .\evidence\fixtures\validation\mojibake-sample.txt

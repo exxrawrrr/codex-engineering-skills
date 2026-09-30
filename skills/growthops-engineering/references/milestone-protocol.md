@@ -1,4 +1,4 @@
-﻿# Milestone protocol
+# Milestone protocol
 
 ## Canonical sequence
 
@@ -6,37 +6,37 @@ Default implementation order:
 
 ```
 Architecture proposal
-â†“
+↓
 Repository skeleton
-â†“
+↓
 Domain + SQLite
-â†“
+↓
 Job engine
-â†“
+↓
 Crawler
-â†“
+↓
 Parser
-â†“
+↓
 Check engine
-â†“
+↓
 Evidence engine
-â†“
+↓
 Finding engine
-â†“
+↓
 Action system
-â†“
+↓
 Verification
-â†“
+↓
 Reporting
-â†“
+↓
 Web UI
-â†“
+↓
 Browser verifier
-â†“
+↓
 Optional AI
-â†“
+↓
 Hardening
-â†“
+↓
 Packaging
 ```
 
@@ -56,13 +56,13 @@ Implementation loop:
 
 ```
 implement
-â†“
+↓
 test
-â†“
+↓
 demonstrate
-â†“
+↓
 checkpoint
-â†“
+↓
 STOP
 ```
 

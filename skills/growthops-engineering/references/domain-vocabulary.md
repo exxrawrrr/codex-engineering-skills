@@ -1,4 +1,4 @@
-﻿# GrowthOps domain vocabulary
+# GrowthOps domain vocabulary
 
 Use canonical terms consistently.
 
