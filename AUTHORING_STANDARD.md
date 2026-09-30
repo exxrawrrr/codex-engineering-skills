@@ -108,6 +108,8 @@ When a skill is added or changed:
 - link reusable evidence through `REGISTRY.json.evidence_refs`;
 - use `none`, `observed`, `repeated`, or `benchmarked` according to `COLLECTION_POLICY.md`;
 - never convert a lifecycle label into a performance claim;
-- preserve explicit limitations when evidence is observational or runtime-specific.
+- preserve explicit limitations when evidence is observational or runtime-specific;
+- make `evidence_refs` skill-specific: the referenced record must explicitly support that skill at the claimed tier;
+- reserve `benchmarked` for comparative evidence rather than repeated observational use.
 
 A benchmark result is not a permanent universal truth. Record the task/case, runtime/model when available, validation method, and limitations.

@@ -32,6 +32,9 @@ jobs:
       - name: Validate static validator contract
         shell: pwsh
         run: ./tests/static-validator-contract.ps1
+      - name: Validate evidence model contract
+        shell: pwsh
+        run: ./tests/evidence-model-contract.ps1
       - name: Validate behavioral evaluation records
         shell: pwsh
         run: ./tests/evaluation-harness.ps1
