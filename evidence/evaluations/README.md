@@ -43,7 +43,14 @@ Cases may allow only the subset of variants relevant to the claim.
 
 ## Result contract
 
-Result files use schema version `2`.
+Files under `evidence/evaluations/results/` must declare an `evaluation_type`.
+
+- `behavioral_execution` — processed by the Phase 05 behavioral harness and uses result schema version `2`;
+- `context_cost` — a non-behavioral measurement artifact owned by the context benchmark and intentionally skipped by the behavioral scorer.
+
+Unknown or missing result document types fail closed. This keeps different evidence families in one reviewable directory without letting one masquerade as another.
+
+Behavioral result files use schema version `2`.
 
 Every result contains:
 
