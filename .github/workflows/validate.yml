@@ -23,9 +23,9 @@ jobs:
       - name: Validate Phase 01 baseline lock
         shell: pwsh
         run: ./tests/baseline-lock.ps1
-      - name: Prove text-hygiene negative fixture
+      - name: Validate text-hygiene fixtures
         shell: pwsh
-        run: ./validate.ps1 -ExpectTextHygieneFailurePath ./evidence/fixtures/validation/mojibake-sample.txt
+        run: ./tests/text-hygiene.ps1
       - name: Prove registry negative fixtures
         shell: pwsh
         run: ./tests/validator-fixtures.ps1
