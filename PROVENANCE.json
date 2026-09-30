@@ -162,6 +162,40 @@
       ]
     },
     {
+      "id": "official-openapi",
+      "type": "official_documentation",
+      "urls": [
+        "https://spec.openapis.org/oas/v3.2.1.html",
+        "https://spec.openapis.org/oas/"
+      ],
+      "url_review": {
+        "reviewed_on": "2026-09-30",
+        "status": "RESOLVED",
+        "method": "manual_network_review"
+      },
+      "license_status": "NOT_APPLICABLE_DOCUMENTATION_REFERENCE",
+      "informs_skills": [
+        "api-contract-testing"
+      ]
+    },
+    {
+      "id": "official-pact",
+      "type": "official_documentation",
+      "urls": [
+        "https://docs.pact.io/",
+        "https://docs.pact.io/provider"
+      ],
+      "url_review": {
+        "reviewed_on": "2026-09-30",
+        "status": "RESOLVED",
+        "method": "manual_network_review"
+      },
+      "license_status": "NOT_APPLICABLE_DOCUMENTATION_REFERENCE",
+      "informs_skills": [
+        "api-contract-testing"
+      ]
+    },
+    {
       "id": "repo-brendonboshell-supercrawler",
       "type": "public_repository_reference",
       "urls": [
