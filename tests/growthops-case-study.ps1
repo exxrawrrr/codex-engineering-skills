@@ -292,9 +292,10 @@ if ($null -ne $record) {
   }
 }
 
+$backtick = [char]0x60
 $docMarkers = @(
   "Evidence state: **PARTIALLY VERIFIED**",
-  "Source repository: `$($case.repository)`",
+  ("Source repository: " + $backtick + [string]$case.repository + $backtick),
   "Evidence window: M01 through M04, committed public records only",
   "No controlled skill-on versus skill-off experiment is claimed here.",
   "M05 and later work are outside this case study",
@@ -316,7 +317,8 @@ foreach ($milestone in $milestones) {
     $errors.Add("${id}: case-study document missing milestone heading")
     continue
   }
-  if (-not $section.Contains("`$([string]$milestone.checkpoint_path)`")) {
+  $checkpointMarker = $backtick + [string]$milestone.checkpoint_path + $backtick
+  if (-not $section.Contains($checkpointMarker)) {
     $errors.Add("${id}: case-study document missing checkpoint path")
   }
   foreach ($sha in Get-StringArray $milestone.implementation_commits) {
@@ -325,12 +327,14 @@ foreach ($milestone in $milestones) {
     }
   }
   foreach ($skill in Get-StringArray $milestone.repository_skills_recorded) {
-    if (-not $section.Contains("`$skill`")) {
+    $skillMarker = $backtick + $skill + $backtick
+    if (-not $section.Contains($skillMarker)) {
       $errors.Add("${id}: case-study document missing recorded skill '$skill'")
     }
   }
 }
-if (-not $doc.Contains("`docs/implementation/M04_PROGRESS.md`")) {
+$m04ProgressMarker = $backtick + "docs/implementation/M04_PROGRESS.md" + $backtick
+if (-not $doc.Contains($m04ProgressMarker)) {
   $errors.Add("Case-study document missing M04 supporting progress path")
 }
 
