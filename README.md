@@ -289,6 +289,7 @@ Detailnya ada di:
 - [ATTRIBUTION.md](ATTRIBUTION.md)
 - [NOTICE](NOTICE)
 - [SOURCES.md](SOURCES.md)
+- [PROVENANCE.json](PROVENANCE.json) — mapping source → skill yang divalidasi CI
 
 Kalau ada ide bagus datang dari orang lain, ya sebut.
 
