@@ -74,3 +74,14 @@ Load:
 Also load `testing-typescript-systems` only when the task includes designing or repairing the tests themselves.
 
 Do not expand this routing into production deployment rollout or rollback design.
+
+## Runtime / host compatibility support review
+
+Load:
+- runtime-compatibility-engineering
+
+Also load `ci-pipeline-reliability` only when the task includes whether the compatibility checks actually execute in CI.
+
+Do not load `api-contract-testing` unless the compatibility question is specifically about an HTTP/provider-consumer contract.
+
+Do not infer untested macOS, Linux distribution, architecture, or runtime-loading support from a different environment's successful run.
