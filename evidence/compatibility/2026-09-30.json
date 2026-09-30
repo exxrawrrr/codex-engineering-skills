@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "verified_on": "2026-09-30",
+  "evidence_basis": {
+    "repository_commit": "00f4654ae4f633ac92ef6002a1f6a4b628d88f72",
+    "pull_request": 12,
+    "pull_request_ci_run": 36667646038,
+    "note": "The full validation, evidence, routing, installer-selection, and installer-rollback suite passed on both windows-latest and ubuntu-latest."
+  },
+  "dimensions": {
+    "format": "Whether the runtime can consume the Markdown/SKILL.md folder representation without changing repository content.",
+    "architecture": "Whether the suite's selective-loading, project-router, and specialist-skill model can be represented by the runtime.",
+    "tested_execution": "Whether this repository's executable validator/installer/test workflow has been run successfully on that environment."
+  },
+  "environments": [
+    {
+      "id": "windows-pwsh-filesystem-skills",
+      "environment": "Windows + PowerShell + filesystem SKILL.md loading",
+      "format": "COMPATIBLE",
+      "architecture": "COMPATIBLE",
+      "tested_execution": "TESTED",
+      "evidence": "GitHub Actions PR #12 run 36667646038: validate (windows-latest) passed the complete suite."
+    },
+    {
+      "id": "ubuntu-pwsh-filesystem-skills",
+      "environment": "Ubuntu Linux + PowerShell + filesystem SKILL.md loading",
+      "format": "COMPATIBLE",
+      "architecture": "COMPATIBLE",
+      "tested_execution": "TESTED",
+      "evidence": "GitHub Actions PR #12 run 36667646038: validate (ubuntu-latest) passed the complete suite after workflow paths were normalized."
+    },
+    {
+      "id": "macos-pwsh-filesystem-skills",
+      "environment": "macOS + PowerShell + filesystem SKILL.md loading",
+      "format": "COMPATIBLE_BY_FORMAT",
+      "architecture": "COMPATIBLE_BY_DESIGN",
+      "tested_execution": "NOT_RUN",
+      "evidence": "Deferred by vNext scope; no macOS CI execution is claimed."
+    },
+    {
+      "id": "other-filesystem-agent-same-convention",
+      "environment": "Other agent with filesystem skill folders and compatible SKILL.md/frontmatter convention",
+      "format": "LIKELY_COMPATIBLE",
+      "architecture": "COMPATIBLE_BY_DESIGN",
+      "tested_execution": "NOT_RUN",
+      "evidence": "Markdown content is runtime-light, but no executable compatibility run exists for an unspecified agent runtime."
+    },
+    {
+      "id": "agent-different-skill-convention",
+      "environment": "Agent requiring different frontmatter, index, packaging, or routing convention",
+      "format": "ADAPTATION_REQUIRED",
+      "architecture": "ADAPTABLE",
+      "tested_execution": "NOT_APPLICABLE",
+      "evidence": "Compatibility requires a wrapper/index/frontmatter adaptation; this repository does not claim direct drop-in support."
+    }
+  ]
+}
