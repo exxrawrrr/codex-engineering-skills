@@ -94,6 +94,24 @@ if (-not (Test-Path $EvidenceIndexPath)) {
       $fail.Add("Unsupported evidence index schema_version '$($evidenceIndex.schema_version)'; validator supports schema_version 1")
     }
 
+    $expectedEvidenceTiers = @("none","observed","repeated","benchmarked")
+    if ($null -eq $evidenceIndex.evidence_tiers) {
+      $fail.Add("Evidence index: evidence_tiers is required")
+    } else {
+      $declaredEvidenceTiers = @($evidenceIndex.evidence_tiers.PSObject.Properties.Name)
+      if (
+        @($declaredEvidenceTiers | Sort-Object).Count -ne $expectedEvidenceTiers.Count -or
+        (Compare-Object ($declaredEvidenceTiers | Sort-Object) ($expectedEvidenceTiers | Sort-Object))
+      ) {
+        $fail.Add("Evidence index: evidence_tiers must declare exactly none, observed, repeated, benchmarked")
+      }
+      foreach ($tierName in $expectedEvidenceTiers) {
+        if ([string]::IsNullOrWhiteSpace([string]$evidenceIndex.evidence_tiers.$tierName)) {
+          $fail.Add("Evidence index: evidence_tiers.$tierName description is required")
+        }
+      }
+    }
+
     foreach ($record in @($evidenceIndex.records)) {
       $recordId = [string]$record.id
       $recordType = [string]$record.type
@@ -124,6 +142,10 @@ if (-not (Test-Path $EvidenceIndexPath)) {
       }
       if ($null -eq $record.skill_observations) {
         $fail.Add("Evidence record '$recordId': skill_observations is required")
+        continue
+      }
+      if ($record.skill_observations -isnot [System.Management.Automation.PSCustomObject]) {
+        $fail.Add("Evidence record '$recordId': skill_observations must be an object mapping skill names to tiers")
         continue
       }
 
