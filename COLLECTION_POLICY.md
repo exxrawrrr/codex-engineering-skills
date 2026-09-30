@@ -59,3 +59,21 @@ History and attribution should remain visible.
 Project routers such as `growthops-engineering` are intentionally preserved as examples of real-world composition.
 
 They should be adapted, not blindly reused.
+
+
+## Lifecycle status vs evidence tier
+
+Lifecycle status answers how the repository maintains and recommends an artifact. It does **not** by itself prove behavioral effectiveness.
+
+Evidence is tracked separately in `REGISTRY.json`:
+
+- `none` — no auditable real-use or behavioral evidence is recorded;
+- `observed` — at least one auditable real-use observation exists;
+- `repeated` — observations exist across multiple milestones/tasks;
+- `benchmarked` — at least one reproducible comparative behavioral evaluation exists.
+
+Evidence refs must resolve to records in `evidence/INDEX.json`.
+
+Do not promote an evidence tier because a skill is long, well-written, popular, or marked stable. A tier must be supported by the referenced record.
+
+Observational evidence can justify `observed` or `repeated`, but it must not be described as causal skill improvement unless a comparative evaluation supports that claim.
