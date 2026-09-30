@@ -97,6 +97,7 @@
         "agent-skill-evaluation",
         "api-contract-testing",
         "ci-pipeline-reliability",
+        "runtime-compatibility-engineering",
         "growthops-engineering"
       ],
       "max_selected": 0
@@ -155,6 +156,23 @@
         "ci-pipeline-reliability"
       ],
       "forbidden": [
+        "growthops-engineering"
+      ],
+      "max_selected": 1
+    },
+    {
+      "id": "generic-runtime-compatibility-overclaim",
+      "task": "Review a generic host/runtime compatibility support claim and narrow it to the environments and dimensions actually proven, without loading API or project-specific guidance.",
+      "scope": "generic",
+      "selection_mode": "exact_required",
+      "required": [
+        "runtime-compatibility-engineering"
+      ],
+      "allowed": [
+        "runtime-compatibility-engineering"
+      ],
+      "forbidden": [
+        "api-contract-testing",
         "growthops-engineering"
       ],
       "max_selected": 1

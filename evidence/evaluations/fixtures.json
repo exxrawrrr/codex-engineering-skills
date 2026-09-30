@@ -113,6 +113,23 @@
         "Do not redesign the application tests themselves.",
         "Do not expand the fix into production rollout or rollback strategy."
       ]
+    },
+    {
+      "id": "runtime-host-support-overclaim-v1",
+      "case_id": "runtime-host-support-overclaim",
+      "description": "Deterministic compatibility-claim scenario based on evidence that exists for Windows and Ubuntu tooling execution but not macOS or third-party runtime loading.",
+      "initial_state": {
+        "observed_ci": "GitHub-hosted windows-latest and ubuntu-latest both passed the repository suite with PowerShell Core 7.6.6",
+        "unexecuted_host": "macOS",
+        "unexecuted_runtime": "third-party agent requiring a different discovery/index convention",
+        "proposed_claim": "The suite is fully cross-platform and works in compatible agent runtimes."
+      },
+      "constraints": [
+        "Do not invent macOS execution.",
+        "Do not convert vendor support into repository-tested support.",
+        "Keep runtime discovery/loading separate from repository tooling execution.",
+        "Record adaptation-required rather than drop-in compatibility for a mismatched runtime convention."
+      ]
     }
   ]
 }

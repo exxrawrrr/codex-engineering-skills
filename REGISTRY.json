@@ -167,6 +167,21 @@
       "evidence_refs": []
     },
     {
+      "name": "runtime-compatibility-engineering",
+      "kind": "generic",
+      "path": "skills/runtime-compatibility-engineering",
+      "tags": [
+        "compatibility",
+        "runtime",
+        "platform",
+        "toolchain",
+        "support-matrix"
+      ],
+      "status": "incubating",
+      "evidence_tier": "none",
+      "evidence_refs": []
+    },
+    {
       "name": "growthops-engineering",
       "kind": "project",
       "path": "skills/growthops-engineering",

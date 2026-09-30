@@ -419,6 +419,38 @@
       "informs_skills": [
         "agent-skill-evaluation"
       ]
+    },
+    {
+      "id": "official-powershell-support-lifecycle",
+      "type": "official_documentation",
+      "urls": [
+        "https://learn.microsoft.com/en-us/powershell/scripting/install/powershell-support-lifecycle"
+      ],
+      "url_review": {
+        "reviewed_on": "2026-09-30",
+        "status": "RESOLVED",
+        "method": "manual_network_review"
+      },
+      "license_status": "NOT_APPLICABLE_DOCUMENTATION_REFERENCE",
+      "informs_skills": [
+        "runtime-compatibility-engineering"
+      ]
+    },
+    {
+      "id": "official-github-hosted-runners",
+      "type": "official_documentation",
+      "urls": [
+        "https://docs.github.com/en/actions/reference/runners/github-hosted-runners"
+      ],
+      "url_review": {
+        "reviewed_on": "2026-09-30",
+        "status": "RESOLVED",
+        "method": "manual_network_review"
+      },
+      "license_status": "NOT_APPLICABLE_DOCUMENTATION_REFERENCE",
+      "informs_skills": [
+        "runtime-compatibility-engineering"
+      ]
     }
   ]
 }

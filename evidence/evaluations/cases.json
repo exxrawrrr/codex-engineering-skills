@@ -148,6 +148,37 @@
           "description": "The recommendation remains pre-deployment and does not claim production rollout/rollback safety."
         }
       ]
+    },
+    {
+      "id": "runtime-host-support-overclaim",
+      "task": "Review a support claim that extrapolates Windows and Ubuntu PowerShell CI evidence into macOS, arbitrary Linux, and third-party runtime-loading support, then define the narrow compatibility matrix justified by the available evidence.",
+      "fixture_id": "runtime-host-support-overclaim-v1",
+      "allowed_variants": [
+        "no_skills",
+        "selected_skills",
+        "all_generic_skills"
+      ],
+      "recommended_skills": [
+        "runtime-compatibility-engineering"
+      ],
+      "acceptance_criteria": [
+        {
+          "id": "dimensions_separated",
+          "description": "Format/design compatibility is separated from tested host execution and runtime loading."
+        },
+        {
+          "id": "unsupported_extrapolation_rejected",
+          "description": "macOS, arbitrary Linux, and third-party runtime-loading support are not inferred from Windows/Ubuntu execution."
+        },
+        {
+          "id": "environment_identity_recorded",
+          "description": "Observed runner/runtime/tool versions and evidence scope are retained in the support claim."
+        },
+        {
+          "id": "adaptation_boundary_stated",
+          "description": "A runtime with different packaging/discovery conventions is marked adaptation-required until adapted and executed."
+        }
+      ]
     }
   ]
 }

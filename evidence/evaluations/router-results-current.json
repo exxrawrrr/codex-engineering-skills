@@ -60,6 +60,12 @@
       "selected": [
         "ci-pipeline-reliability"
       ]
+    },
+    {
+      "case_id": "generic-runtime-compatibility-overclaim",
+      "selected": [
+        "runtime-compatibility-engineering"
+      ]
     }
   ]
 }

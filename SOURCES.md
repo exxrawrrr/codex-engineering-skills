@@ -63,6 +63,16 @@ Used for machine-readable HTTP API description semantics, versioning, schema/too
 
 Used for provider/consumer contract terminology, isolated interaction verification, provider verification, and version-aware contract evidence.
 
+### PowerShell support lifecycle
+- https://learn.microsoft.com/en-us/powershell/scripting/install/powershell-support-lifecycle
+
+Used for runtime support lifecycle, supported-platform boundaries, and the distinction between vendor support and repository execution evidence.
+
+### GitHub-hosted runners
+- https://docs.github.com/en/actions/reference/runners/github-hosted-runners
+
+Used for hosted-runner image semantics, moving `-latest` aliases, and environment identity when interpreting cross-platform execution evidence.
+
 ### GitHub Actions
 - https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax
 - https://docs.github.com/en/actions/concepts/workflows-and-actions/dependency-caching
