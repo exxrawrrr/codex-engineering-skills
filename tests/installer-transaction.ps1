@@ -74,12 +74,12 @@ try {
   $baseInstallerText = Get-Content $installer -Raw
 
   $validationNeedle = @'
-    Copy-Item $src $stagePath -Recurse -Force
+    Copy-Item -LiteralPath $src -Destination $stagePath -Recurse -Force
 
     Assert-SkillBundle -Path $stagePath -ExpectedName $name
 '@
   $validationInjected = @'
-    Copy-Item $src $stagePath -Recurse -Force
+    Copy-Item -LiteralPath $src -Destination $stagePath -Recurse -Force
 
     if ($name -eq "fixture-skill") {
       (Get-Content (Join-Path $stagePath "SKILL.md") -Raw).Replace("name: fixture-skill", "name: wrong-skill") |
@@ -106,14 +106,14 @@ try {
 
   $swapNeedle = @'
     try {
-      if (Test-Path $dst) { Remove-Item $dst -Recurse -Force }
-      Move-Item $stagePath $dst
+      if (Test-Path -LiteralPath $dst) { Remove-Item -LiteralPath $dst -Recurse -Force }
+      Move-Item -LiteralPath $stagePath -Destination $dst
 '@
   $swapInjected = @'
     try {
-      if (Test-Path $dst) { Remove-Item $dst -Recurse -Force }
+      if (Test-Path -LiteralPath $dst) { Remove-Item -LiteralPath $dst -Recurse -Force }
       if ($name -eq "fixture-skill") { throw "Injected swap failure" }
-      Move-Item $stagePath $dst
+      Move-Item -LiteralPath $stagePath -Destination $dst
 '@
   Assert-True ($baseInstallerText.Contains($swapNeedle)) "Swap injection anchor not found"
 
