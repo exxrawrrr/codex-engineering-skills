@@ -66,6 +66,12 @@
       "selected": [
         "runtime-compatibility-engineering"
       ]
+    },
+    {
+      "case_id": "generic-supply-chain-integrity",
+      "selected": [
+        "software-supply-chain-integrity"
+      ]
     }
   ]
 }
