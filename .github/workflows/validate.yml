@@ -38,6 +38,9 @@ jobs:
       - name: Validate behavioral evaluation records
         shell: pwsh
         run: ./tests/evaluation-harness.ps1
+      - name: Validate behavioral evaluation contract
+        shell: pwsh
+        run: ./tests/evaluation-harness-contract.ps1
       - name: Measure selective-loading context
         shell: pwsh
         run: ./tests/context-benchmark.ps1
