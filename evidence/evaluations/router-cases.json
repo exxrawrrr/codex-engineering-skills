@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "cases": [
+    {
+      "id": "generic-typescript-backend-refactor",
+      "required": [
+        "typescript-node-architecture",
+        "testing-typescript-systems"
+      ],
+      "allowed": [
+        "typescript-node-architecture",
+        "testing-typescript-systems"
+      ],
+      "forbidden": [
+        "growthops-engineering"
+      ],
+      "max_selected": 2
+    },
+    {
+      "id": "generic-sqlite-migration",
+      "required": [
+        "sqlite-data-modeling",
+        "testing-typescript-systems",
+        "typescript-node-architecture"
+      ],
+      "allowed": [
+        "sqlite-data-modeling",
+        "testing-typescript-systems",
+        "typescript-node-architecture"
+      ],
+      "forbidden": [
+        "growthops-engineering"
+      ],
+      "max_selected": 3
+    },
+    {
+      "id": "generic-crawler-retry-bug",
+      "required": [
+        "resilient-crawler-engineering",
+        "application-security-local-first",
+        "testing-typescript-systems"
+      ],
+      "allowed": [
+        "resilient-crawler-engineering",
+        "application-security-local-first",
+        "testing-typescript-systems"
+      ],
+      "forbidden": [
+        "growthops-engineering"
+      ],
+      "max_selected": 3
+    },
+    {
+      "id": "generic-report-xss",
+      "required": [
+        "application-security-local-first",
+        "testing-typescript-systems",
+        "typescript-node-architecture"
+      ],
+      "allowed": [
+        "application-security-local-first",
+        "testing-typescript-systems",
+        "typescript-node-architecture"
+      ],
+      "forbidden": [
+        "growthops-engineering"
+      ],
+      "max_selected": 3
+    },
+    {
+      "id": "unrelated-readme-edit",
+      "required": [],
+      "allowed": [],
+      "forbidden": [
+        "growthops-engineering",
+        "typescript-node-architecture",
+        "monorepo-typescript",
+        "sqlite-data-modeling",
+        "resilient-crawler-engineering",
+        "application-security-local-first",
+        "testing-typescript-systems",
+        "agent-skill-authoring"
+      ],
+      "max_selected": 0
+    },
+    {
+      "id": "growthops-crawler-milestone",
+      "required": [
+        "growthops-engineering",
+        "resilient-crawler-engineering",
+        "application-security-local-first",
+        "sqlite-data-modeling",
+        "testing-typescript-systems"
+      ],
+      "allowed": [
+        "growthops-engineering",
+        "resilient-crawler-engineering",
+        "application-security-local-first",
+        "sqlite-data-modeling",
+        "testing-typescript-systems"
+      ],
+      "forbidden": [
+        "agent-skill-authoring",
+        "monorepo-typescript"
+      ],
+      "max_selected": 5
+    }
+  ]
+}
