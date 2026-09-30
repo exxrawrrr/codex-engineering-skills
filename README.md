@@ -330,7 +330,7 @@ Selection contract:
 
 - no selection flag = install the full current registry, preserving the original default behavior;
 - `-GenericOnly` = install exactly entries whose registry `kind` is `generic`;
-- `-SkillName` = install exactly the canonical, case-sensitive registry names requested;
+- `-SkillName` = install exactly the requested registry entries; matching is case-insensitive and output/install paths use the canonical registry name;
 - unknown, blank, mixed-valid/unknown, or ambiguous selections fail before target mutation;
 - skills outside the selected set are left untouched.
 
@@ -507,7 +507,7 @@ Selected skills only:
 powershell -ExecutionPolicy Bypass -File .\install.ps1 -SkillName "sqlite-data-modeling,testing-typescript-systems"
 ```
 
-Selection names are canonical and case-sensitive. No selection flag preserves the original full-registry install; `-GenericOnly` selects exactly registry `kind=generic`; `-SkillName` selects only the named entries and leaves other installed skills untouched. Invalid or mixed-valid/unknown selections fail before mutation.
+`-SkillName` matching remains case-insensitive for compatibility, while installed/output names use the canonical registry spelling. No selection flag preserves the original full-registry install; `-GenericOnly` selects exactly registry `kind=generic`; `-SkillName` selects only the named entries and leaves other installed skills untouched. Invalid or mixed-valid/unknown selections fail before mutation.
 
 Backups default to the sibling `skills-backups` directory, use collision-resistant per-run IDs, and are rejected if the backup path is inside the active target tree or overlaps the repository source-skill tree. Existing symlink/junction/reparse-point aliases in installer-controlled target/backup paths are rejected rather than followed.
 
