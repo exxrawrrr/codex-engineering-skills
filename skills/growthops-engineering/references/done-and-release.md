@@ -1,4 +1,4 @@
-﻿# Definition of Done and release gates
+# Definition of Done and release gates
 
 ## Feature Definition of Done
 
