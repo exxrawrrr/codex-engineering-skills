@@ -326,6 +326,14 @@ powershell -ExecutionPolicy Bypass -File .\install.ps1 -SkillName "sqlite-data-m
 
 `-GenericOnly` and `-SkillName` are intentionally mutually exclusive so selection behavior stays unambiguous.
 
+Selection contract:
+
+- no selection flag = install the full current registry, preserving the original default behavior;
+- `-GenericOnly` = install exactly entries whose registry `kind` is `generic`;
+- `-SkillName` = install exactly the canonical, case-sensitive registry names requested;
+- unknown, blank, mixed-valid/unknown, or ambiguous selections fail before target mutation;
+- skills outside the selected set are left untouched.
+
 Default target:
 
 ```text
@@ -338,7 +346,9 @@ Existing matching folders are staged, validated, backed up, swapped, and verifie
 %USERPROFILE%\.codex\skills-backups
 ```
 
-—not inside the active skill-discovery root. A custom `-BackupRoot` is allowed only when it is outside `-TargetRoot`.
+—not inside the active skill-discovery root. Each backup run uses a timestamp plus GUID suffix so concurrent/rapid runs do not share one backup directory.
+
+A custom `-BackupRoot` must stay outside `-TargetRoot` and outside the repository source-skill tree. Existing target/backup path chains and installed skill destinations must not traverse symlink, junction, or reparse-point aliases; the installer rejects those instead of guessing which physical tree is authoritative. Path containment is case-insensitive on Windows and case-sensitive on Unix-like systems.
 
 Karena installer yang merasa paling tahu lalu nimpa file tanpa backup itu bukan automation.
 
@@ -490,6 +500,16 @@ Generic skills only:
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\install.ps1 -GenericOnly
 ```
+
+Selected skills only:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\install.ps1 -SkillName "sqlite-data-modeling,testing-typescript-systems"
+```
+
+Selection names are canonical and case-sensitive. No selection flag preserves the original full-registry install; `-GenericOnly` selects exactly registry `kind=generic`; `-SkillName` selects only the named entries and leaves other installed skills untouched. Invalid or mixed-valid/unknown selections fail before mutation.
+
+Backups default to the sibling `skills-backups` directory, use collision-resistant per-run IDs, and are rejected if the backup path is inside the active target tree or overlaps the repository source-skill tree. Existing symlink/junction/reparse-point aliases in installer-controlled target/backup paths are rejected rather than followed.
 
 ## Validation
 
