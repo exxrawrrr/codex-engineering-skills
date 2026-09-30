@@ -6,6 +6,8 @@ Machine-readable source-to-skill maintenance map: [`PROVENANCE.json`](PROVENANCE
 
 `PROVENANCE.json` supports validation and drift control. It does not replace this human-readable source record, `ATTRIBUTION.md`, `NOTICE`, or upstream license review.
 
+Source/link/license review snapshot: **2026-09-30**. Network resolution is a dated manual review, not a CI-time availability guarantee.
+
 ## Primary official references
 
 ### TypeScript
@@ -53,7 +55,7 @@ Used for targeted browser/E2E verification guidance.
 - https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html
 - https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html
 - https://cheatsheetseries.owasp.org/cheatsheets/LLM_Prompt_Injection_Prevention_Cheat_Sheet.html
-- https://cheatsheetseries.owasp.org/cheatsheets/Path_Traversal_Cheat_Sheet.html
+- https://wstg.owasp.org/latest/4-Web_Application_Security_Testing/05-Authorization/01-Directory_Traversal_File_Include/
 
 Used for SSRF, redirect/network boundaries, XSS/output safety, prompt-injection isolation, and path containment.
 
@@ -78,11 +80,15 @@ These were used as design references, not copied wholesale.
 
 ## Repository-original evaluation framework
 
+- https://github.com/exxrawrrr/codex-engineering-skills
+
 `agent-skill-evaluation` is an original synthesis built from this repository's own evidence model, behavioral case contract, context benchmark, and router-evaluation work.
 
 Its provenance mapping points back to this repository rather than implying an external benchmark framework was copied.
 
 ## Project-specific source
+
+- https://github.com/exxrawrrr/GrowthOps
 
 GrowthOps product rules come from the canonical GrowthOps blueprint authored for this project.
 
