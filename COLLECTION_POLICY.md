@@ -77,3 +77,7 @@ Evidence refs must resolve to records in `evidence/INDEX.json`.
 Do not promote an evidence tier because a skill is long, well-written, popular, or marked stable. A tier must be supported by the referenced record.
 
 Observational evidence can justify `observed` or `repeated`, but it must not be described as causal skill improvement unless a comparative evaluation supports that claim.
+
+Tier claims are skill-specific, not record-global. A referenced record must explicitly list the skill in `skill_observations` at the claimed tier or higher. An evidence ref that exists but does not name the skill provides no tier support for that skill.
+
+`benchmarked` is reserved for comparative evidence. Observational records cannot promote a skill to `benchmarked`.
