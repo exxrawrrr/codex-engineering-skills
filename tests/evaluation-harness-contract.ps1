@@ -84,11 +84,13 @@ function Write-Results {
   param(
     [Parameter(Mandatory = $true)][string]$Path,
     [Parameter(Mandatory = $true)][object[]]$Results,
-    [int]$SchemaVersion = 2
+    [int]$SchemaVersion = 2,
+    [string]$EvaluationType = "behavioral_execution"
   )
 
   [ordered]@{
     schema_version = $SchemaVersion
+    evaluation_type = $EvaluationType
     results = @($Results)
   } | ConvertTo-Json -Depth 15 | Set-Content -Path $Path -Encoding utf8NoBOM
 }
@@ -252,6 +254,15 @@ try {
   $oldResultSchema = New-Sandbox -Name "old-result-schema"
   Write-Results -Path (Join-Path $oldResultSchema.ResultsRoot "result.json") -Results @((New-NotRunResult)) -SchemaVersion 1
   Assert-Rejected -Sandbox $oldResultSchema -ExpectedText "unsupported result schema_version '1'; expected 2"
+
+  $contextOnly = New-Sandbox -Name "context-only"
+  Write-Results -Path (Join-Path $contextOnly.ResultsRoot "context.json") -Results @() -SchemaVersion 1 -EvaluationType "context_cost"
+  Write-Results -Path (Join-Path $contextOnly.ResultsRoot "behavioral.json") -Results @((New-NotRunResult))
+  Assert-Passes -Sandbox $contextOnly -ExpectedText "[SKIP] context.json / context_cost"
+
+  $unknownType = New-Sandbox -Name "unknown-type"
+  Write-Results -Path (Join-Path $unknownType.ResultsRoot "result.json") -Results @((New-NotRunResult)) -EvaluationType "mystery"
+  Assert-Rejected -Sandbox $unknownType -ExpectedText "unsupported evaluation_type 'mystery'"
 
   $unknownRecommendedSkill = New-Sandbox -Name "unknown-recommended"
   $caseDoc = Get-Content $unknownRecommendedSkill.CasesPath -Raw | ConvertFrom-Json
