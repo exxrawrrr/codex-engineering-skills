@@ -140,7 +140,8 @@ try {
 
   Invoke-ExpectFailure -Action { & $installer -DryRun -TargetRoot (Join-Path $tempRoot "blank") -SkillName " , " | Out-Null } -Message "Blank SkillName did not fail" -ExpectedText "no skill names were supplied"
   Invoke-ExpectFailure -Action { & $installer -DryRun -TargetRoot (Join-Path $tempRoot "ambiguous") -GenericOnly -SkillName "sqlite-data-modeling" | Out-Null } -Message "GenericOnly + SkillName ambiguity did not fail" -ExpectedText "Use either -GenericOnly or -SkillName"
-  Invoke-ExpectFailure -Action { & $installer -DryRun -TargetRoot (Join-Path $tempRoot "wrong-case") -SkillName "SQLite-Data-Modeling" | Out-Null } -Message "Non-canonical skill-name casing did not fail" -ExpectedText "Unknown skill name(s): SQLite-Data-Modeling"
+  $caseNameDry = & $installer -DryRun -TargetRoot (Join-Path $tempRoot "case-name") -SkillName "SQLite-Data-Modeling" | Out-String
+  Assert-SameStringSet -Actual (Get-DryRunInstallNames -Output $caseNameDry) -Expected @("sqlite-data-modeling") -Message "Case-insensitive explicit selection no longer resolves to the canonical registry entry"
 
   $insideTarget = Join-Path $tempRoot "inside-target"
   Invoke-ExpectFailure -Action { & $installer -DryRun -TargetRoot $insideTarget -BackupRoot (Join-Path $insideTarget "backups") -SkillName "sqlite-data-modeling" | Out-Null } -Message "BackupRoot inside TargetRoot was not rejected" -ExpectedText "BackupRoot must be outside TargetRoot"
@@ -188,7 +189,7 @@ try {
   Write-Output "[PASS] default install selects the full registry"
   Write-Output "[PASS] GenericOnly selects exactly generic registry skills"
   Write-Output "[PASS] explicit installer selection is exact and leaves unselected skills untouched"
-  Write-Output "[PASS] unknown/blank/ambiguous/non-canonical selections fail before mutation"
+  Write-Output "[PASS] unknown/blank/ambiguous selections fail before mutation"
   Write-Output "[PASS] backup root stays outside discovery/source trees with collision-resistant run ids"
   Write-Output "[PASS] symlink/junction aliases cannot bypass installer path boundaries"
   Write-Output "[PASS] path containment follows Windows/Unix case semantics"
