@@ -25,6 +25,18 @@ function Get-StringArray {
   return @($Value | ForEach-Object { [string]$_ })
 }
 
+function Get-MilestoneSection {
+  param(
+    [Parameter(Mandatory = $true)][string]$Markdown,
+    [Parameter(Mandatory = $true)][string]$Heading
+  )
+
+  $pattern = "(?ms)^" + [regex]::Escape($Heading) + "\r?\n(?<body>.*?)(?=^## |\z)"
+  $match = [regex]::Match($Markdown, $pattern)
+  if (-not $match.Success) { return $null }
+  return $match.Value
+}
+
 function Test-ObservationMapsEqual {
   param(
     [object]$Actual,
@@ -39,7 +51,7 @@ function Test-ObservationMapsEqual {
   if (-not (Test-SameStringSet -Actual $actualNames -Expected $expectedNames)) { return $false }
 
   foreach ($name in $expectedNames) {
-    if ([string]$Actual.$name -ne [string]$Expected.$name) { return $false }
+    if ([string]$Actual.PSObject.Properties[$name].Value -ne [string]$Expected.PSObject.Properties[$name].Value) { return $false }
   }
   return $true
 }
@@ -167,7 +179,8 @@ if ($case.skill_observations -isnot [System.Management.Automation.PSCustomObject
       $errors.Add("GrowthOps case skill_observations references unregistered skill '$skill'")
       continue
     }
-    if (@($registeredByName[$skill].evidence_refs | ForEach-Object { [string]$_ }) -notcontains [string]$case.evidence_record_id) {
+    $skillEvidenceRefs = @($registeredByName[$skill].evidence_refs | ForEach-Object { [string]$_ })
+    if ($skillEvidenceRefs -notcontains [string]$case.evidence_record_id) {
       $errors.Add("Registry skill '$skill' does not reference the GrowthOps evidence record")
     }
   }
@@ -298,19 +311,21 @@ foreach ($marker in $docMarkers) {
 foreach ($milestone in $milestones) {
   $id = [string]$milestone.id
   $heading = "## $id — $([string]$milestone.name)"
-  if (-not $doc.Contains($heading)) {
+  $section = Get-MilestoneSection -Markdown $doc -Heading $heading
+  if ($null -eq $section) {
     $errors.Add("${id}: case-study document missing milestone heading")
+    continue
   }
-  if (-not $doc.Contains("`$([string]$milestone.checkpoint_path)`")) {
+  if (-not $section.Contains("`$([string]$milestone.checkpoint_path)`")) {
     $errors.Add("${id}: case-study document missing checkpoint path")
   }
   foreach ($sha in Get-StringArray $milestone.implementation_commits) {
-    if (-not $doc.Contains($sha)) {
+    if (-not $section.Contains($sha)) {
       $errors.Add("${id}: case-study document missing commit $sha")
     }
   }
   foreach ($skill in Get-StringArray $milestone.repository_skills_recorded) {
-    if (-not $doc.Contains("`$skill`")) {
+    if (-not $section.Contains("`$skill`")) {
       $errors.Add("${id}: case-study document missing recorded skill '$skill'")
     }
   }
