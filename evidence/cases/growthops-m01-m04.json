@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "id": "growthops-m01-m04-case-study-2026-09-30",
+  "claim_state": "PARTIALLY_VERIFIED",
+  "claim": "Committed GrowthOps M01-M04 records show repeated real-world use of the named repository skills alongside concrete implementation and verification evidence.",
+  "does_not_claim": "A controlled causal improvement over an otherwise identical no-skill execution.",
+  "repository": "exxrawrrr/GrowthOps",
+  "verified_on": "2026-09-30",
+  "privacy": "Public repository commits and checkpoint facts only. Private Codex transcripts, secrets, local-only session logs, and unfinished M05 work are excluded.",
+  "milestones": [
+    {
+      "id": "M01",
+      "name": "Repository Foundation",
+      "claim_state": "VERIFIED",
+      "checkpoint_path": "docs/implementation/M01_CHECKPOINT.md",
+      "implementation_commits": [
+        "164680ef9532e4812baa3b68e51b0a7bfb53e296"
+      ],
+      "repository_skills_recorded": [
+        "growthops-engineering",
+        "monorepo-typescript",
+        "testing-typescript-systems"
+      ],
+      "observed_verification": [
+        "npm run verify PASS",
+        "npm test PASS: 17 passed, 1 platform-specific skip, 0 failed",
+        "npm run test:smoke PASS",
+        "npm audit --audit-level=high PASS: 0 vulnerabilities",
+        "remote CI later passed on ubuntu-latest and windows-latest"
+      ],
+      "notes": "Canonical npm workspace requirements explicitly took precedence over the monorepo skill's pnpm preference."
+    },
+    {
+      "id": "M02",
+      "name": "Domain + SQLite Foundation",
+      "claim_state": "VERIFIED",
+      "checkpoint_path": "docs/implementation/M02_CHECKPOINT.md",
+      "implementation_commits": [
+        "599d50228ae5160e3d4509380d07c28c5c43edb0"
+      ],
+      "repository_skills_recorded": [
+        "growthops-engineering",
+        "sqlite-data-modeling",
+        "typescript-node-architecture",
+        "testing-typescript-systems"
+      ],
+      "observed_verification": [
+        "npm run verify PASS",
+        "full Vitest suite PASS: 29 passed, 1 platform-specific skip, 0 failed",
+        "source/security check PASS with acyclic nine-workspace graph",
+        "npm audit --audit-level=high PASS: 0 vulnerabilities"
+      ],
+      "notes": "The implementation used explicit SQL and a lightweight migration mechanism rather than adding an ORM or migration framework."
+    },
+    {
+      "id": "M03",
+      "name": "Persistent Job Engine",
+      "claim_state": "VERIFIED",
+      "checkpoint_path": "docs/implementation/M03_CHECKPOINT.md",
+      "implementation_commits": [
+        "dae287f456a7d3d36d3d134d3957dce87c918c67"
+      ],
+      "repository_skills_recorded": [
+        "growthops-engineering",
+        "typescript-node-architecture",
+        "sqlite-data-modeling",
+        "testing-typescript-systems"
+      ],
+      "observed_verification": [
+        "focused regression proof initially failed in 2 cases before the final correction",
+        "focused job-engine test PASS: 10 tests, 0 failed after correction",
+        "focused persistence + worker suite PASS: 17 tests, 0 failed",
+        "npm run verify PASS with complete Vitest suite: 47 passed, 1 skipped, 0 failed",
+        "PR #13 CI passed on ubuntu-latest and windows-latest"
+      ],
+      "notes": "The checkpoint records systematic-debugging and verification-loop as supporting skills, but they are not bundled repository skills."
+    },
+    {
+      "id": "M04",
+      "name": "Safe Crawler Network + Discovery",
+      "claim_state": "VERIFIED",
+      "checkpoint_path": "docs/implementation/M04_CHECKPOINT.md",
+      "supporting_progress_path": "docs/implementation/M04_PROGRESS.md",
+      "implementation_commits": [
+        "80b255b3b051b848cadd023f3aa612bb4600cc9b",
+        "da5b8d9373a409b1cdd51b1b34501ec3b9601774",
+        "b1bee1c9b80ad85d533fbd3fc3d102e489f49801"
+      ],
+      "repository_skills_recorded": [
+        "growthops-engineering",
+        "resilient-crawler-engineering",
+        "application-security-local-first",
+        "typescript-node-architecture",
+        "sqlite-data-modeling",
+        "testing-typescript-systems"
+      ],
+      "observed_verification": [
+        "safe HTTP regression proof initially failed in 8 cases before classifier repair",
+        "focused M04 proof PASS: 137 tests, 0 failed",
+        "full repository npm test PASS: 169 passed, 1 platform-conditional skip, 0 failed",
+        "typecheck, lint, format, source check, build, smoke test, and npm audit all PASS",
+        "PR #14 CI passed on ubuntu-latest and windows-latest"
+      ],
+      "notes": "Skill availability varied by slice. M04-A2 explicitly records that growthops-engineering was unavailable in that Codex skill catalog, so the project guide plus specialist skills were used directly. The case study therefore does not claim every M04 slice loaded the project router."
+    }
+  ],
+  "evidence_record_id": "growthops-m01-m04-observational-2026-09-30"
+}

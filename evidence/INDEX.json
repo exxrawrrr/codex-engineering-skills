@@ -30,7 +30,9 @@
         "application-security-local-first": "repeated",
         "testing-typescript-systems": "repeated"
       },
-      "privacy": "Public commit/checkpoint facts only; private Codex transcripts and unfinished GrowthOps M05 work are excluded."
+      "privacy": "Public commit/checkpoint facts only; private Codex transcripts and unfinished GrowthOps M05 work are excluded.",
+      "case_data_path": "evidence/cases/growthops-m01-m04.json",
+      "case_study_path": "docs/case-study-growthops-m01-m04.md"
     }
   ]
 }

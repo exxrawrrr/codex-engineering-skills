@@ -31,3 +31,6 @@ jobs:
       - name: Validate router selection contract
         shell: pwsh
         run: .\tests\router-evaluation.ps1
+      - name: Validate GrowthOps observational case study
+        shell: pwsh
+        run: .\tests\growthops-case-study.ps1
