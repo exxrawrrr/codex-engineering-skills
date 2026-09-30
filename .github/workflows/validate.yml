@@ -47,3 +47,6 @@ jobs:
       - name: Validate compatibility claims
         shell: pwsh
         run: ./tests/compatibility-contract.ps1
+      - name: Validate provenance mappings
+        shell: pwsh
+        run: ./tests/provenance-contract.ps1
