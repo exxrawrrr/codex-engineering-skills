@@ -25,6 +25,29 @@ This skill owns the question:
 
 > Did loading this skill/router materially improve the agent outcome, and what evidence supports that claim?
 
+## When not to load
+
+Do not load this skill merely because:
+- an application change has ordinary unit/integration tests;
+- a CI workflow is failing;
+- a skill needs to be written or reorganized;
+- a repository needs generic debugging;
+- a result only needs static validation rather than a behavioral/effectiveness claim.
+
+Use the specialist skill for the underlying engineering problem first. Add this skill only when the **object of evaluation is the skill/router/loading strategy itself**.
+
+## Limitations
+
+This skill is a method for designing and interpreting evidence. It does not:
+- make agent execution deterministic;
+- turn a single run into generalized effectiveness evidence;
+- provide a model/runtime capable of executing comparison variants;
+- infer unavailable token, latency, or tool-call metrics;
+- replace domain-specific acceptance criteria;
+- automatically promote lifecycle or evidence tiers.
+
+Repository mechanisms that predate this skill are not evidence that loading this skill improved those mechanisms.
+
 ## Core rules
 
 1. Define the claim before choosing metrics.
