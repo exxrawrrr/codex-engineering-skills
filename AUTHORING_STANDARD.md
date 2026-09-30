@@ -81,3 +81,18 @@ A reviewer should be able to tell:
 - what it forbids;
 - which references are conditional;
 - how completion is verified.
+
+
+## Evidence claims
+
+Skill quality and skill effectiveness are different review questions.
+
+When a skill is added or changed:
+
+- state behavioral claims only to the level supported by evidence;
+- link reusable evidence through `REGISTRY.json.evidence_refs`;
+- use `none`, `observed`, `repeated`, or `benchmarked` according to `COLLECTION_POLICY.md`;
+- never convert a lifecycle label into a performance claim;
+- preserve explicit limitations when evidence is observational or runtime-specific.
+
+A benchmark result is not a permanent universal truth. Record the task/case, runtime/model when available, validation method, and limitations.
