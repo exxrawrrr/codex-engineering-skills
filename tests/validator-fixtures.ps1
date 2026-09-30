@@ -33,3 +33,5 @@ try {
 } finally {
   Remove-Item $tempSkills -Recurse -Force -ErrorAction SilentlyContinue
 }
+
+exit 0
