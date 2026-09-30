@@ -1,12 +1,12 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "id": "growthops-m01-m04-case-study-2026-09-30",
   "claim_state": "PARTIALLY_VERIFIED",
   "claim": "Committed GrowthOps M01-M04 records show repeated real-world use of the named repository skills alongside concrete implementation and verification evidence.",
   "does_not_claim": "A controlled causal improvement over an otherwise identical no-skill execution.",
   "repository": "exxrawrrr/GrowthOps",
   "verified_on": "2026-09-30",
-  "privacy": "Public repository commits and checkpoint facts only. Private Codex transcripts, secrets, local-only session logs, and unfinished M05 work are excluded.",
+  "privacy": "Public GrowthOps M01-M04 repository commits and checkpoint facts only. Private Codex transcripts, secrets, local-only session logs, and all M05-and-later work are excluded.",
   "milestones": [
     {
       "id": "M01",
@@ -104,5 +104,47 @@
       "notes": "Skill availability varied by slice. M04-A2 explicitly records that growthops-engineering was unavailable in that Codex skill catalog, so the project guide plus specialist skills were used directly. The case study therefore does not claim every M04 slice loaded the project router."
     }
   ],
-  "evidence_record_id": "growthops-m01-m04-observational-2026-09-30"
+  "evidence_record_id": "growthops-m01-m04-observational-2026-09-30",
+  "evidence_type": "observational_case_study",
+  "source_scope": {
+    "included_milestones": [
+      "M01",
+      "M02",
+      "M03",
+      "M04"
+    ],
+    "excluded": [
+      "M05-and-later work",
+      "private Codex transcripts",
+      "local-only session logs",
+      "secrets or credentials"
+    ]
+  },
+  "privacy_exclusions": [
+    "private Codex transcripts",
+    "secrets or credentials",
+    "local-only session logs",
+    "M05-and-later work"
+  ],
+  "skill_observations": {
+    "growthops-engineering": "repeated",
+    "typescript-node-architecture": "repeated",
+    "monorepo-typescript": "observed",
+    "sqlite-data-modeling": "repeated",
+    "resilient-crawler-engineering": "repeated",
+    "application-security-local-first": "repeated",
+    "testing-typescript-systems": "repeated"
+  },
+  "public_source_resolution": {
+    "checked_on": "2026-09-30",
+    "repository": "exxrawrrr/GrowthOps",
+    "all_listed_commits_resolved": true,
+    "checkpoint_paths_reviewed": [
+      "docs/implementation/M01_CHECKPOINT.md",
+      "docs/implementation/M02_CHECKPOINT.md",
+      "docs/implementation/M03_CHECKPOINT.md",
+      "docs/implementation/M04_CHECKPOINT.md",
+      "docs/implementation/M04_PROGRESS.md"
+    ]
+  }
 }
