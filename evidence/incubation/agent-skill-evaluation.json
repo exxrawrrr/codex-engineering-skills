@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "skill": "agent-skill-evaluation",
+  "phase": "14A",
+  "decision": "ADOPT",
+  "lifecycle_status": "incubating",
+  "evidence_state": "UNPROVEN",
+  "evidence_tier": "none",
+  "problem": "The suite can author and statically validate skills but needs a reusable discipline for comparative skill/router evaluation, evidence claims, and context-cost measurement.",
+  "boundary": {
+    "owns": [
+      "skill-on versus skill-off case design",
+      "router/context comparison design",
+      "criterion-level evidence reporting",
+      "effectiveness-claim and evidence-tier discipline"
+    ],
+    "does_not_own": [
+      "writing or restructuring SKILL.md artifacts (agent-skill-authoring)",
+      "application/system test strategy (testing-typescript-systems)",
+      "general debugging procedure (external systematic-debugging)"
+    ]
+  },
+  "overlap_review": "Boundary is distinct enough to justify a separate skill: authoring creates the instruction artifact; evaluation measures claims about the artifact.",
+  "current_evidence": "No post-creation behavioral run has yet demonstrated that loading agent-skill-evaluation improves evaluation work.",
+  "promotion_requirements": [
+    "at least one reproducible evaluation task using this skill",
+    "criterion-level evidence showing useful behavior beyond existing authoring/testing guidance",
+    "no material routing overlap regression",
+    "cross-platform repository validation remains green"
+  ],
+  "rejection_condition": "Deprecate or merge back into agent-skill-authoring if real use shows evaluation guidance is not independently useful."
+}
