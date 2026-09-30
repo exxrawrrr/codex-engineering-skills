@@ -192,7 +192,7 @@ foreach ($case in @($casesDoc.cases)) {
     if ($required.Count -ne 0 -or $allowed.Count -ne 0 -or $maxSelected -ne 0) {
       $errors.Add("${id}: unrelated case must require/allow zero skills with max_selected 0")
     }
-    if (-not (Test-SameStringSet -Actual $forbidden -Expected @($registeredSkills))) {
+    if (-not (Test-SameStringSet -Actual $forbidden -Expected @($registeredSkills | ForEach-Object { [string]$_ }))) {
       $errors.Add("${id}: unrelated case must forbid every registered skill")
     }
   }
