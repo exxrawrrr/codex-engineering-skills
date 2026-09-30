@@ -68,6 +68,9 @@ try {
   Assert-True ($second.Contains("[UNCHANGED] fixture-skill")) "Identical reinstall was not idempotent"
   Assert-True ($backupFileCountAfter -eq $backupFileCountBefore) "Identical reinstall created an unnecessary backup"
 
+  $v3 = (Get-Content (Join-Path $fakeSkills "SKILL.md") -Raw).Replace("replacement-v2", "replacement-v3")
+  Set-Content (Join-Path $fakeSkills "SKILL.md") $v3
+
   $baseInstallerText = Get-Content $installer -Raw
 
   $validationNeedle = @'
@@ -100,9 +103,6 @@ try {
   Assert-True $validationFailed "Injected staged validation failure did not fail"
   Assert-True ((Read-Marker (Join-Path $targetRoot "fixture-skill")) -eq "replacement-v2") "Staged validation failure mutated installed v2"
   Assert-True (@(Get-ChildItem $backupRoot -Recurse -File).Count -eq $backupFileCountAfter) "Staged validation failure created a backup before validation"
-
-  $v3 = (Get-Content (Join-Path $fakeSkills "SKILL.md") -Raw).Replace("replacement-v2", "replacement-v3")
-  Set-Content (Join-Path $fakeSkills "SKILL.md") $v3
 
   $swapNeedle = @'
     try {
