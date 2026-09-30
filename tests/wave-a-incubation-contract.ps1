@@ -76,6 +76,18 @@ if (-not $stateContract.ContainsKey($state)) {
   }
 }
 
+if ($state -eq "COMPLETE") {
+  if ([string]$decisions.locked_on -ne "2026-09-30") {
+    $errors.Add("COMPLETE state requires locked_on=2026-09-30")
+  }
+  if ([string]::IsNullOrWhiteSpace([string]$decisions.lock_claim) -or
+      [string]$decisions.lock_claim -notmatch "incubating" -or
+      [string]$decisions.lock_claim -notmatch "UNPROVEN" -or
+      [string]$decisions.lock_claim -notmatch "not an effectiveness promotion") {
+    $errors.Add("COMPLETE state requires an explicit incubating/UNPROVEN non-promotion lock claim")
+  }
+}
+
 $expectedCandidates = @("agent-skill-evaluation","api-contract-testing","ci-cd-reliability")
 $requiredCandidates = @($decisions.required_candidates | ForEach-Object { [string]$_ })
 Assert-ExactSet -Actual $requiredCandidates -Expected $expectedCandidates -Label "required_candidates" -Errors $errors
