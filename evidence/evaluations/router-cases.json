@@ -1,8 +1,11 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "cases": [
     {
       "id": "generic-typescript-backend-refactor",
+      "task": "Refactor a generic TypeScript backend package boundary and verify the change without loading project-specific guidance.",
+      "scope": "generic",
+      "selection_mode": "exact_required",
       "required": [
         "typescript-node-architecture",
         "testing-typescript-systems"
@@ -18,6 +21,9 @@
     },
     {
       "id": "generic-sqlite-migration",
+      "task": "Implement a generic versioned SQLite migration with focused verification and no project-specific router.",
+      "scope": "generic",
+      "selection_mode": "exact_required",
       "required": [
         "sqlite-data-modeling",
         "testing-typescript-systems",
@@ -35,6 +41,9 @@
     },
     {
       "id": "generic-crawler-retry-bug",
+      "task": "Repair a generic crawler retry/network-boundary bug with security and focused test guidance.",
+      "scope": "generic",
+      "selection_mode": "exact_required",
       "required": [
         "resilient-crawler-engineering",
         "application-security-local-first",
@@ -52,6 +61,9 @@
     },
     {
       "id": "generic-report-xss",
+      "task": "Fix a generic HTML/report XSS issue with application-security, test, and TypeScript architecture guidance.",
+      "scope": "generic",
+      "selection_mode": "exact_required",
       "required": [
         "application-security-local-first",
         "testing-typescript-systems",
@@ -69,22 +81,29 @@
     },
     {
       "id": "unrelated-readme-edit",
+      "task": "Make a wording-only README edit that does not need any repository engineering skill.",
+      "scope": "unrelated",
+      "selection_mode": "exact_required",
       "required": [],
       "allowed": [],
       "forbidden": [
-        "growthops-engineering",
         "typescript-node-architecture",
         "monorepo-typescript",
         "sqlite-data-modeling",
         "resilient-crawler-engineering",
         "application-security-local-first",
         "testing-typescript-systems",
-        "agent-skill-authoring"
+        "agent-skill-authoring",
+        "agent-skill-evaluation",
+        "growthops-engineering"
       ],
       "max_selected": 0
     },
     {
       "id": "growthops-crawler-milestone",
+      "task": "Execute a GrowthOps crawler milestone that requires the project router plus crawler, security, persistence, and testing guidance.",
+      "scope": "project",
+      "selection_mode": "exact_required",
       "required": [
         "growthops-engineering",
         "resilient-crawler-engineering",
@@ -101,6 +120,7 @@
       ],
       "forbidden": [
         "agent-skill-authoring",
+        "agent-skill-evaluation",
         "monorepo-typescript"
       ],
       "max_selected": 5

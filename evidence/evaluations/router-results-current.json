@@ -1,8 +1,9 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "evaluation_type": "documented_router_contract",
-  "claim_limit": "Confirms the repository's documented routing contract matches these cases; does not prove an agent will follow the router at runtime.",
-  "results": [
+  "runtime_obedience": "NOT_RUN",
+  "claim_limit": "Static repository contract only: confirms documented expected selections are internally consistent. It does not show that any model, agent, or runtime actually followed the router.",
+  "selections": [
     {
       "case_id": "generic-typescript-backend-refactor",
       "selected": [
