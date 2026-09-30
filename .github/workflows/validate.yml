@@ -28,3 +28,6 @@ jobs:
       - name: Measure selective-loading context
         shell: pwsh
         run: .\tests\context-benchmark.ps1
+      - name: Validate router selection contract
+        shell: pwsh
+        run: .\tests\router-evaluation.ps1
