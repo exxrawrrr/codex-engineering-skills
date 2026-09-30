@@ -196,6 +196,24 @@
       ]
     },
     {
+      "id": "official-github-actions",
+      "type": "official_documentation",
+      "urls": [
+        "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax",
+        "https://docs.github.com/en/actions/concepts/workflows-and-actions/dependency-caching",
+        "https://docs.github.com/en/actions/concepts/workflows-and-actions/workflow-artifacts"
+      ],
+      "url_review": {
+        "reviewed_on": "2026-09-30",
+        "status": "RESOLVED",
+        "method": "manual_network_review"
+      },
+      "license_status": "NOT_APPLICABLE_DOCUMENTATION_REFERENCE",
+      "informs_skills": [
+        "ci-pipeline-reliability"
+      ]
+    },
+    {
       "id": "repo-brendonboshell-supercrawler",
       "type": "public_repository_reference",
       "urls": [
