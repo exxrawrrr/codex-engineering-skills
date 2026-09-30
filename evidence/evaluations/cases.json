@@ -1,9 +1,15 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "cases": [
     {
       "id": "typescript-package-boundary",
       "task": "Refactor a small TypeScript workspace change without leaking internal package implementation details or adding unnecessary dependencies.",
+      "fixture_id": "typescript-package-boundary-v1",
+      "allowed_variants": [
+        "no_skills",
+        "selected_skills",
+        "all_generic_skills"
+      ],
       "recommended_skills": [
         "typescript-node-architecture",
         "testing-typescript-systems"
@@ -26,6 +32,12 @@
     {
       "id": "sqlite-migration-safety",
       "task": "Implement a versioned SQLite schema change that preserves existing data and remains safe on fresh and upgraded databases.",
+      "fixture_id": "sqlite-migration-safety-v1",
+      "allowed_variants": [
+        "no_skills",
+        "selected_skills",
+        "all_generic_skills"
+      ],
       "recommended_skills": [
         "sqlite-data-modeling",
         "testing-typescript-systems",
@@ -49,6 +61,12 @@
     {
       "id": "crawler-network-boundary",
       "task": "Implement or repair a bounded HTTP crawler transport that blocks unsafe network destinations across initial requests and redirects.",
+      "fixture_id": "crawler-network-boundary-v1",
+      "allowed_variants": [
+        "no_skills",
+        "selected_skills",
+        "all_generic_skills"
+      ],
       "recommended_skills": [
         "resilient-crawler-engineering",
         "application-security-local-first",
