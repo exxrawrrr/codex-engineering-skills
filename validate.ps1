@@ -7,6 +7,18 @@ param(
 
 $ErrorActionPreference = "Stop"
 
+function Get-EvidenceTierRank {
+  param([Parameter(Mandatory = $true)][string]$Tier)
+
+  switch ($Tier) {
+    "none" { return 0 }
+    "observed" { return 1 }
+    "repeated" { return 2 }
+    "benchmarked" { return 3 }
+    default { return -1 }
+  }
+}
+
 function Get-TextHygieneIssues {
   param([Parameter(Mandatory = $true)][string]$Path)
 
@@ -71,17 +83,58 @@ if (-not (Test-Path $RegistryPath)) {
 }
 
 $evidenceRecordIds = New-Object System.Collections.Generic.HashSet[string]
+$evidenceRecordsById = @{}
 if (-not (Test-Path $EvidenceIndexPath)) {
   $fail.Add("Missing evidence index: $EvidenceIndexPath")
 } else {
   try {
     $evidenceIndex = Get-Content $EvidenceIndexPath -Raw | ConvertFrom-Json
-    foreach ($record in $evidenceIndex.records) {
+
+    if ([int]$evidenceIndex.schema_version -ne 1) {
+      $fail.Add("Unsupported evidence index schema_version '$($evidenceIndex.schema_version)'; validator supports schema_version 1")
+    }
+
+    foreach ($record in @($evidenceIndex.records)) {
       $recordId = [string]$record.id
+      $recordType = [string]$record.type
+      $claimState = [string]$record.claim_state
+
       if ([string]::IsNullOrWhiteSpace($recordId)) {
         $fail.Add("Evidence record has empty id")
-      } elseif (-not $evidenceRecordIds.Add($recordId)) {
+        continue
+      }
+      if (-not $evidenceRecordIds.Add($recordId)) {
         $fail.Add("Duplicate evidence record id: $recordId")
+        continue
+      }
+
+      $evidenceRecordsById[$recordId] = $record
+
+      if ($recordType -notin @("observational","comparative")) {
+        $fail.Add("Evidence record '$recordId': invalid type '$recordType'")
+      }
+      if ($claimState -notin @("VERIFIED","PARTIALLY_VERIFIED","UNPROVEN")) {
+        $fail.Add("Evidence record '$recordId': invalid claim_state '$claimState'")
+      }
+      if ([string]::IsNullOrWhiteSpace([string]$record.claim)) {
+        $fail.Add("Evidence record '$recordId': claim is required")
+      }
+      if ([string]::IsNullOrWhiteSpace([string]$record.does_not_claim)) {
+        $fail.Add("Evidence record '$recordId': does_not_claim is required")
+      }
+      if ($null -eq $record.skill_observations) {
+        $fail.Add("Evidence record '$recordId': skill_observations is required")
+        continue
+      }
+
+      foreach ($observation in $record.skill_observations.PSObject.Properties) {
+        $observationTier = [string]$observation.Value
+        if ($observationTier -notin @("observed","repeated","benchmarked")) {
+          $fail.Add("Evidence record '$recordId': skill '$($observation.Name)' has invalid observation tier '$observationTier'")
+        }
+        if ($recordType -eq "observational" -and $observationTier -eq "benchmarked") {
+          $fail.Add("Evidence record '$recordId': observational records cannot support benchmarked tier")
+        }
       }
     }
   } catch {
@@ -134,16 +187,40 @@ if ($fail.Count -eq 0) {
     if ($evidenceTier -notin @("none","observed","repeated","benchmarked")) {
       $fail.Add("$($name): invalid evidence_tier '$evidenceTier'")
     }
+    if (($evidenceRefs | Sort-Object -Unique).Count -ne $evidenceRefs.Count) {
+      $fail.Add("$($name): duplicate evidence_refs are not allowed")
+    }
     if ($evidenceTier -eq "none" -and $evidenceRefs.Count -gt 0) {
       $fail.Add("$($name): evidence_tier 'none' cannot have evidence_refs")
     }
     if ($evidenceTier -ne "none" -and $evidenceRefs.Count -eq 0) {
       $fail.Add("$($name): evidence_tier '$evidenceTier' requires at least one evidence_ref")
     }
+
+    $supportedEvidenceTier = "none"
     foreach ($evidenceRef in $evidenceRefs) {
       if (-not $evidenceRecordIds.Contains($evidenceRef)) {
         $fail.Add("$($name): unknown evidence_ref '$evidenceRef'")
+        continue
       }
+
+      $record = $evidenceRecordsById[$evidenceRef]
+      $observationProperty = $record.skill_observations.PSObject.Properties[$name]
+      if ($null -eq $observationProperty) {
+        continue
+      }
+
+      $observationTier = [string]$observationProperty.Value
+      if ((Get-EvidenceTierRank -Tier $observationTier) -gt (Get-EvidenceTierRank -Tier $supportedEvidenceTier)) {
+        $supportedEvidenceTier = $observationTier
+      }
+    }
+
+    if (
+      $evidenceTier -in @("observed","repeated","benchmarked") -and
+      (Get-EvidenceTierRank -Tier $supportedEvidenceTier) -lt (Get-EvidenceTierRank -Tier $evidenceTier)
+    ) {
+      $fail.Add("$($name): evidence_tier '$evidenceTier' is not supported by referenced evidence (max supported: '$supportedEvidenceTier')")
     }
 
     $expectedRegistryPath = "skills/$name"
