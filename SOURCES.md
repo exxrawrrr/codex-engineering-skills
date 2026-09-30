@@ -73,6 +73,23 @@ Used for runtime support lifecycle, supported-platform boundaries, and the disti
 
 Used for hosted-runner image semantics, moving `-latest` aliases, and environment identity when interpreting cross-platform execution evidence.
 
+### GitHub Actions secure use / artifact attestations
+- https://docs.github.com/en/actions/reference/security/secure-use
+- https://docs.github.com/en/actions/concepts/security/artifact-attestations
+
+Used for immutable action references, action trust boundaries, signed artifact attestations, and provenance verification.
+
+### SLSA 1.2
+- https://slsa.dev/spec/v1.2/
+- https://slsa.dev/spec/v1.2/provenance
+
+Used for supply-chain provenance concepts and the separation between provenance statements, artifact identity, and verification policy.
+
+### npm package-lock
+- https://docs.npmjs.com/files/package-lock.json/
+
+Used for lockfile-resolved dependency trees, resolved sources, and integrity metadata; lockfiles are treated as reproducibility/integrity inputs rather than complete security proof.
+
 ### GitHub Actions
 - https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax
 - https://docs.github.com/en/actions/concepts/workflows-and-actions/dependency-caching
