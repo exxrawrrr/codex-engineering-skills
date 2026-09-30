@@ -1,41 +1,71 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "verified_on": "2026-09-30",
   "evidence_basis": {
-    "repository_commit": "00f4654ae4f633ac92ef6002a1f6a4b628d88f72",
-    "pull_request": 12,
-    "pull_request_ci_run": 36667646038,
-    "note": "The full validation, evidence, routing, installer-selection, and installer-rollback suite passed on both windows-latest and ubuntu-latest."
+    "repository_commit": "7a361791aa310fc3cf0e54e9a5a5a499abb9b3d8",
+    "pull_request": 26,
+    "pull_request_ci_run": 36686190812,
+    "scope": "repository_tooling",
+    "note": "The full current repository suite passed on both windows-latest and ubuntu-latest. Runtime logs reported PowerShell Core 7.6.6 on both hosted runners.",
+    "does_not_prove": [
+      "automatic SKILL.md discovery or loading by a third-party agent runtime",
+      "macOS executable support",
+      "support for arbitrary Linux distributions or self-hosted runners",
+      "identical behavior for runtimes with different frontmatter, packaging, routing, or discovery conventions"
+    ],
+    "runners": {
+      "windows": {
+        "matrix_runner": "windows-latest",
+        "runner_os": "Windows",
+        "powershell_edition": "Core",
+        "observed_powershell_version": "7.6.6",
+        "job_conclusion": "success"
+      },
+      "ubuntu": {
+        "matrix_runner": "ubuntu-latest",
+        "runner_os": "Linux",
+        "powershell_edition": "Core",
+        "observed_powershell_version": "7.6.6",
+        "job_conclusion": "success"
+      }
+    }
   },
   "dimensions": {
-    "format": "Whether the runtime can consume the Markdown/SKILL.md folder representation without changing repository content.",
-    "architecture": "Whether the suite's selective-loading, project-router, and specialist-skill model can be represented by the runtime.",
-    "tested_execution": "Whether this repository's executable validator/installer/test workflow has been run successfully on that environment."
+    "format": "Structural compatibility of the Markdown/SKILL.md folder representation. This is not runtime execution evidence.",
+    "architecture": "Whether selective loading, project routers, specialist skills, and references can be represented conceptually by the target convention. This is design-level unless separately executed.",
+    "tested_execution": "Whether this repository's executable validator/installer/test workflow has passed in the named host environment.",
+    "runtime_loading": "Whether a named agent/runtime has actually discovered and loaded these SKILL.md folders with the intended semantics."
   },
   "environments": [
     {
-      "id": "windows-pwsh-filesystem-skills",
-      "environment": "Windows + PowerShell + filesystem SKILL.md loading",
-      "format": "COMPATIBLE",
-      "architecture": "COMPATIBLE",
+      "id": "windows-github-hosted-pwsh-tooling",
+      "environment": "GitHub-hosted Windows + PowerShell Core repository tooling",
+      "format": "COMPATIBLE_BY_FORMAT",
+      "architecture": "COMPATIBLE_BY_DESIGN",
       "tested_execution": "TESTED",
-      "evidence": "GitHub Actions PR #12 run 36667646038: validate (windows-latest) passed the complete suite."
+      "runtime_loading": "NOT_RUN",
+      "evidence": "PR #26 run 36686190812: validate (windows-latest) passed the full current suite; log reported PSEdition=Core, PowerShell=7.6.6.",
+      "claim_limit": "Proves repository tooling execution on the hosted Windows runner, not agent-runtime SKILL.md discovery/loading."
     },
     {
-      "id": "ubuntu-pwsh-filesystem-skills",
-      "environment": "Ubuntu Linux + PowerShell + filesystem SKILL.md loading",
-      "format": "COMPATIBLE",
-      "architecture": "COMPATIBLE",
+      "id": "ubuntu-github-hosted-pwsh-tooling",
+      "environment": "GitHub-hosted Ubuntu + PowerShell Core repository tooling",
+      "format": "COMPATIBLE_BY_FORMAT",
+      "architecture": "COMPATIBLE_BY_DESIGN",
       "tested_execution": "TESTED",
-      "evidence": "GitHub Actions PR #12 run 36667646038: validate (ubuntu-latest) passed the complete suite after workflow paths were normalized."
+      "runtime_loading": "NOT_RUN",
+      "evidence": "PR #26 run 36686190812: validate (ubuntu-latest) passed the full current suite; log reported PSEdition=Core, PowerShell=7.6.6.",
+      "claim_limit": "Proves repository tooling execution on the hosted Ubuntu runner, not every Linux distribution or agent-runtime SKILL.md discovery/loading."
     },
     {
       "id": "macos-pwsh-filesystem-skills",
-      "environment": "macOS + PowerShell + filesystem SKILL.md loading",
+      "environment": "macOS + PowerShell + filesystem SKILL.md convention",
       "format": "COMPATIBLE_BY_FORMAT",
       "architecture": "COMPATIBLE_BY_DESIGN",
       "tested_execution": "NOT_RUN",
-      "evidence": "Deferred by vNext scope; no macOS CI execution is claimed."
+      "runtime_loading": "NOT_RUN",
+      "evidence": "Deferred by vNext scope; no macOS CI execution or named agent-runtime loading run is claimed.",
+      "claim_limit": "Structural/design compatibility only."
     },
     {
       "id": "other-filesystem-agent-same-convention",
@@ -43,15 +73,19 @@
       "format": "LIKELY_COMPATIBLE",
       "architecture": "COMPATIBLE_BY_DESIGN",
       "tested_execution": "NOT_RUN",
-      "evidence": "Markdown content is runtime-light, but no executable compatibility run exists for an unspecified agent runtime."
+      "runtime_loading": "NOT_RUN",
+      "evidence": "The representation is Markdown/filesystem-based, but no executable run or named agent loading test is recorded for an unspecified runtime.",
+      "claim_limit": "Requires runtime-specific verification before calling it tested or supported."
     },
     {
       "id": "agent-different-skill-convention",
-      "environment": "Agent requiring different frontmatter, index, packaging, or routing convention",
+      "environment": "Agent requiring different frontmatter, index, packaging, discovery, or routing convention",
       "format": "ADAPTATION_REQUIRED",
       "architecture": "ADAPTABLE",
       "tested_execution": "NOT_APPLICABLE",
-      "evidence": "Compatibility requires a wrapper/index/frontmatter adaptation; this repository does not claim direct drop-in support."
+      "runtime_loading": "NOT_APPLICABLE",
+      "evidence": "Direct drop-in compatibility is not claimed; a wrapper/index/frontmatter or packaging adaptation is required before runtime testing is meaningful.",
+      "claim_limit": "No direct support claim."
     }
   ]
 }
