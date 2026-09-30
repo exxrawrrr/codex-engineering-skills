@@ -340,7 +340,13 @@ Default target:
 %USERPROFILE%\.codex\skills
 ```
 
-Existing matching folders are staged, validated, backed up, swapped, and verified before the install is considered successful. If a swap or post-install verification fails, the previous skill is restored automatically. Identical reinstalls report `UNCHANGED` and do not create redundant backups. By default backups live in the sibling directory:
+Changed skills are handled as one invocation-level transaction: every changed bundle is staged and verified first, then every required existing bundle is backed up and verified before the first swap. Only after those preparation gates pass does replacement begin.
+
+If any swap or post-install verification fails, every destination already attempted in that invocation is rolled back: existing bundles are restored from their verified backups, while failed fresh installs are removed. If restore verification itself fails, the unverified active destination is removed and the verified backup path is preserved in the error for manual recovery. Identical reinstalls report `UNCHANGED` and do not create redundant backups.
+
+The installer cleans the staging directory created by the current invocation, but does not sweep unrelated `.skill-install-staging-*` directories because they may belong to another live or interrupted process.
+
+By default backups live in the sibling directory:
 
 ```text
 %USERPROFILE%\.codex\skills-backups
@@ -510,6 +516,8 @@ powershell -ExecutionPolicy Bypass -File .\install.ps1 -SkillName "sqlite-data-m
 `-SkillName` matching remains case-insensitive for compatibility, while installed/output names use the canonical registry spelling. No selection flag preserves the original full-registry install; `-GenericOnly` selects exactly registry `kind=generic`; `-SkillName` selects only the named entries and leaves other installed skills untouched. Invalid or mixed-valid/unknown selections fail before mutation.
 
 Backups default to the sibling `skills-backups` directory, use collision-resistant per-run IDs, and are rejected if the backup path is inside the active target tree or overlaps the repository source-skill tree. Existing symlink/junction/reparse-point aliases in installer-controlled target/backup paths are rejected rather than followed.
+
+Changed skills are transaction-scoped per installer invocation: all changed bundles are staged/verified and all required backups are verified before the first replacement. A later swap or installed-verification failure rolls back every destination already attempted in that invocation. Fresh installs are removed on rollback; existing installs are restored from verified backups. An incomplete restore removes the unverified active destination and reports the retained verified backup path.
 
 ## Validation
 
