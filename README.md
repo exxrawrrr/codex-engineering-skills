@@ -354,8 +354,8 @@ powershell -ExecutionPolicy Bypass -File .\validate.ps1
 
 Validator ngecek hal-hal seperti:
 
-- frontmatter;
-- skill names;
+- frontmatter block structure;
+- skill names dan canonical registered paths;
 - references;
 - UTF-8 BOM, replacement-character, dan common mojibake corruption;
 - tool-output contamination;
@@ -497,7 +497,7 @@ powershell -ExecutionPolicy Bypass -File .\install.ps1 -GenericOnly
 powershell -ExecutionPolicy Bypass -File .\validate.ps1
 ```
 
-The validator checks skill metadata and registered paths, references, `SKILL.md` length guardrails, generic/project leakage, BOM/U+FFFD/common-mojibake text hygiene, generated-output contamination, registry lifecycle/evidence contracts, and project suite-manifest consistency.
+The validator checks frontmatter structure, skill metadata and canonical registered paths, references, `SKILL.md` length guardrails, generic/project leakage, BOM/U+FFFD/common-mojibake text hygiene, generated-output contamination, registry kind/lifecycle/evidence contracts, and project suite-manifest consistency.
 
 ## Provenance
 
