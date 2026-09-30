@@ -20,7 +20,7 @@ function Assert-Environment {
     [Parameter(Mandatory = $true)][string]$Architecture,
     [Parameter(Mandatory = $true)][string]$TestedExecution,
     [Parameter(Mandatory = $true)][string]$RuntimeLoading,
-    [Parameter(Mandatory = $true)][System.Collections.Generic.List[string]]$Errors
+    [Parameter(Mandatory = $true)][AllowEmptyCollection()][System.Collections.Generic.List[string]]$Errors
   )
 
   if (-not $ById.ContainsKey($Id)) {
