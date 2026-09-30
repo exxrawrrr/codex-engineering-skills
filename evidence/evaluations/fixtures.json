@@ -72,6 +72,24 @@
         "Response-body limit must be enforced.",
         "Redirect-count limit must be enforced with focused tests."
       ]
+    },
+    {
+      "id": "api-backward-compatibility-breaking-response-v1",
+      "case_id": "api-backward-compatibility-breaking-response",
+      "description": "Deterministic API compatibility scenario with a baseline response contract and one known consumer dependency.",
+      "initial_state": {
+        "baseline_contract": "GET /users/{id} -> 200 application/json { id: string, displayName: string, email: string }",
+        "proposed_contract": "GET /users/{id} -> 200 application/json { id: string, displayName: string }",
+        "known_consumer": "account-ui@1.4 reads response.email to render contact details",
+        "provider_ref": "provider-proposed",
+        "baseline_ref": "provider-baseline"
+      },
+      "constraints": [
+        "Do not repair the consumer or contract fixture while evaluating the compatibility question.",
+        "Distinguish contract/schema validation from backward-compatibility evidence.",
+        "Name which provider/consumer refs are being compared.",
+        "Do not claim authorization, performance, or production readiness from contract compatibility alone."
+      ]
     }
   ]
 }
