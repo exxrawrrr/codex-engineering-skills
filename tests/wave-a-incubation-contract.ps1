@@ -13,7 +13,7 @@ function Assert-ExactSet {
     [Parameter(Mandatory = $true)][AllowEmptyCollection()][string[]]$Actual,
     [Parameter(Mandatory = $true)][AllowEmptyCollection()][string[]]$Expected,
     [Parameter(Mandatory = $true)][string]$Label,
-    [Parameter(Mandatory = $true)][System.Collections.Generic.List[string]]$Errors
+    [Parameter(Mandatory = $true)][AllowEmptyCollection()][System.Collections.Generic.List[string]]$Errors
   )
   $a = @($Actual | Sort-Object -Unique -CaseSensitive)
   $e = @($Expected | Sort-Object -Unique -CaseSensitive)
@@ -199,7 +199,7 @@ foreach ($pair in @(
 if ([string]$agentRecord.representative_case_plan.execution_status -ne "NOT_RUN") {
   $errors.Add("agent-skill-evaluation representative case must remain NOT_RUN in 14A")
 }
-if (-not [string]$agentRecord.current_evidence -or [string]$agentRecord.current_evidence -notmatch "No controlled post-creation execution") {
+if ([string]::IsNullOrWhiteSpace([string]$agentRecord.current_evidence) -or [string]$agentRecord.current_evidence -notmatch "No controlled post-creation execution") {
   $errors.Add("agent-skill-evaluation current_evidence must explicitly preserve the missing post-creation comparison")
 }
 
