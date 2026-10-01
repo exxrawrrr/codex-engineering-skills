@@ -1,0 +1,166 @@
+{
+  "schema_version": 1,
+  "phase": "16",
+  "split": "16A",
+  "reviewed_on": "2026-10-01",
+  "completion_state": "DECISIONS_LOCKED_CLEANUP_PENDING_16B",
+  "policy": [
+    "Lifecycle status and evidence strength are separate dimensions.",
+    "No incubating skill may be promoted without new post-creation evidence.",
+    "Observational evidence may retain an existing stable/project lifecycle but is not causal effectiveness proof.",
+    "Phase 16 prefers deletion or consolidation over adding new machinery.",
+    "Historical evidence artifacts are preserved unless they are exact duplicates or nonfunctional."
+  ],
+  "lifecycle_decisions": [
+    {
+      "skill": "typescript-node-architecture",
+      "decision": "KEEP_STABLE",
+      "status": "stable",
+      "evidence_tier": "repeated",
+      "evidence_state": "PARTIALLY_VERIFIED",
+      "basis": "GrowthOps M01-M04 observational record; no causal claim."
+    },
+    {
+      "skill": "monorepo-typescript",
+      "decision": "KEEP_STABLE",
+      "status": "stable",
+      "evidence_tier": "observed",
+      "evidence_state": "PARTIALLY_VERIFIED",
+      "basis": "GrowthOps M01 observational use; no causal claim."
+    },
+    {
+      "skill": "sqlite-data-modeling",
+      "decision": "KEEP_STABLE",
+      "status": "stable",
+      "evidence_tier": "repeated",
+      "evidence_state": "PARTIALLY_VERIFIED",
+      "basis": "Repeated GrowthOps persistence/migration observations; no causal claim."
+    },
+    {
+      "skill": "resilient-crawler-engineering",
+      "decision": "KEEP_STABLE",
+      "status": "stable",
+      "evidence_tier": "repeated",
+      "evidence_state": "PARTIALLY_VERIFIED",
+      "basis": "Repeated GrowthOps crawler observations; no causal claim."
+    },
+    {
+      "skill": "application-security-local-first",
+      "decision": "KEEP_STABLE",
+      "status": "stable",
+      "evidence_tier": "repeated",
+      "evidence_state": "PARTIALLY_VERIFIED",
+      "basis": "Repeated GrowthOps security-boundary observations; no causal claim."
+    },
+    {
+      "skill": "testing-typescript-systems",
+      "decision": "KEEP_STABLE",
+      "status": "stable",
+      "evidence_tier": "repeated",
+      "evidence_state": "PARTIALLY_VERIFIED",
+      "basis": "Repeated GrowthOps test/regression observations; no causal claim."
+    },
+    {
+      "skill": "agent-skill-authoring",
+      "decision": "KEEP_INCUBATING",
+      "status": "incubating",
+      "evidence_tier": "none",
+      "evidence_state": "UNPROVEN",
+      "basis": "No auditable effectiveness evidence is recorded; keep incubating rather than promote."
+    },
+    {
+      "skill": "agent-skill-evaluation",
+      "decision": "KEEP_INCUBATING",
+      "status": "incubating",
+      "evidence_tier": "none",
+      "evidence_state": "UNPROVEN",
+      "basis": "Post-creation representative case remains NOT_RUN."
+    },
+    {
+      "skill": "api-contract-testing",
+      "decision": "KEEP_INCUBATING",
+      "status": "incubating",
+      "evidence_tier": "none",
+      "evidence_state": "UNPROVEN",
+      "basis": "Post-creation representative case remains NOT_RUN."
+    },
+    {
+      "skill": "ci-pipeline-reliability",
+      "decision": "KEEP_INCUBATING",
+      "status": "incubating",
+      "evidence_tier": "none",
+      "evidence_state": "UNPROVEN",
+      "basis": "Post-creation representative case remains NOT_RUN."
+    },
+    {
+      "skill": "runtime-compatibility-engineering",
+      "decision": "KEEP_INCUBATING",
+      "status": "incubating",
+      "evidence_tier": "none",
+      "evidence_state": "UNPROVEN",
+      "basis": "Post-creation representative case remains NOT_RUN."
+    },
+    {
+      "skill": "software-supply-chain-integrity",
+      "decision": "KEEP_INCUBATING",
+      "status": "incubating",
+      "evidence_tier": "none",
+      "evidence_state": "UNPROVEN",
+      "basis": "Post-creation representative case remains NOT_RUN."
+    },
+    {
+      "skill": "growthops-engineering",
+      "decision": "KEEP_PROJECT",
+      "status": "project",
+      "evidence_tier": "repeated",
+      "evidence_state": "PARTIALLY_VERIFIED",
+      "basis": "Repeated public GrowthOps milestone observations; project-specific by design."
+    }
+  ],
+  "deferred_candidates": [
+    {
+      "candidate": "observability-diagnostics",
+      "required_state": "ABSENT",
+      "reason": "Insufficient bounded runtime observability problem evidence."
+    },
+    {
+      "candidate": "dependency-upgrade-engineering",
+      "required_state": "ABSENT",
+      "reason": "Insufficient bounded upgrade/migration evidence."
+    },
+    {
+      "candidate": "release-rollback-engineering",
+      "required_state": "ABSENT",
+      "reason": "No real production release/rollback case yet."
+    }
+  ],
+  "consolidation_decisions": [
+    {
+      "path": "skills/growthops-engineering/scripts/validate-suite.ps1",
+      "decision": "REMOVE_IN_16B",
+      "reason": "Redundant with root validate.ps1 suite-manifest contract and its defaults resolve relative to the scripts directory, so it does not correctly locate the repository registry/skills tree when installed or invoked as written.",
+      "replacement": "Root validate.ps1 suite-manifest validation."
+    },
+    {
+      "path": "skills/growthops-engineering/suite-manifest.json",
+      "decision": "KEEP",
+      "reason": "Root validate.ps1 actively discovers and validates suite-manifest.json; it has a real tested purpose."
+    },
+    {
+      "path": "evidence/evaluations/context-baseline-2026-09-30.json",
+      "decision": "KEEP_HISTORICAL",
+      "reason": "Frozen pre-vNext context baseline; historical evidence must not be rewritten or removed as cleanup."
+    },
+    {
+      "path": "evidence/evaluations/results/phase05-seed.json",
+      "decision": "KEEP_ACTIVE_EVIDENCE",
+      "reason": "Current behavioral harness seed records explicit NOT_RUN states and is consumed by validation; it is not dead duplication."
+    }
+  ],
+  "promotions": [],
+  "demotions": [],
+  "removals_pending_16B": [
+    "skills/growthops-engineering/scripts/validate-suite.ps1"
+  ],
+  "lock_claim": "Phase 16A records lifecycle and consolidation decisions only. It does not promote skill effectiveness, delete assets, or change registry lifecycle labels."
+}
