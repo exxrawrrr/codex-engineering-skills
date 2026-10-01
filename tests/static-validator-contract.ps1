@@ -129,6 +129,38 @@ try {
   $valid = New-Case -Name "valid"
   Assert-Accepted -Case $valid
 
+  $invalidVersion = New-Case -Name "invalid-registry-version"
+  $registryDoc = Get-Content -LiteralPath $invalidVersion.RegistryPath -Raw | ConvertFrom-Json
+  $registryDoc.version = "banana"
+  $registryDoc | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath $invalidVersion.RegistryPath -Encoding utf8NoBOM
+  Assert-Rejected -Case $invalidVersion -ExpectedText "Registry version must use SemVer X.Y.Z"
+
+  $unknownObservation = New-Case -Name "unknown-evidence-skill"
+  $evidenceDoc = Get-Content -LiteralPath $unknownObservation.EvidencePath -Raw | ConvertFrom-Json
+  $evidenceDoc.records = @(
+    [ordered]@{
+      id = "ghost-evidence"
+      type = "observational"
+      claim_state = "PARTIALLY_VERIFIED"
+      claim = "Fixture observation."
+      does_not_claim = "Causal improvement."
+      skill_observations = [ordered]@{
+        "ghost-skill" = "observed"
+      }
+    }
+  )
+  $evidenceDoc | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath $unknownObservation.EvidencePath -Encoding utf8NoBOM
+  Assert-Rejected -Case $unknownObservation -ExpectedText "Evidence record 'ghost-evidence': unknown skill_observation 'ghost-skill'"
+
+  $escapedReference = New-Case -Name "escaped-reference"
+  New-Item -ItemType Directory -Path (Join-Path $escapedReference.SkillRoot "references") -Force | Out-Null
+  Set-Content -LiteralPath (Join-Path $escapedReference.SkillsRoot "outside.md") -Value "outside" -Encoding utf8NoBOM
+  Add-Content -LiteralPath (Join-Path $escapedReference.SkillRoot "SKILL.md") -Value @'
+
+Read `references/../../outside.md`.
+'@ -Encoding utf8NoBOM
+  Assert-Rejected -Case $escapedReference -ExpectedText "reference escapes skill directory"
+
   $invalidKind = New-Case -Name "invalid-kind"
   Write-Registry -Path $invalidKind.RegistryPath -Entries @(
     (New-RegistryEntry -Kind "mystery")
