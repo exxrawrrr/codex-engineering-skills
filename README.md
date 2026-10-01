@@ -307,25 +307,25 @@ Simple.
 Dry run dulu kalau pengen lihat apa yang bakal berubah:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\install.ps1 -DryRun
+pwsh -NoProfile -File .\install.ps1 -DryRun
 ```
 
 Install:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\install.ps1
+pwsh -NoProfile -File .\install.ps1
 ```
 
 Generic skills only:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\install.ps1 -GenericOnly
+pwsh -NoProfile -File .\install.ps1 -GenericOnly
 ```
 
 Install only selected skills:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\install.ps1 -SkillName "sqlite-data-modeling,testing-typescript-systems"
+pwsh -NoProfile -File .\install.ps1 -SkillName "sqlite-data-modeling,testing-typescript-systems"
 ```
 
 `-GenericOnly` and `-SkillName` are intentionally mutually exclusive so selection behavior stays unambiguous.
@@ -369,7 +369,7 @@ Itu villain origin story.
 ## Validate
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\validate.ps1
+pwsh -NoProfile -File .\validate.ps1
 ```
 
 Validator ngecek hal-hal seperti:
@@ -505,20 +505,20 @@ See [COLLECTION_POLICY.md](COLLECTION_POLICY.md) and [REGISTRY.json](REGISTRY.js
 ## Installation
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\install.ps1 -DryRun
-powershell -ExecutionPolicy Bypass -File .\install.ps1
+pwsh -NoProfile -File .\install.ps1 -DryRun
+pwsh -NoProfile -File .\install.ps1
 ```
 
 Generic skills only:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\install.ps1 -GenericOnly
+pwsh -NoProfile -File .\install.ps1 -GenericOnly
 ```
 
 Selected skills only:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\install.ps1 -SkillName "sqlite-data-modeling,testing-typescript-systems"
+pwsh -NoProfile -File .\install.ps1 -SkillName "sqlite-data-modeling,testing-typescript-systems"
 ```
 
 `-SkillName` matching remains case-insensitive for compatibility, while installed/output names use the canonical registry spelling. No selection flag preserves the original full-registry install; `-GenericOnly` selects exactly registry `kind=generic`; `-SkillName` selects only the named entries and leaves other installed skills untouched. Invalid or mixed-valid/unknown selections fail before mutation.
@@ -530,7 +530,7 @@ Changed skills are transaction-scoped per installer invocation: all changed bund
 ## Validation
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\validate.ps1
+pwsh -NoProfile -File .\validate.ps1
 ```
 
 The validator checks frontmatter structure, skill metadata and canonical registered paths, references, `SKILL.md` length guardrails, generic/project leakage, BOM/U+FFFD/common-mojibake text hygiene, generated-output contamination, registry kind/lifecycle/evidence contracts, and project suite-manifest consistency.
@@ -561,6 +561,24 @@ To create or adapt skills, start with:
 Apache-2.0.
 
 Third-party projects retain their own copyrights and licenses as documented in the attribution files.
+
+## Version and release semantics
+
+Current suite release: **v1.2.0**.
+
+Repository tooling and installer execution are tested with **PowerShell Core 7+ (`pwsh`)** on GitHub-hosted Windows and Ubuntu. Windows PowerShell 5.1 is not a supported installer runtime.
+
+The suite version follows simple SemVer-style rules:
+
+- **MAJOR** — breaking registry/installer contract changes, incompatible default behavior, or removal/renaming of maintained stable interfaces;
+- **MINOR** — backward-compatible new skills, optional installer/evidence/validation capabilities, or maintained feature additions;
+- **PATCH** — backward-compatible fixes, documentation/provenance corrections, test hardening, and implementation repairs.
+
+When `REGISTRY.json` changes version for a release-ready main commit, publish `v<version>` only after required CI is green.
+
+v1.2.0 release notes: [docs/releases/v1.2.0-vnext.md](docs/releases/v1.2.0-vnext.md)
+
+Machine-readable vNext acceptance: [evidence/releases/v1.2.0-vnext-acceptance-2026-10-01.json](evidence/releases/v1.2.0-vnext-acceptance-2026-10-01.json)
 
 ---
 
