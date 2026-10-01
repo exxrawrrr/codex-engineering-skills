@@ -300,8 +300,23 @@ if ($fail.Count -eq 0) {
       ForEach-Object { $_.Value } | Sort-Object -Unique
 
     foreach ($ref in $refs) {
-      $refPath = Join-Path $dir ($ref -replace '/', '\')
-      if (-not (Test-Path $refPath)) {
+      $dirFull = [System.IO.Path]::GetFullPath($dir)
+      $refPath = [System.IO.Path]::GetFullPath((Join-Path $dir $ref))
+      $relativeRef = [System.IO.Path]::GetRelativePath($dirFull, $refPath)
+      $parentPrefix = ".." + [System.IO.Path]::DirectorySeparatorChar
+      $altParentPrefix = ".." + [System.IO.Path]::AltDirectorySeparatorChar
+
+      if (
+        [System.IO.Path]::IsPathRooted($relativeRef) -or
+        $relativeRef -eq ".." -or
+        $relativeRef.StartsWith($parentPrefix, [System.StringComparison]::Ordinal) -or
+        $relativeRef.StartsWith($altParentPrefix, [System.StringComparison]::Ordinal)
+      ) {
+        $fail.Add("$($name): reference escapes skill directory -> $ref")
+        continue
+      }
+
+      if (-not (Test-Path -LiteralPath $refPath)) {
         $fail.Add("$($name): broken reference -> $ref")
       }
     }
