@@ -148,6 +148,25 @@
         "Separate action/input identity, integrity, provenance, and acceptance policy.",
         "Do not expand the conclusion into application security or deployment safety."
       ]
+    },
+    {
+      "id": "phase17-supply-chain-comparison-v1",
+      "case_id": "phase17-supply-chain-comparison",
+      "description": "Phase 17 matched-treatment supply-chain review scenario used for a no-skills versus selected-skill behavioral comparison.",
+      "initial_state": {
+        "workflow_action": "vendor/example-action@v3",
+        "tool_url": "https://downloads.example.invalid/latest/tool.zip",
+        "checksum_url": "https://downloads.example.invalid/latest/tool.zip.sha256",
+        "artifact_attestation": "none",
+        "lock_or_digest_policy": "not defined"
+      },
+      "constraints": [
+        "Do not call a tag immutable.",
+        "Do not treat a checksum from the same mutable source as independent provenance.",
+        "Separate action/input identity, integrity, provenance, and acceptance policy.",
+        "Do not expand the conclusion into application security or deployment safety.",
+        "Score acceptance criteria only; do not score prose style."
+      ]
     }
   ]
 }
