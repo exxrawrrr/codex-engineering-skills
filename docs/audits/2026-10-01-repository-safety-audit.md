@@ -244,6 +244,47 @@ This lock covers audit implementation and documentation only. It does **not** me
 
 The lock commit itself is documentation-only and must also pass the same Windows + Ubuntu CI before Task 6 is considered closed.
 
+## Task 7 production-verification progress
+
+Real installation smoke was executed on the authorized GROWTH Windows machine using an already-downloaded portable PowerShell 7 runtime and **temporary paths only**.
+
+Verified smoke implementation head:
+
+`8c003470b98ad5f0200ab45b556fec47f620bff7`
+
+Observed:
+
+- root validator: **PASS — 13 PASS / 0 WARN / 0 FAIL**;
+- `-DryRun -GenericOnly`: **PASS**, no target mutation;
+- real `-GenericOnly` install: **PASS**, exactly 12 generic skills;
+- `growthops-engineering` absent from the generic target: **PASS**;
+- identical reinstall: **PASS**, all 12 reported `UNCHANGED` with stable SKILL.md hashes;
+- full-registry dry-run: **PASS**, explicit project-skill warning plus `-GenericOnly` / `-SkillName` recommendation;
+- per-target lock released after install: **PASS**;
+- temporary smoke root removed: **PASS**.
+
+The live `~/.codex/skills` directory was not the installation target.
+
+### Whole-branch review
+
+Final review before the patch-version bump was a **self-review** because no independent subagent reviewer is available in the current toolset.
+
+Review range:
+
+`38625ccb5258260a7d24a41c28fd98362347b90a..8c003470b98ad5f0200ab45b556fec47f620bff7`
+
+Result:
+
+- Critical findings: **0**;
+- Important findings: **0**.
+
+Deferred minors:
+
+1. `Assert-SkillBundle` treats description presence textually; an explicitly quoted empty YAML value is not separately parsed as semantic emptiness.
+2. The sibling install lock file is intentionally persistent after its handle is released. Removing it automatically would require additional race-safe coordination and is not necessary for correctness.
+
+Neither minor changes active-install safety, rollback safety, path containment, or supported-runtime behavior.
+
 ## Remaining final gates
 
 Before this audit is considered shipped:
