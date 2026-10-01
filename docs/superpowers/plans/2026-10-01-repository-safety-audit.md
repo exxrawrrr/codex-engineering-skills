@@ -1,6 +1,8 @@
 # Repository Safety Audit & Hardening Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+**Implementation lock status:** Tasks 1–6 COMPLETE. Verified by GitHub Actions PR run #131 on implementation head `7af4e70651d935fb883aaaf379eebc278879d707` (Windows + Ubuntu PASS). Task 7 is intentionally deferred to the production-verification chat.
+
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Audit and harden codex-engineering-skills so public users can install/update it with safer defaults, deterministic failure behavior, trustworthy CI, and truthful maintenance documentation.
 
@@ -41,23 +43,23 @@
 - Consumes: current `-TargetRoot`, `-BackupRoot`, `-GenericOnly`, `-SkillName` installer interface.
 - Produces: cross-platform default target resolution and a per-target exclusive installation lock.
 
-- [ ] **Step 1: Write failing tests**
+- [x] **Step 1: Write failing tests**
   - Default target derives from the runtime user home on Windows/Linux instead of direct `$env:USERPROFILE` concatenation.
   - A held sibling lock file rejects a second mutating install before target content changes.
   - Dry-run remains non-mutating and does not require an install lock.
 
-- [ ] **Step 2: Run focused installer-selection test and verify RED**
+- [x] **Step 2: Run focused installer-selection test and verify RED**
   - Expected: default-target/lock assertions fail against current installer.
 
-- [ ] **Step 3: Implement minimal installer fix**
+- [x] **Step 3: Implement minimal installer fix**
   - Resolve default target after startup using the runtime user profile/home.
   - Acquire an exclusive `<TargetRoot>.install.lock` FileStream for non-dry-run invocations.
   - Hold the handle through transaction cleanup and release it in `finally`.
   - Emit a clear error when another installer owns the target lock.
 
-- [ ] **Step 4: Run installer selection + transaction tests and verify GREEN**
+- [x] **Step 4: Run installer selection + transaction tests and verify GREEN**
 
-- [ ] **Step 5: Commit focused installer-safety change**
+- [x] **Step 5: Commit focused installer-safety change**
 
 ---
 
@@ -72,25 +74,25 @@
 - Consumes: selected source skill bundles from Task 1.
 - Produces: stricter pre-mutation bundle checks and explicit full-registry/project-skill warning.
 
-- [ ] **Step 1: Write failing tests**
+- [x] **Step 1: Write failing tests**
   - Missing frontmatter closer is rejected.
   - Missing frontmatter description is rejected.
   - A `references/../...` escape is rejected.
   - Full-registry install output warns when project-specific skills are included.
 
-- [ ] **Step 2: Run focused test and verify RED**
+- [x] **Step 2: Run focused test and verify RED**
 
-- [ ] **Step 3: Implement minimal validation/warning behavior**
+- [x] **Step 3: Implement minimal validation/warning behavior**
   - Strengthen `Assert-SkillBundle`.
   - Canonicalize referenced Markdown paths and require containment under the skill directory.
   - Preserve full-registry default for compatibility, but warn and recommend `-GenericOnly` / `-SkillName`.
 
-- [ ] **Step 4: Update README installation flow**
+- [x] **Step 4: Update README installation flow**
   - Make `-GenericOnly` the recommended general-user command.
   - Label no-selection install as advanced/full registry including project-specific entries.
   - Document lock behavior and cross-platform default home resolution.
 
-- [ ] **Step 5: Run installer tests and validator**
+- [x] **Step 5: Run installer tests and validator**
 
 ---
 
@@ -104,16 +106,16 @@
 - Consumes: registry, evidence index, skill tree.
 - Produces: stronger rejection of invalid evidence and escaped references.
 
-- [ ] **Step 1: Write failing static-validator fixtures**
+- [x] **Step 1: Write failing static-validator fixtures**
   - Evidence `skill_observations` naming an unregistered skill fails.
   - Registry version not matching SemVer `X.Y.Z` fails.
   - A reference path escaping a skill directory fails.
 
-- [ ] **Step 2: Run static-validator contract and verify RED**
+- [x] **Step 2: Run static-validator contract and verify RED**
 
-- [ ] **Step 3: Implement minimal validator checks**
+- [x] **Step 3: Implement minimal validator checks**
 
-- [ ] **Step 4: Run validator fixture suite and root validator**
+- [x] **Step 4: Run validator fixture suite and root validator**
 
 ---
 
@@ -127,15 +129,15 @@
 - Consumes: existing Windows/Ubuntu matrix.
 - Produces: immutable checkout pin + bounded workflow runtime.
 
-- [ ] **Step 1: Write failing CI contract assertions**
+- [x] **Step 1: Write failing CI contract assertions**
   - checkout must use exact commit `3d3c42e5aac5ba805825da76410c181273ba90b1` with version comment `v7.0.1`.
   - validate job must have a finite `timeout-minutes`.
 
-- [ ] **Step 2: Run CI contract and verify RED**
+- [x] **Step 2: Run CI contract and verify RED**
 
-- [ ] **Step 3: Pin checkout action and add timeout**
+- [x] **Step 3: Pin checkout action and add timeout**
 
-- [ ] **Step 4: Run CI contract and root validation**
+- [x] **Step 4: Run CI contract and root validation**
 
 ---
 
@@ -149,10 +151,10 @@
 - Consumes: immutable v1.2.0 acceptance report/release notes.
 - Produces: historical v1.2.0 validation that no longer freezes the current suite version or README current-release string.
 
-- [ ] **Step 1: Write fixture proving registry version `1.2.1` and a future README current-version can coexist with valid historical v1.2.0 evidence**
-- [ ] **Step 2: Run fixture and verify RED**
-- [ ] **Step 3: Remove only current-state coupling from historical Phase 17 contract**
-- [ ] **Step 4: Run Phase 17 contract + fixtures and verify GREEN**
+- [x] **Step 1: Write fixture proving registry version `1.2.1` and a future README current-version can coexist with valid historical v1.2.0 evidence**
+- [x] **Step 2: Run fixture and verify RED**
+- [x] **Step 3: Remove only current-state coupling from historical Phase 17 contract**
+- [x] **Step 4: Run Phase 17 contract + fixtures and verify GREEN**
 
 ---
 
@@ -167,11 +169,11 @@
 - Consumes: verified findings from Tasks 1–5 plus current skill inventory.
 - Produces: factual current maintenance guidance and skill-by-skill audit matrix.
 
-- [ ] **Step 1: Correct stale contributor language (`six reusable skills` → current generic/project contract without fragile hard-coded count)**
-- [ ] **Step 2: Label the 2026-09-30 compatibility run clearly as a historical snapshot and point readers to newer CI for current repository health without rewriting old evidence**
-- [ ] **Step 3: Record audit matrix for all 13 skills: routing clarity, scope, completion guidance, evidence tier, overlap risk, and deferred improvement notes**
-- [ ] **Step 4: Record repo hygiene findings: no secret-pattern hits, no symlinks, no >200 KB files, no broken relative Markdown links, index LF / Windows checkout CRLF normalization**
-- [ ] **Step 5: Record unresolved evidence limits (macOS/runtime-loading/router obedience/incubating effectiveness)**
+- [x] **Step 1: Correct stale contributor language (`six reusable skills` → current generic/project contract without fragile hard-coded count)**
+- [x] **Step 2: Label the 2026-09-30 compatibility run clearly as a historical snapshot and point readers to newer CI for current repository health without rewriting old evidence**
+- [x] **Step 3: Record audit matrix for all 13 skills: routing clarity, scope, completion guidance, evidence tier, overlap risk, and deferred improvement notes**
+- [x] **Step 4: Record repo hygiene findings: no secret-pattern hits, no symlinks, no >200 KB files, no broken relative Markdown links, index LF / Windows checkout CRLF normalization**
+- [x] **Step 5: Record unresolved evidence limits (macOS/runtime-loading/router obedience/incubating effectiveness)**
 
 ---
 
