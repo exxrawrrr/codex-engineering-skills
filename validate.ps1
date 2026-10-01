@@ -174,7 +174,7 @@ if ($fail.Count -eq 0) {
   }
 
   $registryVersion = [string]$registry.version
-  if ($registryVersion -notmatch '^\d+\.\d+\.\d+ New-Object System.Collections.Generic.HashSet[string]
+  if ($registryVersion -notmatch '^\d+\.\d+\.\d+
   $registryByName = @{}
 
   foreach ($entry in $registry.skills) {
