@@ -144,11 +144,17 @@ if ($releaseNotes -notmatch "v1\.2\.0" -or
   $errors.Add("v1.2.0 release notes must preserve version, acceptance target, and comparative limitation")
 }
 
-if ([string]$report.optional_local_smoke.installer_smoke -ne "NOT_RUN_SUPPORTED_RUNTIME") {
-  $errors.Add("Optional local smoke must preserve unsupported-runtime NOT_RUN until a pwsh 7+ local run exists")
+if ([string]$report.optional_local_smoke.supported_runtime_installer_smoke -ne "NOT_RUN") {
+  $errors.Add("Optional local supported-runtime installer smoke must remain NOT_RUN until local pwsh 7+ exists")
 }
-if ([string]$report.optional_local_smoke.reason -notmatch "does not have pwsh/PowerShell Core 7\+") {
+if ([string]$report.optional_local_smoke.supported_runtime_reason -notmatch "does not have pwsh/PowerShell Core 7\+") {
   $errors.Add("Optional local smoke must explain missing local pwsh 7+")
+}
+if ([string]$report.optional_local_smoke.unsupported_runtime_guard -ne "PASS") {
+  $errors.Add("Optional local smoke must record unsupported-runtime guard PASS")
+}
+if ([string]$report.optional_local_smoke.guard_verification_ref -ne "a43ad832d47433103d215192b6c050c87508ffa2") {
+  $errors.Add("Optional local runtime guard must be tied to the verified branch ref")
 }
 if ([string]$report.external_execution_notes.openai_api_comparison_attempt -ne "NOT_RUN") {
   $errors.Add("Failed OpenAI API attempt must remain NOT_RUN")
