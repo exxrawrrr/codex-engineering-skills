@@ -17,6 +17,7 @@ task
 This is **not** presented as a novel engineering framework, a universal benchmark, or proof that loading a skill automatically improves model quality. It is a maintained working collection built from practical project experience, public repositories, and official documentation, with explicit provenance and evidence limits.
 
 > **Latest published release:** `v1.2.0`  
+> Current suite release: **v1.2.0**  
 > **Registry:** 13 skills  
 > **License:** Apache-2.0  
 > **Tooling runtime:** PowerShell Core 7+ (`pwsh`)  
