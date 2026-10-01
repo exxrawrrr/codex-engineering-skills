@@ -104,6 +104,17 @@
       ],
       "selected_skill_count": 1,
       "generic_skill_count": 12
+    },
+    {
+      "case_id": "phase17-supply-chain-comparison",
+      "no_skills_bytes": 0,
+      "selected_skills_bytes": 9814,
+      "all_generic_skills_bytes": 64907,
+      "selected_skills": [
+        "software-supply-chain-integrity"
+      ],
+      "selected_skill_count": 1,
+      "generic_skill_count": 12
     }
   ],
   "runtime_metrics": {

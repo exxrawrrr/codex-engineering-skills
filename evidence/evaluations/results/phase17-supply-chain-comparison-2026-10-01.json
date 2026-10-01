@@ -1,0 +1,65 @@
+{
+  "schema_version": 2,
+  "evaluation_type": "behavioral_execution",
+  "comparison_id": "phase17-supply-chain-no-skills-vs-selected-2026-10-01",
+  "comparison_claim": "Matched-treatment execution exists for no_skills and selected_skills on the same versioned fixture. Both variants satisfied all four acceptance criteria, so this run demonstrates the comparison mechanism but does not show measured criterion uplift from the selected skill.",
+  "claim_limit": "This is one model/session comparison on one deterministic fixture. It is not causal proof, not a universal quality claim, and does not promote the skill evidence tier.",
+  "results": [
+    {
+      "case_id": "phase17-supply-chain-comparison",
+      "variant": "no_skills",
+      "execution_status": "COMPLETED",
+      "skills_loaded": [],
+      "execution": {
+        "run_id": "chat17-gpt56sol-no-skills-2026-10-01",
+        "executed_at": "2026-10-01T01:48:16.373Z",
+        "runtime": "ChatGPT text assistant; controlled treatment prompt; no repository skill text supplied",
+        "model": "gpt-5.6-sol",
+        "repository": "exxrawrrr/codex-engineering-skills",
+        "repository_ref": "962461d4af23296d145da7de6d9bf389ec9f8d07"
+      },
+      "criteria": {
+        "mutable_input_identified": true,
+        "trust_layers_separated": true,
+        "verification_boundary_defined": true,
+        "scope_limit_preserved": true
+      },
+      "evidence": {
+        "mutable_input_identified": "The no-skills review identified vendor/example-action@v3 as mutable and treated /latest tool retrieval as mutable input rather than an immutable identity.",
+        "trust_layers_separated": "The review separately required immutable selection, independent byte-integrity evidence, provenance/producer identity, and an acceptance policy instead of collapsing them into one trusted flag.",
+        "verification_boundary_defined": "The review required an immutable action/source identity plus a digest/signature or attestation obtained through an independently trusted boundary and verified against the consumed bytes.",
+        "scope_limit_preserved": "The review explicitly limited the conclusion to supply-chain identity/integrity/provenance and did not claim application security, vulnerability absence, or deployment safety."
+      },
+      "notes": "Baseline treatment used only the fixed task/fixture/constraints. All criteria passed. This means the selected-skill treatment must not be described as an uplift merely for also passing."
+    },
+    {
+      "case_id": "phase17-supply-chain-comparison",
+      "variant": "selected_skills",
+      "execution_status": "COMPLETED",
+      "skills_loaded": [
+        "software-supply-chain-integrity"
+      ],
+      "execution": {
+        "run_id": "chat17-gpt56sol-selected-2026-10-01",
+        "executed_at": "2026-10-01T01:48:16.373Z",
+        "runtime": "ChatGPT text assistant; controlled treatment prompt with selected SKILL.md guidance supplied",
+        "model": "gpt-5.6-sol",
+        "repository": "exxrawrrr/codex-engineering-skills",
+        "repository_ref": "962461d4af23296d145da7de6d9bf389ec9f8d07"
+      },
+      "criteria": {
+        "mutable_input_identified": true,
+        "trust_layers_separated": true,
+        "verification_boundary_defined": true,
+        "scope_limit_preserved": true
+      },
+      "evidence": {
+        "mutable_input_identified": "The selected-skill review identified the mutable action tag and mutable /latest tool channel as supply-chain trust risks.",
+        "trust_layers_separated": "The selected-skill review explicitly separated identity, selection/pinning, byte integrity, provenance, and policy approval.",
+        "verification_boundary_defined": "The selected-skill review required immutable identity where supported, independently trusted digest/signature/attestation evidence, subject-digest linkage, expected source/builder identity, and fail-closed verification.",
+        "scope_limit_preserved": "The selected-skill review explicitly stated that the checks do not prove application security, absence of vulnerabilities, or safe production rollout."
+      },
+      "notes": "Selected treatment passed all criteria, but the matched baseline also passed all criteria. Comparative outcome: no measured criterion uplift in this single run; skill remains UNPROVEN/evidence_tier none."
+    }
+  ]
+}
