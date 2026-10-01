@@ -204,6 +204,13 @@ if ($hasExplicitSelection) {
   $entries = @($entries | Where-Object { $requestedNames -contains [string]$_.name })
 }
 
+if (-not $GenericOnly -and -not $hasExplicitSelection) {
+  $projectNames = @($entries | Where-Object { [string]$_.kind -eq "project" } | ForEach-Object { [string]$_.name })
+  if ($projectNames.Count -gt 0) {
+    Write-Output "[WARN] Full-registry install includes project-specific skills: $($projectNames -join ', '). For general reusable skills, prefer -GenericOnly or -SkillName."
+  }
+}
+
 $sourceFull = Get-NormalizedFullPath -Path $sourceRoot -Label "Source skill root"
 Assert-NoPathAlias -Path $sourceFull -Label "Source skill root"
 
