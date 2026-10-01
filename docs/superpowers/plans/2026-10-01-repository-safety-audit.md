@@ -1,6 +1,6 @@
 # Repository Safety Audit & Hardening Implementation Plan
 
-**Implementation lock status:** Tasks 1–6 COMPLETE. Verified by GitHub Actions PR run #131 on implementation head `7af4e70651d935fb883aaaf379eebc278879d707` (Windows + Ubuntu PASS). Task 7 is intentionally deferred to the production-verification chat.
+**Implementation lock status:** Tasks 1–6 COMPLETE. Task 7 production verification is IN PROGRESS from lock head `8c003470b98ad5f0200ab45b556fec47f620bff7`.
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
@@ -188,9 +188,9 @@
 - Consumes: all hardened behavior.
 - Produces: verified public state.
 
-- [ ] **Step 1: Run real temporary-clone smoke on Remote GROWTH Stable; never touch the user's live Codex skill directory**
+- [x] **Step 1: Run real temporary-clone smoke on Remote GROWTH Stable; never touch the user's live Codex skill directory**
 - [ ] **Step 2: Run complete GitHub PR CI on Windows + Ubuntu**
-- [ ] **Step 3: Perform whole-branch review against this plan; fix Critical/Important findings with RED→GREEN**
+- [x] **Step 3: Perform whole-branch review against this plan; fix Critical/Important findings with RED→GREEN**
 - [ ] **Step 4: Merge only after full green verification**
 - [ ] **Step 5: Verify post-merge main CI**
 - [ ] **Step 6: Enable `main` branch protection requiring PR + validation checks if GitHub plan/permissions support it**
