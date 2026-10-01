@@ -40,6 +40,10 @@ Release notes: [v1.2.1 safety hardening](docs/releases/v1.2.1-safety-hardening.m
 
 Historical v1.2.0 release evidence remains preserved rather than rewritten to pretend later hardening existed at that time.
 
+Historical release/runtime evidence:
+- [docs/releases/v1.2.0-vnext.md](docs/releases/v1.2.0-vnext.md)
+- [evidence/releases/v1.2.0-vnext-acceptance-2026-10-01.json](evidence/releases/v1.2.0-vnext-acceptance-2026-10-01.json)
+
 ---
 
 ## Why this exists
