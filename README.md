@@ -17,6 +17,7 @@ task
 This is **not** presented as a novel engineering framework, a universal benchmark, or proof that loading a skill automatically improves model quality. It is a maintained working collection built from practical project experience, public repositories, and official documentation, with explicit provenance and evidence limits.
 
 > **Current suite version:** `1.2.1`  
+> **Published patch:** [`v1.2.1`](https://github.com/exxrawrrr/codex-engineering-skills/releases/tag/v1.2.1)  
 > **Historical vNext release:** `v1.2.0`  
 > **Registry:** 13 skills  
 > **License:** Apache-2.0  
@@ -424,6 +425,8 @@ Adding a skill directly as `stable` just because the topic sounds important is i
 ## Version and release semantics
 
 Current suite version: **`1.2.1`**.
+
+Published release: **[`v1.2.1`](https://github.com/exxrawrrr/codex-engineering-skills/releases/tag/v1.2.1)**.
 
 Patch notes: [`docs/releases/v1.2.1-safety-hardening.md`](docs/releases/v1.2.1-safety-hardening.md).
 
