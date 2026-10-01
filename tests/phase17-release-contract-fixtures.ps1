@@ -92,6 +92,15 @@ try {
   $valid = New-Sandbox -Name "valid"
   Assert-Passes -Sandbox $valid
 
+  $futurePatch = New-Sandbox -Name "future-patch-version"
+  $r = Get-Content -LiteralPath $futurePatch.RegistryPath -Raw | ConvertFrom-Json
+  $r.version = "1.2.1"
+  Save-Json -Path $futurePatch.RegistryPath -Value $r
+  $text = Get-Content -LiteralPath $futurePatch.ReadmePath -Raw
+  $text = $text.Replace("Current suite release: **v1.2.0**","Current suite release: **v1.2.1**")
+  Set-Content -LiteralPath $futurePatch.ReadmePath -Value $text -Encoding utf8NoBOM
+  Assert-Passes -Sandbox $futurePatch
+
   $versionDrift = New-Sandbox -Name "version-drift"
   $r = Get-Content -LiteralPath $versionDrift.RegistryPath -Raw | ConvertFrom-Json
   $r.version = "1.1.1"
