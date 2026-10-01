@@ -1,0 +1,264 @@
+{
+  "schema_version": 1,
+  "phase": "17",
+  "generated_on": "2026-10-01",
+  "generated_at": "2026-10-01T01:56:36.032Z",
+  "repository": "exxrawrrr/codex-engineering-skills",
+  "baseline_sha": "962461d4af23296d145da7de6d9bf389ec9f8d07",
+  "target_version": "1.2.0",
+  "tag_name": "v1.2.0",
+  "release_state": "READY_FOR_FINAL_PR_CI_AND_TAG",
+  "release_ready": true,
+  "version_semantics": {
+    "scheme": "SemVer-style suite version",
+    "previous_version": "1.1.1",
+    "selected_bump": "MINOR",
+    "rationale": "vNext adds backward-compatible skills, evidence contracts, selective installer capabilities, cross-platform validation, and lifecycle governance while preserving the default full-registry install behavior.",
+    "major": "Breaking registry/installer contract changes, incompatible default behavior, or removal/renaming of maintained stable interfaces.",
+    "minor": "Backward-compatible new skills, optional installer capabilities, evidence/validation capabilities, or maintained public behavior additions.",
+    "patch": "Backward-compatible corrections, documentation/provenance fixes, test hardening, or implementation repairs that do not add a new maintained capability.",
+    "tag_policy": "When REGISTRY.version changes for a release-ready main commit, publish an immutable Git tag v<version> only after required CI is green."
+  },
+  "acceptance_summary": {
+    "pass": 20,
+    "fail": 0,
+    "not_run": 0,
+    "total": 20
+  },
+  "criteria": [
+    {
+      "id": 1,
+      "status": "PASS",
+      "criterion": "Current mojibake in project skill files is removed.",
+      "evidence": [
+        "tests/text-hygiene.ps1",
+        "validate.ps1",
+        "GitHub Actions main run 36802576037 on 962461d4af23296d145da7de6d9bf389ec9f8d07"
+      ]
+    },
+    {
+      "id": 2,
+      "status": "PASS",
+      "criterion": "Validator catches the known encoding failure pattern or equivalent regression fixture.",
+      "evidence": [
+        "evidence/fixtures/validation/mojibake-sample.txt",
+        "evidence/fixtures/validation/mojibake-extended-sample.txt",
+        "tests/text-hygiene.ps1",
+        "tests/validator-fixtures.ps1"
+      ]
+    },
+    {
+      "id": 3,
+      "status": "PASS",
+      "criterion": "Validator checks registry status values.",
+      "evidence": [
+        "validate.ps1 status validation",
+        "evidence/fixtures/validation/invalid-status-registry.json",
+        "tests/validator-fixtures.ps1"
+      ]
+    },
+    {
+      "id": 4,
+      "status": "PASS",
+      "criterion": "README validator claims match actual checks.",
+      "evidence": [
+        "README.md",
+        "tests/static-validator-contract.ps1",
+        "tests/ci-workflow-contract.ps1"
+      ]
+    },
+    {
+      "id": 5,
+      "status": "PASS",
+      "criterion": "Duplicate/nonfunctional GrowthOps suite validator is removed or given a real tested purpose.",
+      "evidence": [
+        "evidence/lifecycle/phase16-review-2026-10-01.json completion_state COMPLETE",
+        "skills/growthops-engineering/scripts/validate-suite.ps1 removed in Phase 16B",
+        "root validate.ps1 retains suite-manifest validation"
+      ]
+    },
+    {
+      "id": 6,
+      "status": "PASS",
+      "criterion": "Evidence model separates lifecycle from evidence tier.",
+      "evidence": [
+        "REGISTRY.json schema_version 2",
+        "COLLECTION_POLICY.md lifecycle/evidence separation",
+        "tests/evidence-model-contract.ps1"
+      ]
+    },
+    {
+      "id": 7,
+      "status": "PASS",
+      "criterion": "At least three reproducible behavioral cases exist.",
+      "evidence": [
+        "evidence/evaluations/cases.json contains versioned bounded cases with deterministic criteria",
+        "evidence/evaluations/fixtures.json contains matching fixtures",
+        "tests/evaluation-harness.ps1"
+      ]
+    },
+    {
+      "id": 8,
+      "status": "PASS",
+      "criterion": "At least one case compares no-skill versus selected-skill behavior.",
+      "evidence": [
+        "evidence/evaluations/results/phase17-supply-chain-comparison-2026-10-01.json contains matched COMPLETED no_skills and selected_skills treatments",
+        "Both treatments passed all fixed criteria; comparison records no measured criterion uplift and makes no causal skill claim"
+      ]
+    },
+    {
+      "id": 9,
+      "status": "PASS",
+      "criterion": "At least one case measures context size for selected versus over-loaded routing.",
+      "evidence": [
+        "evidence/evaluations/context-current.json",
+        "tests/context-benchmark.ps1",
+        "selected_skills versus all_generic_skills canonical UTF-8 entrypoint bytes"
+      ]
+    },
+    {
+      "id": 10,
+      "status": "PASS",
+      "criterion": "Router corpus has at least five task-selection cases.",
+      "evidence": [
+        "evidence/evaluations/router-cases.json contains 10 cases",
+        "evidence/evaluations/router-results-current.json contains 10 documented selections",
+        "tests/router-evaluation.ps1"
+      ]
+    },
+    {
+      "id": 11,
+      "status": "PASS",
+      "criterion": "GrowthOps public case study maps committed milestones to skills without exposing private logs.",
+      "evidence": [
+        "docs/case-study-growthops-m01-m04.md",
+        "evidence/cases/growthops-m01-m04.json",
+        "tests/growthops-case-study.ps1",
+        "tests/growthops-case-study-contract.ps1"
+      ]
+    },
+    {
+      "id": 12,
+      "status": "PASS",
+      "criterion": "Installer has explicit skill selection.",
+      "evidence": [
+        "install.ps1 -SkillName and -GenericOnly",
+        "tests/installer-selection.ps1",
+        "README.md installation section"
+      ]
+    },
+    {
+      "id": 13,
+      "status": "PASS",
+      "criterion": "Installer staging/rollback is tested against a temporary target.",
+      "evidence": [
+        "tests/installer-transaction.ps1",
+        "evidence/fixtures/installer/",
+        "GitHub Actions Windows + Ubuntu validation"
+      ]
+    },
+    {
+      "id": 14,
+      "status": "PASS",
+      "criterion": "Installer backup is not placed inside an active skill discovery root.",
+      "evidence": [
+        "install.ps1 backup-root containment checks",
+        "tests/installer-selection.ps1",
+        "README.md backup-root contract"
+      ]
+    },
+    {
+      "id": 15,
+      "status": "PASS",
+      "criterion": "Validator runs successfully on Windows and Ubuntu pwsh in CI.",
+      "evidence": [
+        "GitHub Actions main run 36802576037",
+        "windows-latest success",
+        "ubuntu-latest success",
+        "COMPATIBILITY.md requires PowerShell Core 7+"
+      ]
+    },
+    {
+      "id": 16,
+      "status": "PASS",
+      "criterion": "Compatibility document distinguishes format/architecture/tested execution.",
+      "evidence": [
+        "COMPATIBILITY.md compatibility matrix",
+        "tests/compatibility-contract.ps1",
+        "tests/compatibility-contract-fixtures.ps1"
+      ]
+    },
+    {
+      "id": 17,
+      "status": "PASS",
+      "criterion": "Provenance duplication is removed and source mappings are validated.",
+      "evidence": [
+        "PROVENANCE.json canonical mappings",
+        "SOURCES.md",
+        "ATTRIBUTION.md",
+        "tests/provenance-contract.ps1",
+        "tests/provenance-contract-fixtures.ps1"
+      ]
+    },
+    {
+      "id": 18,
+      "status": "PASS",
+      "criterion": "No new candidate skill is promoted directly to stable.",
+      "evidence": [
+        "evidence/incubation/wave-a-decisions-2026-09-30.json COMPLETE",
+        "evidence/incubation/wave-b-decisions-2026-09-30.json COMPLETE",
+        "evidence/lifecycle/phase16-review-2026-10-01.json keeps new skills incubating/UNPROVEN"
+      ]
+    },
+    {
+      "id": 19,
+      "status": "PASS",
+      "criterion": "At least one candidate skill is rejected/deferred based on overlap or insufficient evidence.",
+      "evidence": [
+        "observability-diagnostics DEFER",
+        "dependency-upgrade-engineering DEFER",
+        "release-rollback-engineering DEFER",
+        "evidence/incubation/wave-b-decisions-2026-09-30.json"
+      ]
+    },
+    {
+      "id": 20,
+      "status": "PASS",
+      "criterion": "Final vNext audit reports PASS/FAIL/NOT RUN for every acceptance criterion.",
+      "evidence": [
+        "This report contains exactly criteria 1-20 with explicit status values and acceptance_summary 20 PASS / 0 FAIL / 0 NOT_RUN"
+      ]
+    }
+  ],
+  "comparative_behavior": {
+    "result_path": "evidence/evaluations/results/phase17-supply-chain-comparison-2026-10-01.json",
+    "case_id": "phase17-supply-chain-comparison",
+    "model": "gpt-5.6-sol",
+    "outcome": "NO_MEASURED_CRITERION_UPLIFT",
+    "no_skills": "PASS 4/4",
+    "selected_skills": "PASS 4/4",
+    "claim_limit": "The matched comparison satisfies the requirement to compare behavior. It does not show that the skill caused an improvement, so the skill remains incubating / UNPROVEN / evidence_tier none."
+  },
+  "optional_local_smoke": {
+    "machine_connection": "Rafdi Remote GROWTH Stable",
+    "exact_repository_ref_verified": "962461d4af23296d145da7de6d9bf389ec9f8d07",
+    "host_shell": "Windows PowerShell 5.1.26100.9444 Desktop",
+    "git": "2.55.0.windows.3",
+    "root_validator": "PASS (13 PASS / 0 WARN / 0 FAIL)",
+    "installer_smoke": "NOT_RUN_SUPPORTED_RUNTIME",
+    "reason": "The remote machine does not have pwsh/PowerShell Core 7+, while the repository compatibility contract requires PowerShell Core 7+ for tested tooling execution.",
+    "temp_cleanup": "PASS",
+    "release_impact": "NON_BLOCKING; required supported-runtime execution is covered by green Windows and Ubuntu GitHub Actions pwsh jobs."
+  },
+  "external_execution_notes": {
+    "openai_api_comparison_attempt": "NOT_RUN",
+    "reason": "Connected OpenAI API account returned HTTP 429 credit_balance_exhausted for both treatment requests. No behavioral claim is derived from that failed attempt."
+  },
+  "limitations": [
+    "Router runtime obedience remains NOT_RUN; the router corpus is a static contract evaluation.",
+    "Context benchmark proves canonical entrypoint byte differences, not token, latency, tool-call, or quality savings.",
+    "macOS repository-tooling execution remains NOT_RUN.",
+    "Third-party runtime skill discovery/loading remains NOT_RUN unless separately adapted and executed.",
+    "Incubating skills remain UNPROVEN unless their own post-creation evidence requirements are satisfied."
+  ]
+}
