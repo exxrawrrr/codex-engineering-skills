@@ -51,10 +51,10 @@ function Assert-Passes {
   param([Parameter(Mandatory = $true)][hashtable]$Sandbox)
   $result = Invoke-Contract -Sandbox $Sandbox
   if ($result.ExitCode -ne 0) { throw "Expected Wave B contract to pass. Output: $($result.Text)" }
-  if (-not $result.Text.Contains("WAVE_B_CONTRACT STATE=IMPLEMENTATION_COMPLETE_PENDING_LOCK DECISIONS=5 CREATED=2 PENDING=0 DEFERRED=3 FAIL=0")) {
-    throw "Wave B contract passed without expected admission summary. Output: $($result.Text)"
+  if (-not $result.Text.Contains("WAVE_B_CONTRACT STATE=COMPLETE DECISIONS=5 CREATED=2 PENDING=0 DEFERRED=3 FAIL=0")) {
+    throw "Wave B contract passed without expected final-lock summary. Output: $($result.Text)"
   }
-  Write-Output "[PASS] valid Wave B implementation-complete ledger"
+  Write-Output "[PASS] valid locked Wave B ledger"
 }
 
 function Assert-Rejected {
@@ -70,6 +70,18 @@ try {
 
   $valid = New-Sandbox -Name "valid"
   Assert-Passes -Sandbox $valid
+
+  $missingLockDate = New-Sandbox -Name "missing-lock-date"
+  $d = Get-Content -LiteralPath $missingLockDate.DecisionPath -Raw | ConvertFrom-Json
+  $d.locked_on = $null
+  Save-Json -Path $missingLockDate.DecisionPath -Value $d
+  Assert-Rejected -Sandbox $missingLockDate -ExpectedText "COMPLETE state requires locked_on=2026-10-01"
+
+  $badLockClaim = New-Sandbox -Name "bad-lock-claim"
+  $d = Get-Content -LiteralPath $badLockClaim.DecisionPath -Raw | ConvertFrom-Json
+  $d.lock_claim = "Implementation done."
+  Save-Json -Path $badLockClaim.DecisionPath -Value $d
+  Assert-Rejected -Sandbox $badLockClaim -ExpectedText "COMPLETE state requires an explicit incubating/UNPROVEN non-promotion lock claim"
 
   $missingCandidate = New-Sandbox -Name "missing-candidate"
   $d = Get-Content -LiteralPath $missingCandidate.DecisionPath -Raw | ConvertFrom-Json
