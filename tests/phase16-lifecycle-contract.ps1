@@ -101,11 +101,11 @@ foreach ($candidate in $expectedDeferred) {
 
 $cleanupPath = "skills/growthops-engineering/scripts/validate-suite.ps1"
 $cleanup = @($review.consolidation_decisions | Where-Object { [string]$_.path -eq $cleanupPath })
-if ($cleanup.Count -ne 1 -or [string]$cleanup[0].decision -ne "REMOVE_IN_16B") {
-  $errors.Add("Phase 16 must lock validate-suite.ps1 as REMOVE_IN_16B")
+$expectedCleanupDecision = if ($state -eq "COMPLETE") { "REMOVED_IN_16B" } else { "REMOVE_IN_16B" }
+if ($cleanup.Count -ne 1 -or [string]$cleanup[0].decision -ne $expectedCleanupDecision) {
+  $errors.Add("Phase 16 cleanup decision must be '$expectedCleanupDecision' for completion_state '$state'")
 }
-$repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
-$cleanupFullPath = Join-Path $repoRoot $cleanupPath
+$cleanupFullPath = Join-Path $SkillRoot "growthops-engineering/scripts/validate-suite.ps1"
 if ($state -eq "DECISIONS_LOCKED_CLEANUP_PENDING_16B" -and -not (Test-Path -LiteralPath $cleanupFullPath)) {
   $errors.Add("16A pending cleanup asset must still exist before 16B")
 }
@@ -122,12 +122,24 @@ if ($rootValidator -notmatch "suite-manifest\.json") {
   $errors.Add("Root validator must retain suite-manifest validation")
 }
 
-if ([string]::IsNullOrWhiteSpace([string]$review.lock_claim) -or [string]$review.lock_claim -notmatch "does not promote skill effectiveness") {
-  $errors.Add("Phase 16A requires an explicit non-promotion lock claim")
+if ($state -eq "DECISIONS_LOCKED_CLEANUP_PENDING_16B") {
+  if ([string]::IsNullOrWhiteSpace([string]$review.lock_claim) -or [string]$review.lock_claim -notmatch "does not promote skill effectiveness") {
+    $errors.Add("Phase 16A requires an explicit non-promotion lock claim")
+  }
+  if (@($review.removals_pending_16B).Count -ne 1 -or [string]$review.removals_pending_16B[0] -ne $cleanupPath) {
+    $errors.Add("16A state requires exactly the locked cleanup path in removals_pending_16B")
+  }
 }
 
 if ($state -eq "COMPLETE") {
   if ([string]$review.locked_on -ne "2026-10-01") { $errors.Add("COMPLETE state requires locked_on=2026-10-01") }
+  if (@($review.removals_pending_16B).Count -ne 0) { $errors.Add("COMPLETE state requires removals_pending_16B to be empty") }
+  Assert-ExactSet -Actual @($review.removals_completed_16B | ForEach-Object { [string]$_ }) -Expected @($cleanupPath) -Label "completed removals"
+  if ([string]::IsNullOrWhiteSpace([string]$review.lock_claim) -or
+      [string]$review.lock_claim -notmatch "UNPROVEN" -or
+      [string]$review.lock_claim -notmatch "no evidence-tier promotion") {
+    $errors.Add("COMPLETE state requires an explicit UNPROVEN / no evidence-tier promotion lock claim")
+  }
 }
 
 foreach ($e in $errors) { Write-Output "[FAIL] $e" }

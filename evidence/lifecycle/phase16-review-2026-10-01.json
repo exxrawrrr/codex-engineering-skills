@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "phase": "16",
-  "split": "16A",
+  "split": "16B",
   "reviewed_on": "2026-10-01",
-  "completion_state": "DECISIONS_LOCKED_CLEANUP_PENDING_16B",
+  "completion_state": "COMPLETE",
   "policy": [
     "Lifecycle status and evidence strength are separate dimensions.",
     "No incubating skill may be promoted without new post-creation evidence.",
@@ -137,9 +137,10 @@
   "consolidation_decisions": [
     {
       "path": "skills/growthops-engineering/scripts/validate-suite.ps1",
-      "decision": "REMOVE_IN_16B",
+      "decision": "REMOVED_IN_16B",
       "reason": "Redundant with root validate.ps1 suite-manifest contract and its defaults resolve relative to the scripts directory, so it does not correctly locate the repository registry/skills tree when installed or invoked as written.",
-      "replacement": "Root validate.ps1 suite-manifest validation."
+      "replacement": "Root validate.ps1 suite-manifest validation.",
+      "result": "Removed after Phase 16A locked the redundancy decision; root validate.ps1 remains the canonical suite-manifest validator."
     },
     {
       "path": "skills/growthops-engineering/suite-manifest.json",
@@ -159,8 +160,10 @@
   ],
   "promotions": [],
   "demotions": [],
-  "removals_pending_16B": [
+  "removals_pending_16B": [],
+  "lock_claim": "Phase 16 is complete. Lifecycle labels remain unchanged, incubating skills remain UNPROVEN with no evidence-tier promotion, deferred candidates remain absent, and only the previously locked redundant validator was removed.",
+  "locked_on": "2026-10-01",
+  "removals_completed_16B": [
     "skills/growthops-engineering/scripts/validate-suite.ps1"
-  ],
-  "lock_claim": "Phase 16A records lifecycle and consolidation decisions only. It does not promote skill effectiveness, delete assets, or change registry lifecycle labels."
+  ]
 }
