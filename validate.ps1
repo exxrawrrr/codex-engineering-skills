@@ -326,6 +326,15 @@ if ($fail.Count -eq 0) {
     }
   }
 
+  foreach ($recordId in @($evidenceRecordsById.Keys)) {
+    $record = $evidenceRecordsById[$recordId]
+    foreach ($observation in $record.skill_observations.PSObject.Properties) {
+      if (-not $registryByName.ContainsKey([string]$observation.Name)) {
+        $fail.Add("Evidence record '$recordId': unknown skill_observation '$($observation.Name)'")
+      }
+    }
+  }
+
   Get-ChildItem $SkillsRoot -Recurse -File -Filter "suite-manifest.json" -ErrorAction SilentlyContinue | ForEach-Object {
     $manifestPath = $_.FullName
     try {
