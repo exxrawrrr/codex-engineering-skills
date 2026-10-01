@@ -1,6 +1,6 @@
 # Repository Safety Audit & Hardening Implementation Plan
 
-**Implementation lock status:** Tasks 1–6 COMPLETE. Task 7 production verification is IN PROGRESS from lock head `8c003470b98ad5f0200ab45b556fec47f620bff7`.
+**Implementation lock status:** Tasks 1–7 COMPLETE. Release `v1.2.1` was published from protected-main release commit `4b4238da8d97b41568a191711e3e6ae23161088c` after green PR and post-merge CI.
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
@@ -189,12 +189,12 @@
 - Produces: verified public state.
 
 - [x] **Step 1: Run real temporary-clone smoke on Remote GROWTH Stable; never touch the user's live Codex skill directory**
-- [ ] **Step 2: Run complete GitHub PR CI on Windows + Ubuntu**
+- [x] **Step 2: Run complete GitHub PR CI on Windows + Ubuntu**
 - [x] **Step 3: Perform whole-branch review against this plan; fix Critical/Important findings with RED→GREEN**
-- [ ] **Step 4: Merge only after full green verification**
-- [ ] **Step 5: Verify post-merge main CI**
-- [ ] **Step 6: Enable `main` branch protection requiring PR + validation checks if GitHub plan/permissions support it**
-- [ ] **Step 7: If code changes are merged, publish patch `v1.2.1` after green main CI; do not rewrite v1.2.0 historical evidence**
+- [x] **Step 4: Merge only after full green verification**
+- [x] **Step 5: Verify post-merge main CI**
+- [x] **Step 6: Enable `main` branch protection requiring PR + validation checks if GitHub plan/permissions support it**
+- [x] **Step 7: If code changes are merged, publish patch `v1.2.1` after green main CI; do not rewrite v1.2.0 historical evidence**
 
 ## Self-review
 
