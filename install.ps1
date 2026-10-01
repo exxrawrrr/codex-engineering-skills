@@ -7,6 +7,11 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
+
+if ($PSVersionTable.PSEdition -ne "Core" -or $PSVersionTable.PSVersion.Major -lt 7) {
+  throw "install.ps1 requires PowerShell Core 7+ (pwsh). Windows PowerShell 5.1 is not a supported installer runtime."
+}
+
 $sourceRoot = Join-Path $PSScriptRoot "skills"
 $registryPath = Join-Path $PSScriptRoot "REGISTRY.json"
 
