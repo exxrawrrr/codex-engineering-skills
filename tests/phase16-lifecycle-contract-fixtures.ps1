@@ -50,10 +50,10 @@ function Assert-Passes {
   param([hashtable]$Sandbox)
   $r = Invoke-Contract -Sandbox $Sandbox
   if ($r.ExitCode -ne 0) { throw "Expected Phase 16 contract to pass. Output: $($r.Text)" }
-  if (-not $r.Text.Contains("PHASE16_CONTRACT STATE=DECISIONS_LOCKED_CLEANUP_PENDING_16B SKILLS=13 DEFERRED=3 CLEANUP_PENDING=1 FAIL=0")) {
-    throw "Phase 16 contract passed without expected summary. Output: $($r.Text)"
+  if (-not $r.Text.Contains("PHASE16_CONTRACT STATE=COMPLETE SKILLS=13 DEFERRED=3 CLEANUP_PENDING=0 FAIL=0")) {
+    throw "Phase 16 contract passed without expected final summary. Output: $($r.Text)"
   }
-  Write-Output "[PASS] valid Phase 16A lifecycle review"
+  Write-Output "[PASS] valid locked Phase 16 lifecycle review"
 }
 
 function Assert-Rejected {
@@ -94,7 +94,31 @@ try {
   $d = Get-Content -LiteralPath $badCleanup.ReviewPath -Raw | ConvertFrom-Json
   (@($d.consolidation_decisions | Where-Object { $_.path -eq "skills/growthops-engineering/scripts/validate-suite.ps1" })[0]).decision = "KEEP"
   Save-Json -Path $badCleanup.ReviewPath -Value $d
-  Assert-Rejected -Sandbox $badCleanup -ExpectedText "Phase 16 must lock validate-suite.ps1 as REMOVE_IN_16B"
+  Assert-Rejected -Sandbox $badCleanup -ExpectedText "Phase 16 cleanup decision must be 'REMOVED_IN_16B' for completion_state 'COMPLETE'"
+
+  $missingLockDate = New-Sandbox -Name "missing-lock-date"
+  $d = Get-Content -LiteralPath $missingLockDate.ReviewPath -Raw | ConvertFrom-Json
+  $d.locked_on = $null
+  Save-Json -Path $missingLockDate.ReviewPath -Value $d
+  Assert-Rejected -Sandbox $missingLockDate -ExpectedText "COMPLETE state requires locked_on=2026-10-01"
+
+  $pendingRemoval = New-Sandbox -Name "pending-removal"
+  $d = Get-Content -LiteralPath $pendingRemoval.ReviewPath -Raw | ConvertFrom-Json
+  $d.removals_pending_16B = @("skills/growthops-engineering/scripts/validate-suite.ps1")
+  Save-Json -Path $pendingRemoval.ReviewPath -Value $d
+  Assert-Rejected -Sandbox $pendingRemoval -ExpectedText "COMPLETE state requires removals_pending_16B to be empty"
+
+  $reintroducedCleanup = New-Sandbox -Name "reintroduced-cleanup"
+  $scriptDir = Join-Path $reintroducedCleanup.Root "skills/growthops-engineering/scripts"
+  New-Item -ItemType Directory -Path $scriptDir -Force | Out-Null
+  Set-Content -LiteralPath (Join-Path $scriptDir "validate-suite.ps1") -Value "Write-Output 'stale'" -Encoding utf8NoBOM
+  Assert-Rejected -Sandbox $reintroducedCleanup -ExpectedText "COMPLETE state requires redundant validate-suite.ps1 to be removed"
+
+  $badLockClaim = New-Sandbox -Name "bad-lock-claim"
+  $d = Get-Content -LiteralPath $badLockClaim.ReviewPath -Raw | ConvertFrom-Json
+  $d.lock_claim = "Phase 16 complete."
+  Save-Json -Path $badLockClaim.ReviewPath -Value $d
+  Assert-Rejected -Sandbox $badLockClaim -ExpectedText "COMPLETE state requires an explicit UNPROVEN / no evidence-tier promotion lock claim"
 
   $missingSkill = New-Sandbox -Name "missing-skill"
   $d = Get-Content -LiteralPath $missingSkill.ReviewPath -Raw | ConvertFrom-Json
@@ -102,7 +126,7 @@ try {
   Save-Json -Path $missingSkill.ReviewPath -Value $d
   Assert-Rejected -Sandbox $missingSkill -ExpectedText "lifecycle skill set mismatch"
 
-  Write-Output "[PASS] Phase 16 lifecycle overclaim, deferred-leak, cleanup, and completeness fixtures are regression-covered"
+  Write-Output "[PASS] Phase 16 lifecycle overclaim, deferred-leak, completed-cleanup, lock, and completeness fixtures are regression-covered"
 } finally {
   if (Test-Path -LiteralPath $tempRoot) { Remove-Item -LiteralPath $tempRoot -Recurse -Force }
 }
