@@ -54,6 +54,15 @@
       "criteria": {},
       "evidence": {},
       "notes": "Wave B incubation case registered; no post-creation behavioral execution has run."
+    },
+    {
+      "case_id": "ci-third-party-input-integrity",
+      "variant": "selected_skills",
+      "execution_status": "NOT_RUN",
+      "skills_loaded": [],
+      "criteria": {},
+      "evidence": {},
+      "notes": "Wave B incubation case registered; no post-creation behavioral execution has run."
     }
   ],
   "evaluation_type": "behavioral_execution"

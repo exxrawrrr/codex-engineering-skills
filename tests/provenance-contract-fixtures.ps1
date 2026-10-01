@@ -78,7 +78,7 @@ try {
   New-Item -ItemType Directory -Path $tempRoot -Force | Out-Null
 
   $valid = New-Sandbox -Name "valid"
-  Assert-Passes -Sandbox $valid -ExpectedText "PROVENANCE_CONTRACT SOURCES=22 MAPPED_SKILLS=12 RETIRED_URLS=1 FAIL=0"
+  Assert-Passes -Sandbox $valid -ExpectedText "PROVENANCE_CONTRACT SOURCES=25 MAPPED_SKILLS=13 RETIRED_URLS=1 FAIL=0"
 
   $oldSchema = New-Sandbox -Name "old-schema"
   $p = Get-Content -LiteralPath $oldSchema.ProvenancePath -Raw | ConvertFrom-Json

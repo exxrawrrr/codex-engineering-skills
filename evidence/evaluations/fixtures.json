@@ -130,6 +130,24 @@
         "Keep runtime discovery/loading separate from repository tooling execution.",
         "Record adaptation-required rather than drop-in compatibility for a mismatched runtime convention."
       ]
+    },
+    {
+      "id": "ci-third-party-input-integrity-v1",
+      "case_id": "ci-third-party-input-integrity",
+      "description": "Deterministic supply-chain scenario with a mutable third-party CI action and a tool/checksum pair retrieved from one mutable trust channel.",
+      "initial_state": {
+        "workflow_action": "vendor/example-action@v3",
+        "tool_url": "https://downloads.example.invalid/latest/tool.zip",
+        "checksum_url": "https://downloads.example.invalid/latest/tool.zip.sha256",
+        "artifact_attestation": "none",
+        "lock_or_digest_policy": "not defined"
+      },
+      "constraints": [
+        "Do not call a tag immutable.",
+        "Do not treat a checksum from the same mutable source as independent provenance.",
+        "Separate action/input identity, integrity, provenance, and acceptance policy.",
+        "Do not expand the conclusion into application security or deployment safety."
+      ]
     }
   ]
 }

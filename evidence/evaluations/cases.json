@@ -179,6 +179,37 @@
           "description": "A runtime with different packaging/discovery conventions is marked adaptation-required until adapted and executed."
         }
       ]
+    },
+    {
+      "id": "ci-third-party-input-integrity",
+      "task": "Review a CI/build setup that executes a third-party action through a mutable tag and downloads a build tool with a checksum from the same mutable source, then define the minimal technical supply-chain integrity evidence required.",
+      "fixture_id": "ci-third-party-input-integrity-v1",
+      "allowed_variants": [
+        "no_skills",
+        "selected_skills",
+        "all_generic_skills"
+      ],
+      "recommended_skills": [
+        "software-supply-chain-integrity"
+      ],
+      "acceptance_criteria": [
+        {
+          "id": "mutable_input_identified",
+          "description": "The mutable third-party executable reference is identified as a supply-chain trust risk."
+        },
+        {
+          "id": "trust_layers_separated",
+          "description": "Version selection/pinning is separated from byte integrity, provenance, and policy approval."
+        },
+        {
+          "id": "verification_boundary_defined",
+          "description": "The critical input/artifact gets an explicit integrity/provenance verification mechanism with a trusted identity/source boundary."
+        },
+        {
+          "id": "scope_limit_preserved",
+          "description": "The result does not claim application security, absence of vulnerabilities, or release safety from supply-chain verification."
+        }
+      ]
     }
   ]
 }

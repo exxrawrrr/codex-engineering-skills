@@ -98,6 +98,7 @@
         "api-contract-testing",
         "ci-pipeline-reliability",
         "runtime-compatibility-engineering",
+        "software-supply-chain-integrity",
         "growthops-engineering"
       ],
       "max_selected": 0
@@ -173,6 +174,23 @@
       ],
       "forbidden": [
         "api-contract-testing",
+        "growthops-engineering"
+      ],
+      "max_selected": 1
+    },
+    {
+      "id": "generic-supply-chain-integrity",
+      "task": "Review a generic CI/build third-party input for immutable identity, integrity, and provenance without expanding into application security or release rollout.",
+      "scope": "generic",
+      "selection_mode": "exact_required",
+      "required": [
+        "software-supply-chain-integrity"
+      ],
+      "allowed": [
+        "software-supply-chain-integrity"
+      ],
+      "forbidden": [
+        "application-security-local-first",
         "growthops-engineering"
       ],
       "max_selected": 1

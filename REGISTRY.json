@@ -182,6 +182,22 @@
       "evidence_refs": []
     },
     {
+      "name": "software-supply-chain-integrity",
+      "kind": "generic",
+      "path": "skills/software-supply-chain-integrity",
+      "tags": [
+        "supply-chain",
+        "provenance",
+        "integrity",
+        "attestation",
+        "dependencies",
+        "artifacts"
+      ],
+      "status": "incubating",
+      "evidence_tier": "none",
+      "evidence_refs": []
+    },
+    {
       "name": "growthops-engineering",
       "kind": "project",
       "path": "skills/growthops-engineering",

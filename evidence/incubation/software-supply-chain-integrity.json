@@ -1,0 +1,66 @@
+{
+  "schema_version": 2,
+  "skill": "software-supply-chain-integrity",
+  "phase": "15B",
+  "reviewed_on": "2026-09-30",
+  "decision": "MODIFY",
+  "original_candidate": "supply-chain-security",
+  "implementation_state": "CREATED",
+  "lifecycle_status": "incubating",
+  "evidence_state": "UNPROVEN",
+  "evidence_tier": "none",
+  "problem": "Repository CI and build inputs rely on third-party code/artifacts while existing application-security and CI-reliability skills deliberately do not own dependency/action/artifact provenance and integrity.",
+  "triggers": [
+    "third-party CI action or plugin refs",
+    "dependency source/lockfile/integrity changes",
+    "external build-tool downloads",
+    "artifact checksum/signature/attestation verification",
+    "build provenance or SBOM trust review"
+  ],
+  "boundary": {
+    "owns": [
+      "dependency/action/source provenance and integrity",
+      "immutable technical build-input identity",
+      "artifact digest/signature/attestation verification",
+      "lockfile source/integrity trust boundaries",
+      "technical supply-chain verification policy"
+    ],
+    "does_not_own": [
+      "application authorization/SSRF/XSS security",
+      "generic CI workflow reliability",
+      "production release rollout/rollback",
+      "organizational vendor-risk governance",
+      "legal/license interpretation"
+    ]
+  },
+  "overlap_review": "application-security-local-first owns runtime/application security; ci-pipeline-reliability owns whether integrity gates execute; provenance-contract tracks repository source attribution/license evidence. This skill owns technical identity/integrity/provenance of software inputs and artifacts.",
+  "current_evidence": "Phases 11 and 13 expose the problem class before this skill existed. No controlled post-creation behavioral execution has tested whether loading software-supply-chain-integrity improves review outcomes.",
+  "representative_case_plan": {
+    "id": "ci-third-party-input-integrity",
+    "fixture_id": "ci-third-party-input-integrity-v1",
+    "required_variants": [
+      "no_skills",
+      "selected_skills"
+    ],
+    "minimum_criteria": [
+      "mutable/unverified third-party executable input is identified",
+      "version pinning is separated from integrity/provenance evidence",
+      "critical artifact/input receives an explicit verification mechanism and trust boundary",
+      "result does not claim application security or release safety"
+    ],
+    "execution_status": "NOT_RUN"
+  },
+  "limitations": [
+    "integrity/provenance does not prove absence of vulnerabilities or malicious logic",
+    "trust depends on signer/builder/source identity and policy",
+    "lockfiles and SBOMs are not complete security proofs",
+    "license/legal conclusions remain outside scope"
+  ],
+  "promotion_requirements": [
+    "execute at least one controlled post-creation supply-chain review case",
+    "show criterion-level value beyond application-security and CI guidance",
+    "preserve routing boundaries",
+    "cross-platform repository validation remains green"
+  ],
+  "rejection_condition": "Retire or fold into security/CI guidance if real use shows supply-chain integrity is not independently useful."
+}

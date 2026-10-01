@@ -451,6 +451,56 @@
       "informs_skills": [
         "runtime-compatibility-engineering"
       ]
+    },
+    {
+      "id": "official-github-actions-security",
+      "type": "official_documentation",
+      "urls": [
+        "https://docs.github.com/en/actions/reference/security/secure-use",
+        "https://docs.github.com/en/actions/concepts/security/artifact-attestations"
+      ],
+      "url_review": {
+        "reviewed_on": "2026-09-30",
+        "status": "RESOLVED",
+        "method": "manual_network_review"
+      },
+      "license_status": "NOT_APPLICABLE_DOCUMENTATION_REFERENCE",
+      "informs_skills": [
+        "software-supply-chain-integrity"
+      ]
+    },
+    {
+      "id": "official-slsa",
+      "type": "official_documentation",
+      "urls": [
+        "https://slsa.dev/spec/v1.2/",
+        "https://slsa.dev/spec/v1.2/provenance"
+      ],
+      "url_review": {
+        "reviewed_on": "2026-09-30",
+        "status": "RESOLVED",
+        "method": "manual_network_review"
+      },
+      "license_status": "NOT_APPLICABLE_DOCUMENTATION_REFERENCE",
+      "informs_skills": [
+        "software-supply-chain-integrity"
+      ]
+    },
+    {
+      "id": "official-npm-package-lock",
+      "type": "official_documentation",
+      "urls": [
+        "https://docs.npmjs.com/files/package-lock.json/"
+      ],
+      "url_review": {
+        "reviewed_on": "2026-09-30",
+        "status": "RESOLVED",
+        "method": "manual_network_review"
+      },
+      "license_status": "NOT_APPLICABLE_DOCUMENTATION_REFERENCE",
+      "informs_skills": [
+        "software-supply-chain-integrity"
+      ]
     }
   ]
 }
