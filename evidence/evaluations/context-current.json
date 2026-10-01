@@ -18,80 +18,92 @@
     "agent-skill-evaluation",
     "api-contract-testing",
     "ci-pipeline-reliability",
-    "runtime-compatibility-engineering"
+    "runtime-compatibility-engineering",
+    "software-supply-chain-integrity"
   ],
-  "all_generic_entrypoint_bytes": 55093,
+  "all_generic_entrypoint_bytes": 64907,
   "comparisons": [
     {
       "case_id": "typescript-package-boundary",
       "no_skills_bytes": 0,
       "selected_skills_bytes": 7079,
-      "all_generic_skills_bytes": 55093,
+      "all_generic_skills_bytes": 64907,
       "selected_skills": [
         "typescript-node-architecture",
         "testing-typescript-systems"
       ],
       "selected_skill_count": 2,
-      "generic_skill_count": 11
+      "generic_skill_count": 12
     },
     {
       "case_id": "sqlite-migration-safety",
       "no_skills_bytes": 0,
       "selected_skills_bytes": 10050,
-      "all_generic_skills_bytes": 55093,
+      "all_generic_skills_bytes": 64907,
       "selected_skills": [
         "sqlite-data-modeling",
         "testing-typescript-systems",
         "typescript-node-architecture"
       ],
       "selected_skill_count": 3,
-      "generic_skill_count": 11
+      "generic_skill_count": 12
     },
     {
       "case_id": "crawler-network-boundary",
       "no_skills_bytes": 0,
       "selected_skills_bytes": 14213,
-      "all_generic_skills_bytes": 55093,
+      "all_generic_skills_bytes": 64907,
       "selected_skills": [
         "resilient-crawler-engineering",
         "application-security-local-first",
         "testing-typescript-systems"
       ],
       "selected_skill_count": 3,
-      "generic_skill_count": 11
+      "generic_skill_count": 12
     },
     {
       "case_id": "api-backward-compatibility-breaking-response",
       "no_skills_bytes": 0,
       "selected_skills_bytes": 7397,
-      "all_generic_skills_bytes": 55093,
+      "all_generic_skills_bytes": 64907,
       "selected_skills": [
         "api-contract-testing"
       ],
       "selected_skill_count": 1,
-      "generic_skill_count": 11
+      "generic_skill_count": 12
     },
     {
       "case_id": "ci-matrix-silent-skip",
       "no_skills_bytes": 0,
       "selected_skills_bytes": 9038,
-      "all_generic_skills_bytes": 55093,
+      "all_generic_skills_bytes": 64907,
       "selected_skills": [
         "ci-pipeline-reliability"
       ],
       "selected_skill_count": 1,
-      "generic_skill_count": 11
+      "generic_skill_count": 12
     },
     {
       "case_id": "runtime-host-support-overclaim",
       "no_skills_bytes": 0,
       "selected_skills_bytes": 7667,
-      "all_generic_skills_bytes": 55093,
+      "all_generic_skills_bytes": 64907,
       "selected_skills": [
         "runtime-compatibility-engineering"
       ],
       "selected_skill_count": 1,
-      "generic_skill_count": 11
+      "generic_skill_count": 12
+    },
+    {
+      "case_id": "ci-third-party-input-integrity",
+      "no_skills_bytes": 0,
+      "selected_skills_bytes": 9814,
+      "all_generic_skills_bytes": 64907,
+      "selected_skills": [
+        "software-supply-chain-integrity"
+      ],
+      "selected_skill_count": 1,
+      "generic_skill_count": 12
     }
   ],
   "runtime_metrics": {
