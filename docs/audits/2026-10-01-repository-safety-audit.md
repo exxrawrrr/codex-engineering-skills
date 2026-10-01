@@ -225,6 +225,25 @@ The portable PowerShell download/extract attempt timed out through the remote co
 
 A read-only inspection showed the most recently modified live Codex files at that moment were under `~/.codex/skills/.system/`; the audit did not establish the cause of those system-file timestamps and therefore does not attribute them to this repository.
 
+## Task 6 implementation lock
+
+Tasks 1–6 are complete on the audit branch.
+
+Verified implementation head:
+
+`7af4e70651d935fb883aaaf379eebc278879d707`
+
+Verification evidence:
+
+- GitHub Actions PR run **#131** / run id `36841830126`;
+- `validate (ubuntu-latest)`: **PASS**;
+- `validate (windows-latest)`: **PASS**;
+- no failed steps in either job.
+
+This lock covers audit implementation and documentation only. It does **not** merge the branch, mutate the live user skill directory, enable branch protection, bump the suite version, or publish a release. Those remain exclusively in Task 7.
+
+The lock commit itself is documentation-only and must also pass the same Windows + Ubuntu CI before Task 6 is considered closed.
+
 ## Remaining final gates
 
 Before this audit is considered shipped:
