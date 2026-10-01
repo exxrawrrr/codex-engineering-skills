@@ -2,7 +2,7 @@ param(
   [switch]$DryRun,
   [switch]$GenericOnly,
   [string[]]$SkillName,
-  [string]$TargetRoot = "$env:USERPROFILE\.codex\skills",
+  [string]$TargetRoot,
   [string]$BackupRoot
 )
 
@@ -10,6 +10,17 @@ $ErrorActionPreference = "Stop"
 
 if ($PSVersionTable.PSEdition -ne "Core" -or $PSVersionTable.PSVersion.Major -lt 7) {
   throw "install.ps1 requires PowerShell Core 7+ (pwsh). Windows PowerShell 5.1 is not a supported installer runtime."
+}
+
+if (-not $PSBoundParameters.ContainsKey("TargetRoot")) {
+  $userHome = if ([System.OperatingSystem]::IsWindows()) { $env:USERPROFILE } else { $env:HOME }
+  if ([string]::IsNullOrWhiteSpace($userHome)) {
+    $userHome = [Environment]::GetFolderPath([Environment+SpecialFolder]::UserProfile)
+  }
+  if ([string]::IsNullOrWhiteSpace($userHome)) {
+    throw "Unable to resolve the current user home directory; provide -TargetRoot explicitly"
+  }
+  $TargetRoot = Join-Path (Join-Path $userHome ".codex") "skills"
 }
 
 $sourceRoot = Join-Path $PSScriptRoot "skills"
@@ -258,6 +269,25 @@ if ((Test-SameOrChildPath -Candidate $backupFull -Root $sourceFull) -or
 $TargetRoot = $targetFull
 $BackupRoot = $backupFull
 $targetRootExisted = Test-Path -LiteralPath $TargetRoot
+$installLockHandle = $null
+$installLockPath = "$TargetRoot.install.lock"
+
+if (-not $DryRun) {
+  if (-not (Test-Path -LiteralPath $targetParent)) {
+    New-Item -ItemType Directory -Path $targetParent -Force | Out-Null
+  }
+
+  try {
+    $installLockHandle = [System.IO.File]::Open(
+      $installLockPath,
+      [System.IO.FileMode]::OpenOrCreate,
+      [System.IO.FileAccess]::ReadWrite,
+      [System.IO.FileShare]::None
+    )
+  } catch [System.IO.IOException] {
+    throw "Another installer is already operating on TargetRoot '$TargetRoot'. Wait for it to finish, then retry."
+  }
+}
 
 if (-not $targetRootExisted -and -not $DryRun) {
   New-Item -ItemType Directory -Path $TargetRoot -Force | Out-Null
@@ -433,6 +463,10 @@ try {
 } finally {
   if (-not $DryRun -and (Test-Path -LiteralPath $stagingRoot)) {
     Remove-Item -LiteralPath $stagingRoot -Recurse -Force
+  }
+
+  if ($null -ne $installLockHandle) {
+    $installLockHandle.Dispose()
   }
 
   # If this invocation created an otherwise-empty target root and then failed
