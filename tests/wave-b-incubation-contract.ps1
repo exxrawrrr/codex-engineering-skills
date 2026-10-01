@@ -80,6 +80,18 @@ if (-not $stateContract.ContainsKey($state)) {
   }
 }
 
+if ($state -eq "COMPLETE") {
+  if ([string]$ledger.locked_on -ne "2026-10-01") {
+    $errors.Add("COMPLETE state requires locked_on=2026-10-01")
+  }
+  if ([string]::IsNullOrWhiteSpace([string]$ledger.lock_claim) -or
+      [string]$ledger.lock_claim -notmatch "incubating" -or
+      [string]$ledger.lock_claim -notmatch "UNPROVEN" -or
+      [string]$ledger.lock_claim -notmatch "not an effectiveness promotion") {
+    $errors.Add("COMPLETE state requires an explicit incubating/UNPROVEN non-promotion lock claim")
+  }
+}
+
 $expectedCandidates = @(
   "observability-diagnostics",
   "dependency-upgrade-engineering",

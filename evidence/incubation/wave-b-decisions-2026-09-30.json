@@ -3,7 +3,7 @@
   "phase": "15",
   "split": "15B",
   "reviewed_on": "2026-09-30",
-  "completion_state": "IMPLEMENTATION_COMPLETE_PENDING_LOCK",
+  "completion_state": "COMPLETE",
   "required_candidates": [
     "observability-diagnostics",
     "dependency-upgrade-engineering",
@@ -203,5 +203,7 @@
       },
       "next_action": "Keep incubating with explicit NOT_RUN behavioral evidence until a controlled post-creation supply-chain case executes."
     }
-  ]
+  ],
+  "locked_on": "2026-10-01",
+  "lock_claim": "Wave B implementation is complete. Both created Wave B skills remain incubating and behaviorally UNPROVEN pending controlled post-creation execution; this lock is not an effectiveness promotion."
 }
