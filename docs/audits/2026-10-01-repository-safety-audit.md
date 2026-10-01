@@ -45,7 +45,7 @@ Skill content itself was not mass-edited. No concrete skill-content defect justi
 | Phase 17 historical contract required README current suite string to remain v1.2.0 | High maintenance risk | Decoupled |
 | `CONTRIBUTING.md` hard-coded “six reusable skills” | Low | Fixed |
 | `COMPATIBILITY.md` described a dated Phase 11 snapshot as current evidence | Low | Clarified as historical snapshot |
-| `main` branch protection was disabled at audit start | Important governance gap | Pending final Task 7 repository setting |
+| `main` branch protection was disabled at audit start | Important governance gap | Fixed after green post-merge CI: PR required, Windows + Ubuntu checks required, admin enforcement on, force-push/delete blocked |
 | macOS executable testing | Evidence gap | Still NOT RUN |
 | Named third-party agent runtime loading | Evidence gap | Still NOT RUN |
 | Runtime proof that agents obey router selection | Evidence gap | Still NOT RUN |
@@ -221,7 +221,7 @@ This audit does **not** change these truthful limits:
 
 A remote supported-runtime smoke attempt used only temporary paths and did not intentionally target the live Codex skill directory.
 
-The portable PowerShell download/extract attempt timed out through the remote connector and left two temporary audit directories under the Windows TEMP directory. They are audit leftovers, not repository content. Final cleanup/smoke handling belongs to the final verification task.
+The earlier portable PowerShell download/extract timeout left two temporary audit directories under the Windows TEMP directory. Task 7 reused the completed portable runtime for supported-runtime smoke and then removed both audit runtime directories; final audit TEMP remaining count was **0**.
 
 A read-only inspection showed the most recently modified live Codex files at that moment were under `~/.codex/skills/.system/`; the audit did not establish the cause of those system-file timestamps and therefore does not attribute them to this repository.
 
@@ -285,15 +285,52 @@ Deferred minors:
 
 Neither minor changes active-install safety, rollback safety, path containment, or supported-runtime behavior.
 
-## Remaining final gates
+## Final shipped state
 
-Before this audit is considered shipped:
+Task 7 completed all production gates.
 
-1. run the final temporary-target installer smoke without touching live skills;
-2. run full PR CI Windows + Ubuntu at the final branch head;
-3. review the full branch diff;
-4. merge only after green;
-5. verify post-merge `main` CI;
-6. enable practical `main` branch protection if the repository plan permits it;
-7. if releasing the fixes, publish a SemVer patch without rewriting v1.2.0 historical evidence.
+Release candidate head:
+
+`958c4dc9ae1b0313cdfaa49232f45da363204e5c`
+
+Final PR verification:
+
+- PR **#41**;
+- GitHub Actions run **#136** / run id `36844215981`;
+- Windows: **PASS**;
+- Ubuntu: **PASS**;
+- failed steps: **0**.
+
+Merge:
+
+- squash merge commit: `4b4238da8d97b41568a191711e3e6ae23161088c`.
+
+Post-merge verification:
+
+- GitHub Actions main run **#137** / run id `36844534998`;
+- Windows: **PASS**;
+- Ubuntu: **PASS**;
+- failed steps: **0**.
+
+Repository governance after verification:
+
+- `main` branch protection: **enabled for everyone**;
+- pull request required;
+- required checks: `validate (windows-latest)`, `validate (ubuntu-latest)`;
+- strict/up-to-date required checks: enabled;
+- required approving reviews: **0**;
+- administrator enforcement: enabled;
+- linear history: required;
+- force push: disabled;
+- branch deletion: disabled.
+
+Release:
+
+- registry version: **1.2.1**;
+- tag: **v1.2.1**;
+- GitHub Release: **v1.2.1 — Installation Safety Hardening**;
+- tag target: `4b4238da8d97b41568a191711e3e6ae23161088c`;
+- historical v1.2.0 acceptance/release evidence remains unchanged.
+
+This audit is shipped. Remaining items documented under **Evidence limits intentionally preserved** are evidence gaps, not unfinished Task 7 work.
 
