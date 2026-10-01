@@ -52,6 +52,49 @@ function New-DirectoryAlias {
   }
 }
 
+function New-SourceValidationSandbox {
+  param(
+    [Parameter(Mandatory = $true)][string]$Name,
+    [Parameter(Mandatory = $true)][string]$SkillBody,
+    [switch]$AddExternalReadme
+  )
+
+  $root = Join-Path $tempRoot ("source-validation-" + $Name)
+  $repo = Join-Path $root "repo"
+  $skillRoot = Join-Path $repo "skills/fixture-skill"
+  New-Item -ItemType Directory -Path $skillRoot -Force | Out-Null
+  Copy-Item -LiteralPath $installer -Destination (Join-Path $repo "install.ps1")
+  [System.IO.File]::WriteAllText(
+    (Join-Path $skillRoot "SKILL.md"),
+    $SkillBody,
+    [System.Text.UTF8Encoding]::new($false)
+  )
+  if ($AddExternalReadme) {
+    Set-Content -LiteralPath (Join-Path $repo "README.md") -Value "external file" -Encoding utf8NoBOM
+  }
+  [ordered]@{
+    schema_version = 2
+    suite = "installer-source-validation"
+    version = "0.0.0"
+    skills = @(
+      [ordered]@{
+        name = "fixture-skill"
+        kind = "generic"
+        path = "skills/fixture-skill"
+        tags = @("fixture")
+        status = "stable"
+        evidence_tier = "none"
+        evidence_refs = @()
+      }
+    )
+  } | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath (Join-Path $repo "REGISTRY.json") -Encoding utf8NoBOM
+
+  return @{
+    Installer = Join-Path $repo "install.ps1"
+    TargetRoot = Join-Path $root "target/skills"
+  }
+}
+
 function Invoke-ExpectFailure {
   param(
     [Parameter(Mandatory = $true)][scriptblock]$Action,
@@ -88,6 +131,8 @@ try {
   $defaultDry = & $installer -DryRun -TargetRoot $defaultDryTarget | Out-String
   Assert-SameStringSet -Actual (Get-DryRunInstallNames -Output $defaultDry) -Expected $allRegistryNames -Message "Default dry-run did not select exactly the full registry"
   Assert-True (-not (Test-Path -LiteralPath $defaultDryTarget)) "Default dry-run mutated the target"
+  Assert-True ($defaultDry.Contains("[WARN] Full-registry install includes project-specific skills: growthops-engineering")) "Full-registry install did not warn about project-specific skills"
+  Assert-True ($defaultDry.Contains("prefer -GenericOnly or -SkillName")) "Full-registry warning did not recommend safer selective installation"
 
   $genericDryTarget = Join-Path (Join-Path $tempRoot "generic-dry") "skills"
   $genericDry = & $installer -DryRun -TargetRoot $genericDryTarget -GenericOnly | Out-String
@@ -186,7 +231,98 @@ try {
     Assert-True ($caseDry.Contains("Would stage and install sqlite-data-modeling")) "Unix case-sensitive distinct path was incorrectly rejected"
   }
 
-  Write-Output "[PASS] default install selects the full registry"
+  $unclosed = New-SourceValidationSandbox -Name "unclosed-frontmatter" -SkillBody @'
+---
+name: fixture-skill
+description: "Fixture with an unclosed frontmatter block."
+
+# Body that must not rescue malformed frontmatter
+'@
+  Invoke-ExpectFailure -Action {
+    & $unclosed.Installer -DryRun -TargetRoot $unclosed.TargetRoot -SkillName "fixture-skill" | Out-Null
+  } -Message "Installer accepted an unclosed frontmatter block" -ExpectedText "invalid YAML frontmatter block"
+
+  $missingDescription = New-SourceValidationSandbox -Name "missing-description" -SkillBody @'
+---
+name: fixture-skill
+---
+
+# Fixture
+
+No frontmatter description.
+'@
+  Invoke-ExpectFailure -Action {
+    & $missingDescription.Installer -DryRun -TargetRoot $missingDescription.TargetRoot -SkillName "fixture-skill" | Out-Null
+  } -Message "Installer accepted missing frontmatter description" -ExpectedText "missing description in YAML frontmatter"
+
+  $escapedReference = New-SourceValidationSandbox -Name "escaped-reference" -AddExternalReadme -SkillBody @'
+---
+name: fixture-skill
+description: "Fixture with a path-escaping reference."
+---
+
+# Fixture
+
+Read `references/../../README.md`.
+'@
+  Invoke-ExpectFailure -Action {
+    & $escapedReference.Installer -DryRun -TargetRoot $escapedReference.TargetRoot -SkillName "fixture-skill" | Out-Null
+  } -Message "Installer accepted a reference path that escapes the skill directory" -ExpectedText "reference escapes skill directory"
+
+  # Cross-platform default target must derive from the runtime user home.
+  $originalHome = $env:HOME
+  $originalUserProfile = $env:USERPROFILE
+  try {
+    $fakeHome = Join-Path $tempRoot "fake-user-home"
+    New-Item -ItemType Directory -Path $fakeHome -Force | Out-Null
+
+    if ([System.OperatingSystem]::IsWindows()) {
+      $env:USERPROFILE = $fakeHome
+    } else {
+      $env:HOME = $fakeHome
+      Remove-Item Env:USERPROFILE -ErrorAction SilentlyContinue
+    }
+
+    $homeDefaultDry = & $installer -DryRun -SkillName "sqlite-data-modeling" | Out-String
+    $expectedDefaultTarget = Join-Path (Join-Path $fakeHome ".codex") "skills"
+    Assert-True ($homeDefaultDry.Contains("-> $expectedDefaultTarget")) "Default TargetRoot did not resolve from the runtime user home"
+    Assert-True (-not (Test-Path -LiteralPath $expectedDefaultTarget)) "Default-target dry-run mutated the user-home target"
+  } finally {
+    if ($null -eq $originalHome) { Remove-Item Env:HOME -ErrorAction SilentlyContinue } else { $env:HOME = $originalHome }
+    if ($null -eq $originalUserProfile) { Remove-Item Env:USERPROFILE -ErrorAction SilentlyContinue } else { $env:USERPROFILE = $originalUserProfile }
+  }
+
+  # A mutating install must fail closed while another process holds the
+  # target's sibling install lock. Dry-run remains read-only and lock-free.
+  $lockTarget = Join-Path (Join-Path $tempRoot "concurrent") "skills"
+  $lockFile = "$lockTarget.install.lock"
+  New-Item -ItemType Directory -Path (Split-Path $lockFile -Parent) -Force | Out-Null
+  $lockHandle = [System.IO.File]::Open(
+    $lockFile,
+    [System.IO.FileMode]::OpenOrCreate,
+    [System.IO.FileAccess]::ReadWrite,
+    [System.IO.FileShare]::None
+  )
+  try {
+    $lockDry = & $installer -DryRun -TargetRoot $lockTarget -SkillName "sqlite-data-modeling" | Out-String
+    Assert-True ($lockDry.Contains("[DRY RUN] Would stage and install sqlite-data-modeling")) "Dry-run incorrectly required the install lock"
+
+    New-Item -ItemType Directory -Path $lockTarget -Force | Out-Null
+    $lockSentinel = Join-Path $lockTarget "sentinel.txt"
+    Set-Content -LiteralPath $lockSentinel -Value "untouched" -Encoding utf8NoBOM
+
+    Invoke-ExpectFailure -Action {
+      & $installer -TargetRoot $lockTarget -SkillName "sqlite-data-modeling" | Out-Null
+    } -Message "Concurrent install did not fail closed while target lock was held" -ExpectedText "Another installer is already operating on TargetRoot"
+
+    Assert-True ((Get-Content -LiteralPath $lockSentinel -Raw).Trim() -eq "untouched") "Concurrent-install rejection mutated pre-existing target content"
+    Assert-True (-not (Test-Path -LiteralPath (Join-Path $lockTarget "sqlite-data-modeling"))) "Concurrent-install rejection installed a skill before failing"
+  } finally {
+    $lockHandle.Dispose()
+  }
+
+  Write-Output "[PASS] default install selects the full registry with explicit project-skill warning"
+  Write-Output "[PASS] malformed frontmatter and escaped references fail before mutation"
   Write-Output "[PASS] GenericOnly selects exactly generic registry skills"
   Write-Output "[PASS] explicit installer selection is exact and leaves unselected skills untouched"
   Write-Output "[PASS] unknown/blank/ambiguous selections fail before mutation"

@@ -37,7 +37,6 @@ function New-Sandbox {
   return @{
     Root = $root
     ReportPath = Join-Path $root "evidence/releases/v1.2.0-vnext-acceptance-2026-10-01.json"
-    RegistryPath = Join-Path $root "REGISTRY.json"
     Phase16Path = Join-Path $root "evidence/lifecycle/phase16-review-2026-10-01.json"
     ComparativeResultPath = Join-Path $root "evidence/evaluations/results/phase17-supply-chain-comparison-2026-10-01.json"
     CasesPath = Join-Path $root "evidence/evaluations/cases.json"
@@ -57,7 +56,6 @@ function Invoke-Contract {
   param([hashtable]$Sandbox)
   $output = & pwsh -NoProfile -File $validator `
     -ReportPath $Sandbox.ReportPath `
-    -RegistryPath $Sandbox.RegistryPath `
     -Phase16Path $Sandbox.Phase16Path `
     -ComparativeResultPath $Sandbox.ComparativeResultPath `
     -CasesPath $Sandbox.CasesPath `
@@ -92,11 +90,21 @@ try {
   $valid = New-Sandbox -Name "valid"
   Assert-Passes -Sandbox $valid
 
+  $futurePatch = New-Sandbox -Name "future-patch-version"
+  $futureRegistryPath = Join-Path $futurePatch.Root "REGISTRY.json"
+  $r = Get-Content -LiteralPath $futureRegistryPath -Raw | ConvertFrom-Json
+  $r.version = "1.2.1"
+  Save-Json -Path $futureRegistryPath -Value $r
+  $text = Get-Content -LiteralPath $futurePatch.ReadmePath -Raw
+  $text = $text.Replace("Current suite release: **v1.2.0**","Current suite release: **v1.2.1**")
+  Set-Content -LiteralPath $futurePatch.ReadmePath -Value $text -Encoding utf8NoBOM
+  Assert-Passes -Sandbox $futurePatch
+
   $versionDrift = New-Sandbox -Name "version-drift"
-  $r = Get-Content -LiteralPath $versionDrift.RegistryPath -Raw | ConvertFrom-Json
-  $r.version = "1.1.1"
-  Save-Json -Path $versionDrift.RegistryPath -Value $r
-  Assert-Rejected -Sandbox $versionDrift -ExpectedText "REGISTRY.version must be 1.2.0 for this release"
+  $r = Get-Content -LiteralPath $versionDrift.ReportPath -Raw | ConvertFrom-Json
+  $r.target_version = "1.1.1"
+  Save-Json -Path $versionDrift.ReportPath -Value $r
+  Assert-Rejected -Sandbox $versionDrift -ExpectedText "Phase 17 target_version must be 1.2.0"
 
   $notRun = New-Sandbox -Name "criterion-not-run"
   $r = Get-Content -LiteralPath $notRun.ReportPath -Raw | ConvertFrom-Json

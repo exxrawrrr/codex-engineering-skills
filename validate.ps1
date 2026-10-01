@@ -173,6 +173,11 @@ if ($fail.Count -eq 0) {
     $fail.Add("Registry schema_version must be at least 2 for evidence metadata")
   }
 
+  $registryVersion = [string]$registry.version
+  if ($registryVersion -notmatch '^\d+\.\d+\.\d+$') {
+    $fail.Add("Registry version must use SemVer X.Y.Z; observed '$registryVersion'")
+  }
+
   $names = New-Object System.Collections.Generic.HashSet[string]
   $registryByName = @{}
 
@@ -295,8 +300,23 @@ if ($fail.Count -eq 0) {
       ForEach-Object { $_.Value } | Sort-Object -Unique
 
     foreach ($ref in $refs) {
-      $refPath = Join-Path $dir ($ref -replace '/', '\')
-      if (-not (Test-Path $refPath)) {
+      $dirFull = [System.IO.Path]::GetFullPath($dir)
+      $refPath = [System.IO.Path]::GetFullPath((Join-Path $dir $ref))
+      $relativeRef = [System.IO.Path]::GetRelativePath($dirFull, $refPath)
+      $parentPrefix = ".." + [System.IO.Path]::DirectorySeparatorChar
+      $altParentPrefix = ".." + [System.IO.Path]::AltDirectorySeparatorChar
+
+      if (
+        [System.IO.Path]::IsPathRooted($relativeRef) -or
+        $relativeRef -eq ".." -or
+        $relativeRef.StartsWith($parentPrefix, [System.StringComparison]::Ordinal) -or
+        $relativeRef.StartsWith($altParentPrefix, [System.StringComparison]::Ordinal)
+      ) {
+        $fail.Add("$($name): reference escapes skill directory -> $ref")
+        continue
+      }
+
+      if (-not (Test-Path -LiteralPath $refPath)) {
         $fail.Add("$($name): broken reference -> $ref")
       }
     }
@@ -317,6 +337,15 @@ if ($fail.Count -eq 0) {
         Select-String -Pattern "GrowthOps" -SimpleMatch -ErrorAction SilentlyContinue
       if ($hits) {
         $warn.Add("$($name): generic skill contains GrowthOps-specific text")
+      }
+    }
+  }
+
+  foreach ($recordId in @($evidenceRecordsById.Keys)) {
+    $record = $evidenceRecordsById[$recordId]
+    foreach ($observation in $record.skill_observations.PSObject.Properties) {
+      if (-not $registryByName.ContainsKey([string]$observation.Name)) {
+        $fail.Add("Evidence record '$recordId': unknown skill_observation '$($observation.Name)'")
       }
     }
   }

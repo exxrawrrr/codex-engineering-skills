@@ -1,6 +1,5 @@
 param(
   [string]$ReportPath = "$PSScriptRoot\..\evidence\releases\v1.2.0-vnext-acceptance-2026-10-01.json",
-  [string]$RegistryPath = "$PSScriptRoot\..\REGISTRY.json",
   [string]$Phase16Path = "$PSScriptRoot\..\evidence\lifecycle\phase16-review-2026-10-01.json",
   [string]$ComparativeResultPath = "$PSScriptRoot\..\evidence\evaluations\results\phase17-supply-chain-comparison-2026-10-01.json",
   [string]$CasesPath = "$PSScriptRoot\..\evidence\evaluations\cases.json",
@@ -22,12 +21,11 @@ function Assert-ExactSet {
   }
 }
 
-foreach ($path in @($ReportPath,$RegistryPath,$Phase16Path,$ComparativeResultPath,$CasesPath,$ContextPath,$ReadmePath,$InstallPath,$ReleaseNotesPath)) {
+foreach ($path in @($ReportPath,$Phase16Path,$ComparativeResultPath,$CasesPath,$ContextPath,$ReadmePath,$InstallPath,$ReleaseNotesPath)) {
   if (-not (Test-Path -LiteralPath $path)) { throw "Missing Phase 17 input: $path" }
 }
 
 $report = Get-Content -LiteralPath $ReportPath -Raw | ConvertFrom-Json
-$registry = Get-Content -LiteralPath $RegistryPath -Raw | ConvertFrom-Json
 $phase16 = Get-Content -LiteralPath $Phase16Path -Raw | ConvertFrom-Json
 $comparison = Get-Content -LiteralPath $ComparativeResultPath -Raw | ConvertFrom-Json
 $cases = Get-Content -LiteralPath $CasesPath -Raw | ConvertFrom-Json
@@ -43,7 +41,6 @@ if ([string]$report.target_version -ne "1.2.0") { $errors.Add("Phase 17 target_v
 if ([string]$report.tag_name -ne "v1.2.0") { $errors.Add("Phase 17 tag_name must be v1.2.0") }
 if (-not [bool]$report.release_ready) { $errors.Add("Phase 17 release_ready must be true") }
 if ([string]$report.release_state -ne "READY_FOR_FINAL_PR_CI_AND_TAG") { $errors.Add("Phase 17 release_state must be READY_FOR_FINAL_PR_CI_AND_TAG") }
-if ([string]$registry.version -ne "1.2.0") { $errors.Add("REGISTRY.version must be 1.2.0 for this release") }
 
 if ([string]$phase16.completion_state -ne "COMPLETE" -or [string]$phase16.split -ne "16B" -or [string]$phase16.locked_on -ne "2026-10-01") {
   $errors.Add("Phase 16 must be COMPLETE/16B and locked on 2026-10-01 before release")
@@ -120,7 +117,6 @@ $contextRows = @($context.comparisons | Where-Object { [string]$_.case_id -eq "p
 if ($contextRows.Count -ne 1) { $errors.Add("Current context benchmark must include the Phase 17 comparative case") }
 
 foreach ($needle in @(
-  "Current suite release: **v1.2.0**",
   "PowerShell Core 7+",
   "pwsh -NoProfile -File .\install.ps1",
   "docs/releases/v1.2.0-vnext.md",

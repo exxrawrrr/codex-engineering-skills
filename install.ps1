@@ -2,7 +2,7 @@ param(
   [switch]$DryRun,
   [switch]$GenericOnly,
   [string[]]$SkillName,
-  [string]$TargetRoot = "$env:USERPROFILE\.codex\skills",
+  [string]$TargetRoot,
   [string]$BackupRoot
 )
 
@@ -10,6 +10,17 @@ $ErrorActionPreference = "Stop"
 
 if ($PSVersionTable.PSEdition -ne "Core" -or $PSVersionTable.PSVersion.Major -lt 7) {
   throw "install.ps1 requires PowerShell Core 7+ (pwsh). Windows PowerShell 5.1 is not a supported installer runtime."
+}
+
+if (-not $PSBoundParameters.ContainsKey("TargetRoot")) {
+  $userHome = if ([System.OperatingSystem]::IsWindows()) { $env:USERPROFILE } else { $env:HOME }
+  if ([string]::IsNullOrWhiteSpace($userHome)) {
+    $userHome = [Environment]::GetFolderPath([Environment+SpecialFolder]::UserProfile)
+  }
+  if ([string]::IsNullOrWhiteSpace($userHome)) {
+    throw "Unable to resolve the current user home directory; provide -TargetRoot explicitly"
+  }
+  $TargetRoot = Join-Path (Join-Path $userHome ".codex") "skills"
 }
 
 $sourceRoot = Join-Path $PSScriptRoot "skills"
@@ -126,11 +137,37 @@ function Assert-SkillBundle {
   }
 
   $raw = Get-Content -LiteralPath $skillPath -Raw
-  if (-not $raw.StartsWith("---")) {
-    throw "Invalid skill bundle '$ExpectedName': missing YAML frontmatter opener"
+  $frontmatterMatch = [regex]::Match(
+    $raw,
+    '\A---\r?\n(?<frontmatter>[\s\S]*?)\r?\n---(?:\r?\n|$)'
+  )
+  if (-not $frontmatterMatch.Success) {
+    throw "Invalid skill bundle '$ExpectedName': invalid YAML frontmatter block"
   }
-  if ($raw -notmatch "(?m)^name:\s+$([regex]::Escape($ExpectedName))\s*$") {
+
+  $frontmatter = $frontmatterMatch.Groups["frontmatter"].Value
+  if ($frontmatter -notmatch "(?m)^name:\s+$([regex]::Escape($ExpectedName))\s*$") {
     throw "Invalid skill bundle '$ExpectedName': frontmatter name mismatch"
+  }
+  if ($frontmatter -notmatch "(?m)^description:\s+.+$") {
+    throw "Invalid skill bundle '$ExpectedName': missing description in YAML frontmatter"
+  }
+
+  $bundleRoot = Get-NormalizedFullPath -Path $Path -Label "Skill bundle '$ExpectedName'"
+  $refs = [regex]::Matches($raw, 'references/[A-Za-z0-9._/-]+\.md') |
+    ForEach-Object { $_.Value } |
+    Sort-Object -Unique
+
+  foreach ($ref in $refs) {
+    $relativeRef = $ref.Replace('/', [System.IO.Path]::DirectorySeparatorChar)
+    $candidate = Get-NormalizedFullPath -Path (Join-Path $bundleRoot $relativeRef) -Label "Reference '$ref'"
+
+    if (-not (Test-SameOrChildPath -Candidate $candidate -Root $bundleRoot)) {
+      throw "Invalid skill bundle '$ExpectedName': reference escapes skill directory -> $ref"
+    }
+    if (-not (Test-Path -LiteralPath $candidate -PathType Leaf)) {
+      throw "Invalid skill bundle '$ExpectedName': broken reference -> $ref"
+    }
   }
 }
 
@@ -191,6 +228,13 @@ if ($hasExplicitSelection) {
     throw "Unknown skill name(s): $($unknownNames -join ', ')"
   }
   $entries = @($entries | Where-Object { $requestedNames -contains [string]$_.name })
+}
+
+if (-not $GenericOnly -and -not $hasExplicitSelection) {
+  $projectNames = @($entries | Where-Object { [string]$_.kind -eq "project" } | ForEach-Object { [string]$_.name })
+  if ($projectNames.Count -gt 0) {
+    Write-Output "[WARN] Full-registry install includes project-specific skills: $($projectNames -join ', '). For general reusable skills, prefer -GenericOnly or -SkillName."
+  }
 }
 
 $sourceFull = Get-NormalizedFullPath -Path $sourceRoot -Label "Source skill root"
@@ -258,6 +302,25 @@ if ((Test-SameOrChildPath -Candidate $backupFull -Root $sourceFull) -or
 $TargetRoot = $targetFull
 $BackupRoot = $backupFull
 $targetRootExisted = Test-Path -LiteralPath $TargetRoot
+$installLockHandle = $null
+$installLockPath = "$TargetRoot.install.lock"
+
+if (-not $DryRun) {
+  if (-not (Test-Path -LiteralPath $targetParent)) {
+    New-Item -ItemType Directory -Path $targetParent -Force | Out-Null
+  }
+
+  try {
+    $installLockHandle = [System.IO.File]::Open(
+      $installLockPath,
+      [System.IO.FileMode]::OpenOrCreate,
+      [System.IO.FileAccess]::ReadWrite,
+      [System.IO.FileShare]::None
+    )
+  } catch [System.IO.IOException] {
+    throw "Another installer is already operating on TargetRoot '$TargetRoot'. Wait for it to finish, then retry."
+  }
+}
 
 if (-not $targetRootExisted -and -not $DryRun) {
   New-Item -ItemType Directory -Path $TargetRoot -Force | Out-Null
@@ -433,6 +496,10 @@ try {
 } finally {
   if (-not $DryRun -and (Test-Path -LiteralPath $stagingRoot)) {
     Remove-Item -LiteralPath $stagingRoot -Recurse -Force
+  }
+
+  if ($null -ne $installLockHandle) {
+    $installLockHandle.Dispose()
   }
 
   # If this invocation created an otherwise-empty target root and then failed

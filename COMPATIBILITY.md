@@ -35,9 +35,11 @@ Structural simplicity is useful portability evidence, but it is not execution ev
 
 Machine-readable source: [`evidence/compatibility/2026-09-30.json`](evidence/compatibility/2026-09-30.json).
 
-## Current tested-execution evidence
+## Historical tested-execution snapshot (2026-09-30)
 
-The current compatibility evidence snapshot is based on:
+The machine-readable compatibility record under `evidence/compatibility/2026-09-30.json` is a dated historical snapshot. It is intentionally not rewritten every time later CI succeeds. For current repository health, inspect the latest GitHub Actions run for the relevant commit or pull request; a later green run does not by itself change the runtime-loading or macOS claims below.
+
+The dated compatibility evidence snapshot is based on:
 
 - repository commit: `7a361791aa310fc3cf0e54e9a5a5a499abb9b3d8`;
 - PR: **#26 — Phase 11 cross-platform PowerShell CI re-audit**;
