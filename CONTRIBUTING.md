@@ -8,7 +8,7 @@ For skill changes:
 1. keep `SKILL.md` focused;
 2. move deep detail into `references/`;
 3. preserve clear trigger/use-case wording;
-4. keep the six reusable skills project-agnostic;
+4. keep reusable generic skills project-agnostic; project-specific rules belong in project routers/contracts;
 5. update attribution if a new external source materially informs the work;
 6. run `validate.ps1`.
 
