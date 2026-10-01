@@ -50,42 +50,42 @@ foreach ($row in $rows) {
   $status = [string]$entry.status
   $tier = [string]$entry.evidence_tier
 
-  if ([string]$row.status -ne $status) { $errors.Add("$name: review status does not match registry") }
-  if ([string]$row.evidence_tier -ne $tier) { $errors.Add("$name: review evidence_tier does not match registry") }
-  if ([string]::IsNullOrWhiteSpace([string]$row.basis)) { $errors.Add("$name: lifecycle decision requires basis") }
+  if ([string]$row.status -ne $status) { $errors.Add("${name}: review status does not match registry") }
+  if ([string]$row.evidence_tier -ne $tier) { $errors.Add("${name}: review evidence_tier does not match registry") }
+  if ([string]::IsNullOrWhiteSpace([string]$row.basis)) { $errors.Add("${name}: lifecycle decision requires basis") }
 
   if ($status -eq "stable") {
-    if ([string]$row.decision -ne "KEEP_STABLE") { $errors.Add("$name: stable skill must remain KEEP_STABLE in 16A") }
-    if ([string]$row.evidence_state -ne "PARTIALLY_VERIFIED") { $errors.Add("$name: observational stable evidence must remain PARTIALLY_VERIFIED") }
+    if ([string]$row.decision -ne "KEEP_STABLE") { $errors.Add("${name}: stable skill must remain KEEP_STABLE in 16A") }
+    if ([string]$row.evidence_state -ne "PARTIALLY_VERIFIED") { $errors.Add("${name}: observational stable evidence must remain PARTIALLY_VERIFIED") }
   } elseif ($status -eq "project") {
-    if ([string]$row.decision -ne "KEEP_PROJECT") { $errors.Add("$name: project skill must remain KEEP_PROJECT") }
-    if ([string]$row.evidence_state -ne "PARTIALLY_VERIFIED") { $errors.Add("$name: project observational evidence must remain PARTIALLY_VERIFIED") }
+    if ([string]$row.decision -ne "KEEP_PROJECT") { $errors.Add("${name}: project skill must remain KEEP_PROJECT") }
+    if ([string]$row.evidence_state -ne "PARTIALLY_VERIFIED") { $errors.Add("${name}: project observational evidence must remain PARTIALLY_VERIFIED") }
   } elseif ($status -eq "incubating") {
-    if ([string]$row.decision -ne "KEEP_INCUBATING") { $errors.Add("$name: incubating skill must remain KEEP_INCUBATING in Phase 16") }
-    if ($tier -ne "none" -or @($entry.evidence_refs).Count -ne 0) { $errors.Add("$name: incubating skill must remain evidence_tier none with no refs") }
-    if ([string]$row.evidence_state -ne "UNPROVEN") { $errors.Add("$name: incubating skill must remain UNPROVEN") }
+    if ([string]$row.decision -ne "KEEP_INCUBATING") { $errors.Add("${name}: incubating skill must remain KEEP_INCUBATING in Phase 16") }
+    if ($tier -ne "none" -or @($entry.evidence_refs).Count -ne 0) { $errors.Add("${name}: incubating skill must remain evidence_tier none with no refs") }
+    if ([string]$row.evidence_state -ne "UNPROVEN") { $errors.Add("${name}: incubating skill must remain UNPROVEN") }
 
     $recordPath = Join-Path $IncubationRoot ($name + ".json")
     if ($name -eq "agent-skill-authoring") {
       if (Test-Path -LiteralPath $recordPath) {
         $record = Get-Content -LiteralPath $recordPath -Raw | ConvertFrom-Json
-        if ([string]$record.evidence_state -ne "UNPROVEN") { $errors.Add("$name: optional incubation record must remain UNPROVEN") }
+        if ([string]$record.evidence_state -ne "UNPROVEN") { $errors.Add("${name}: optional incubation record must remain UNPROVEN") }
       }
     } else {
       if (-not (Test-Path -LiteralPath $recordPath)) {
-        $errors.Add("$name: expected incubation record is missing")
+        $errors.Add("${name}: expected incubation record is missing")
       } else {
         $record = Get-Content -LiteralPath $recordPath -Raw | ConvertFrom-Json
         if ([string]$record.lifecycle_status -ne "incubating" -or [string]$record.evidence_state -ne "UNPROVEN" -or [string]$record.evidence_tier -ne "none") {
-          $errors.Add("$name: incubation record lifecycle/evidence fields are inconsistent")
+          $errors.Add("${name}: incubation record lifecycle/evidence fields are inconsistent")
         }
         if ([string]$record.representative_case_plan.execution_status -ne "NOT_RUN") {
-          $errors.Add("$name: post-creation representative case must remain NOT_RUN")
+          $errors.Add("${name}: post-creation representative case must remain NOT_RUN")
         }
       }
     }
   } else {
-    $errors.Add("$name: unsupported lifecycle status '$status'")
+    $errors.Add("${name}: unsupported lifecycle status '$status'")
   }
 }
 
@@ -95,8 +95,8 @@ if (@($review.demotions).Count -ne 0) { $errors.Add("Phase 16A must not contain 
 $expectedDeferred = @("observability-diagnostics","dependency-upgrade-engineering","release-rollback-engineering")
 Assert-ExactSet -Actual @($review.deferred_candidates | ForEach-Object { [string]$_.candidate }) -Expected $expectedDeferred -Label "deferred candidates"
 foreach ($candidate in $expectedDeferred) {
-  if ($registryByName.ContainsKey($candidate)) { $errors.Add("$candidate: deferred candidate must remain absent from REGISTRY.json") }
-  if (Test-Path -LiteralPath (Join-Path (Join-Path $SkillRoot $candidate) "SKILL.md")) { $errors.Add("$candidate: deferred candidate must remain absent from skills/") }
+  if ($registryByName.ContainsKey($candidate)) { $errors.Add("${candidate}: deferred candidate must remain absent from REGISTRY.json") }
+  if (Test-Path -LiteralPath (Join-Path (Join-Path $SkillRoot $candidate) "SKILL.md")) { $errors.Add("${candidate}: deferred candidate must remain absent from skills/") }
 }
 
 $cleanupPath = "skills/growthops-engineering/scripts/validate-suite.ps1"
