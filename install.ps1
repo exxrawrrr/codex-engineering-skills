@@ -137,10 +137,16 @@ function Assert-SkillBundle {
   }
 
   $raw = Get-Content -LiteralPath $skillPath -Raw
-  if (-not $raw.StartsWith("---")) {
-    throw "Invalid skill bundle '$ExpectedName': missing YAML frontmatter opener"
+  $frontmatterMatch = [regex]::Match(
+    $raw,
+    '\A---\r?\n(?<frontmatter>[\s\S]*?)\r?\n---(?:\r?\n|$)'
+  )
+  if (-not $frontmatterMatch.Success) {
+    throw "Invalid skill bundle '$ExpectedName': invalid YAML frontmatter block"
   }
-  if ($raw -notmatch "(?m)^name:\s+$([regex]::Escape($ExpectedName))\s*$") {
+
+  $frontmatter = $frontmatterMatch.Groups["frontmatter"].Value
+  if ($frontmatter -notmatch "(?m)^name:\s+$([regex]::Escape($ExpectedName))\s*$") {
     throw "Invalid skill bundle '$ExpectedName': frontmatter name mismatch"
   }
 }
