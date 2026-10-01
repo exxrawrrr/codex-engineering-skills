@@ -223,23 +223,21 @@ pwsh --version
 
 Windows PowerShell 5.1 is not a supported installer runtime. The installer rejects it explicitly rather than continuing with uncertain behavior.
 
-### Dry run
+### Recommended for most users: generic skills only
+
+Preview first:
 
 ```powershell
-pwsh -NoProfile -File .\install.ps1 -DryRun
+pwsh -NoProfile -File .\install.ps1 -DryRun -GenericOnly
 ```
 
-### Install the full current registry
-
-```powershell
-pwsh -NoProfile -File .\install.ps1
-```
-
-### Install generic skills only
+Install the reusable generic skills:
 
 ```powershell
 pwsh -NoProfile -File .\install.ps1 -GenericOnly
 ```
+
+This avoids installing project-specific routers such as `growthops-engineering` into a general Codex skill directory.
 
 ### Install selected skills only
 
@@ -247,28 +245,34 @@ pwsh -NoProfile -File .\install.ps1 -GenericOnly
 pwsh -NoProfile -File .\install.ps1 -SkillName "sqlite-data-modeling,testing-typescript-systems"
 ```
 
+### Advanced: install the full current registry
+
+```powershell
+pwsh -NoProfile -File .\install.ps1 -DryRun
+pwsh -NoProfile -File .\install.ps1
+```
+
+No selection flag intentionally preserves the historical full-registry behavior, including project-specific entries. The installer prints a warning when project skills are included. Use this only when that is what you want.
+
 Selection behavior:
 
-- no selection flag installs the full current registry;
+- no selection flag installs the full current registry and warns when project-specific skills are included;
 - `-GenericOnly` installs exactly entries whose registry `kind` is `generic`;
 - `-SkillName` installs exactly the requested registered skills;
 - `-GenericOnly` and `-SkillName` are mutually exclusive;
 - invalid or mixed valid/unknown selections fail before target mutation;
 - skills outside the selected set are left untouched.
 
-Default Codex target:
+Default Codex target is resolved from the current operating-system user home:
 
 ```text
-%USERPROFILE%\.codex\skills
+Windows: %USERPROFILE%\.codex\skills
+Linux/macOS convention: $HOME/.codex/skills
 ```
 
-Default backup root:
+A mutating install takes an exclusive sibling lock for that target (for example `skills.install.lock`). A second installer targeting the same directory fails before changing active skill content. Dry-run remains lock-free and non-mutating.
 
-```text
-%USERPROFILE%\.codex\skills-backups
-```
-
-Backups are intentionally outside the active skill-discovery root.
+Default backup root is the sibling `skills-backups` directory under the same user-home location. Backups are intentionally outside the active skill-discovery root.
 
 For changed bundles, the installer uses a staged transaction:
 
