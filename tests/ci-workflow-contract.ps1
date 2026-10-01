@@ -51,7 +51,13 @@ if ($workflow -notmatch "(?m)^permissions:\s*\r?\n\s*contents:\s*read\s*$") {
   throw "CI workflow must keep read-only contents permission"
 }
 
-Assert-ContainsOnce -Text $workflow -Needle "actions/checkout@v7.0.1" -Label "Pinned checkout action"
+Assert-ContainsOnce -Text $workflow -Needle "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1" -Label "Immutable checkout action pin"
+if ($workflow -match '(?m)^\s*- uses:\s*actions/checkout@v') {
+  throw "Checkout action must use an immutable commit SHA, not a mutable version tag"
+}
+if ($workflow -notmatch '(?m)^\s{4}timeout-minutes:\s*20\s*$') {
+  throw "CI validate job must define timeout-minutes: 20"
+}
 Assert-ContainsOnce -Text $workflow -Needle "name: Report PowerShell runtime" -Label "PowerShell runtime evidence step"
 Assert-ContainsOnce -Text $workflow -Needle "name: Validate CI workflow contract" -Label "CI self-contract step"
 
