@@ -152,6 +152,23 @@ function Assert-SkillBundle {
   if ($frontmatter -notmatch "(?m)^description:\s+.+$") {
     throw "Invalid skill bundle '$ExpectedName': missing description in YAML frontmatter"
   }
+
+  $bundleRoot = Get-NormalizedFullPath -Path $Path -Label "Skill bundle '$ExpectedName'"
+  $refs = [regex]::Matches($raw, 'references/[A-Za-z0-9._/-]+\.md') |
+    ForEach-Object { $_.Value } |
+    Sort-Object -Unique
+
+  foreach ($ref in $refs) {
+    $relativeRef = $ref.Replace('/', [System.IO.Path]::DirectorySeparatorChar)
+    $candidate = Get-NormalizedFullPath -Path (Join-Path $bundleRoot $relativeRef) -Label "Reference '$ref'"
+
+    if (-not (Test-SameOrChildPath -Candidate $candidate -Root $bundleRoot)) {
+      throw "Invalid skill bundle '$ExpectedName': reference escapes skill directory -> $ref"
+    }
+    if (-not (Test-Path -LiteralPath $candidate -PathType Leaf)) {
+      throw "Invalid skill bundle '$ExpectedName': broken reference -> $ref"
+    }
+  }
 }
 
 function Get-DirectoryFingerprint {
