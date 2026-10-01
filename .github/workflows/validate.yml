@@ -114,3 +114,9 @@ jobs:
       - name: Validate Phase 16 lifecycle fixtures
         shell: pwsh
         run: ./tests/phase16-lifecycle-contract-fixtures.ps1
+      - name: Validate Phase 17 release readiness
+        shell: pwsh
+        run: ./tests/phase17-release-contract.ps1
+      - name: Validate Phase 17 release fixtures
+        shell: pwsh
+        run: ./tests/phase17-release-contract-fixtures.ps1
