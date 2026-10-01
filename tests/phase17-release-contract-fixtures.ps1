@@ -91,9 +91,10 @@ try {
   Assert-Passes -Sandbox $valid
 
   $futurePatch = New-Sandbox -Name "future-patch-version"
-  $r = Get-Content -LiteralPath $futurePatch.RegistryPath -Raw | ConvertFrom-Json
+  $futureRegistryPath = Join-Path $futurePatch.Root "REGISTRY.json"
+  $r = Get-Content -LiteralPath $futureRegistryPath -Raw | ConvertFrom-Json
   $r.version = "1.2.1"
-  Save-Json -Path $futurePatch.RegistryPath -Value $r
+  Save-Json -Path $futureRegistryPath -Value $r
   $text = Get-Content -LiteralPath $futurePatch.ReadmePath -Raw
   $text = $text.Replace("Current suite release: **v1.2.0**","Current suite release: **v1.2.1**")
   Set-Content -LiteralPath $futurePatch.ReadmePath -Value $text -Encoding utf8NoBOM
