@@ -1,126 +1,551 @@
 # Codex Engineering Skills
 
-> **Catatan buat gue sendiri dulu.**
->
-> Repo ini bukan "install semua biar AI makin sakti".
->
-> Justru kebalikannya.
->
-> Kalau nanti gue mulai masukin 48 skill ke satu agent terus heran kenapa context-nya sesak:
->
-> **woco README iki meneh.**
+A small, curated collection of engineering instructions for **Codex and other agent workflows that can consume `SKILL.md`-style guidance**.
+
+The repository packages recurring engineering concerns into task-specific skills: architecture boundaries, monorepo structure, SQLite durability, crawler reliability, local-first application security, testing, API contracts, CI reliability, runtime compatibility, software supply-chain integrity, and one project-specific GrowthOps router.
+
+The intended workflow is simple:
+
+```text
+task
+  -> select the smallest relevant skill set
+    -> load only the references needed
+      -> implement
+        -> verify
+```
+
+This is **not** presented as a novel engineering framework, a universal benchmark, or proof that loading a skill automatically improves model quality. It is a maintained working collection built from practical project experience, public repositories, and official documentation, with explicit provenance and evidence limits.
+
+> **Latest published release:** `v1.2.0`  
+> Current suite release: **v1.2.0**  
+> **Registry:** 13 skills  
+> **License:** Apache-2.0  
+> **Tooling runtime:** PowerShell Core 7+ (`pwsh`)  
+> **Primary tested hosts:** GitHub-hosted Windows and Ubuntu
+
+---
+
+## What these skills are for
+
+A skill in this repository is a bounded instruction package for a recurring engineering problem.
+
+Instead of asking an agent to rely only on a broad prompt such as:
+
+> "Build a TypeScript monorepo."
+
+a relevant skill can add constraints such as:
+
+- which package owns which responsibility;
+- where public API boundaries belong;
+- which dependency directions are allowed;
+- what durability or security invariant must survive;
+- what verification is required before the task is considered complete.
+
+The goal is not to make every prompt longer. The goal is to provide **specific engineering context when that context is actually relevant**.
+
+Typical uses include:
+
+- giving Codex a reusable engineering contract for a focused task;
+- keeping project-specific rules separate from generic engineering guidance;
+- reducing repeated explanation across similar tasks;
+- making important failure boundaries and verification steps explicit;
+- testing whether a skill is useful enough to keep, revise, or remove.
+
+---
+
+## What this repository is not
+
+This repository does **not** claim that:
+
+- every available skill should be loaded for every task;
+- the current skill set is complete;
+- every skill is already proven effective;
+- the repository replaces project-specific engineering judgment;
+- passing static validation proves an agent will behave correctly;
+- context-byte reduction automatically means lower token cost or better output;
+- one successful evaluation proves causal improvement;
+- material adapted from public work originated here.
+
+Some skills are intentionally still experimental.
+
+---
+
+## Current status
+
+Current registry version: **1.2.0**.
+
+| Category | Count | Meaning |
+| --- | ---: | --- |
+| Stable generic skills | 6 | Maintained for normal reuse, with observational evidence attached |
+| Incubating generic skills | 6 | Useful enough to keep testing, but still `UNPROVEN` / evidence tier `none` |
+| Project-specific skills | 1 | Deliberately tied to a named project and not treated as generic guidance |
+| Total | **13** | Current registry entries |
+
+### What is already in place
+
+- UTF-8 / mojibake regression checks;
+- registry lifecycle and evidence contracts;
+- a behavioral evaluation harness with versioned cases and fixtures;
+- one matched `no_skills` vs `selected_skills` behavioral comparison;
+- a context-size benchmark for selective vs overloaded skill loading;
+- a 10-case static router-selection corpus;
+- a public, sanitized GrowthOps evidence case study;
+- explicit installer selection with `-GenericOnly` and `-SkillName`;
+- staged install, backup, rollback, and idempotency checks;
+- Windows + Ubuntu CI using PowerShell Core 7+;
+- compatibility claims separated into format, design, tested execution, and runtime loading;
+- canonical provenance mapping and source validation;
+- candidate incubation / defer decisions;
+- Phase 16 lifecycle cleanup and removal of a redundant GrowthOps validator;
+- a vNext acceptance report covering all 20 release criteria.
+
+### What is **not** demonstrated yet
+
+- macOS repository-tooling execution is **NOT RUN**;
+- runtime loading/discovery in arbitrary third-party agents is **NOT RUN**;
+- router **runtime obedience** is **NOT RUN** — the current router corpus validates the documented routing contract, not real agent compliance;
+- the current context benchmark measures canonical `SKILL.md` entrypoint bytes, **not** token savings, latency savings, tool-call savings, or output quality;
+- the six incubating skills remain **UNPROVEN** until their own post-creation evidence requirements are satisfied;
+- the Phase 17 matched behavioral comparison produced **no measured criterion uplift** in that single run: both the baseline and selected-skill treatment passed 4/4 criteria;
+- there is no broad multi-model or multi-user benchmark demonstrating universal effectiveness.
+
+That distinction is intentional. The evidence system is meant to make unknowns visible rather than convert them into marketing claims.
+
+Machine-readable vNext acceptance:
+
+[`evidence/releases/v1.2.0-vnext-acceptance-2026-10-01.json`](evidence/releases/v1.2.0-vnext-acceptance-2026-10-01.json)
+
+Release notes:
+
+[`docs/releases/v1.2.0-vnext.md`](docs/releases/v1.2.0-vnext.md)
+
+---
+
+## Skills
+
+| Skill | Lifecycle | Purpose |
+| --- | --- | --- |
+| `typescript-node-architecture` | stable | TypeScript/Node boundaries, contracts, lifecycle, async flow, and error design |
+| `monorepo-typescript` | stable | pnpm workspaces, package ownership, exports, and dependency direction |
+| `sqlite-data-modeling` | stable | Schema design, migrations, transactions, locking, and restart-safe persistence |
+| `resilient-crawler-engineering` | stable | Durable crawling, retries, robots/sitemaps, bounded transport, checkpoint/resume |
+| `application-security-local-first` | stable | SSRF/DNS rebinding, XSS, filesystem/path safety, secrets, and prompt boundaries |
+| `testing-typescript-systems` | stable | Vitest/MSW, fixtures, regression strategy, fault injection, durability and restart testing |
+| `agent-skill-authoring` | incubating | Creating, reviewing, packaging, and maintaining agent skills |
+| `agent-skill-evaluation` | incubating | Evaluation cases, baselines, evidence discipline, routing, and context-cost analysis |
+| `api-contract-testing` | incubating | API compatibility, provider conformance, consumer/provider contracts, breaking-change gates |
+| `ci-pipeline-reliability` | incubating | CI triggers, matrices, failure propagation, runtime assumptions, caches/artifacts, flaky-test boundaries |
+| `runtime-compatibility-engineering` | incubating | Host/runtime/toolchain support evidence, version boundaries, adaptation, and compatibility claim limits |
+| `software-supply-chain-integrity` | incubating | Dependency/action/source trust, immutable refs, lockfiles, digests, attestations, build provenance |
+| `growthops-engineering` | project | Project router and engineering contract specifically for GrowthOps |
+
+Canonical metadata lives in [`REGISTRY.json`](REGISTRY.json).
+
+---
+
+## Lifecycle and evidence are separate
+
+A lifecycle label answers:
+
+> How is this skill intended to be maintained and used?
+
+An evidence tier answers:
+
+> What evidence currently supports its usefulness?
+
+Those are deliberately different questions.
+
+### Lifecycle
+
+- **stable** — maintained for normal reuse;
+- **incubating** — experimental and expected to change;
+- **reference** — retained mainly as a pattern/knowledge asset;
+- **project** — intentionally scoped to a specific project.
+
+### Evidence
+
+The repository records evidence separately so `stable` does not silently mean "scientifically benchmarked" and `incubating` does not silently mean "bad".
+
+See:
+
+- [`COLLECTION_POLICY.md`](COLLECTION_POLICY.md)
+- [`evidence/README.md`](evidence/README.md)
+- [`evidence/evaluations/README.md`](evidence/evaluations/README.md)
+
+---
+
+## Routing model
+
+The default assumption is selective loading.
+
+```text
+PROJECT / TASK CONTEXT
+        |
+        v
+optional project router
+        |
+        v
+relevant specialist skill(s)
+        |
+        v
+selected references only
+        |
+        v
+implementation
+        |
+        v
+verification
+```
+
+The repository intentionally does **not** treat "more skills loaded" as automatically better.
+
+The current context benchmark compares:
+
+- `no_skills`;
+- `selected_skills`;
+- `all_generic_skills`.
+
+It measures canonical UTF-8 byte size of skill entrypoints. References are excluded because they are conditionally loaded.
+
+See [`evidence/evaluations/context-current.json`](evidence/evaluations/context-current.json).
+
+---
+
+## Installation
+
+### Requirements
+
+Use **PowerShell Core 7+**:
+
+```powershell
+pwsh --version
+```
+
+Windows PowerShell 5.1 is not a supported installer runtime. The installer rejects it explicitly rather than continuing with uncertain behavior.
+
+### Dry run
+
+```powershell
+pwsh -NoProfile -File .\install.ps1 -DryRun
+```
+
+### Install the full current registry
+
+```powershell
+pwsh -NoProfile -File .\install.ps1
+```
+
+### Install generic skills only
+
+```powershell
+pwsh -NoProfile -File .\install.ps1 -GenericOnly
+```
+
+### Install selected skills only
+
+```powershell
+pwsh -NoProfile -File .\install.ps1 -SkillName "sqlite-data-modeling,testing-typescript-systems"
+```
+
+Selection behavior:
+
+- no selection flag installs the full current registry;
+- `-GenericOnly` installs exactly entries whose registry `kind` is `generic`;
+- `-SkillName` installs exactly the requested registered skills;
+- `-GenericOnly` and `-SkillName` are mutually exclusive;
+- invalid or mixed valid/unknown selections fail before target mutation;
+- skills outside the selected set are left untouched.
+
+Default Codex target:
+
+```text
+%USERPROFILE%\.codex\skills
+```
+
+Default backup root:
+
+```text
+%USERPROFILE%\.codex\skills-backups
+```
+
+Backups are intentionally outside the active skill-discovery root.
+
+For changed bundles, the installer uses a staged transaction:
+
+```text
+stage
+  -> verify
+    -> backup existing destination
+      -> verify backup
+        -> swap
+          -> verify installed bundle
+            -> rollback attempted destinations on failure
+```
+
+Identical reinstalls report `UNCHANGED` rather than generating unnecessary backups.
+
+---
+
+## Validation
+
+Run:
+
+```powershell
+pwsh -NoProfile -File .\validate.ps1
+```
+
+The root validator currently checks, among other repository contracts:
+
+- `SKILL.md` frontmatter structure;
+- registered skill names and canonical paths;
+- references;
+- UTF-8 BOM / U+FFFD / known mojibake patterns;
+- generated-output contamination;
+- `SKILL.md` length guardrails;
+- generic/project boundary leakage;
+- registry kind, lifecycle status, evidence tier, and evidence references;
+- retained project `suite-manifest.json` consistency.
+
+Additional regression contracts under [`tests/`](tests/) cover the evidence model, evaluation harness, context benchmark, router selection, installer transactions, compatibility claims, provenance, incubation decisions, lifecycle cleanup, and vNext release readiness.
+
+CI currently runs the shared PowerShell suite on:
+
+- `windows-latest`;
+- `ubuntu-latest`.
+
+---
+
+## Evidence and evaluation
+
+The repository distinguishes static validity from behavioral evidence.
+
+A valid skill can still be unhelpful.
+
+A passing behavioral case can still fail to establish causality.
+
+The current Phase 17 matched comparison is intentionally reported as:
+
+```text
+no_skills       -> PASS 4/4
+selected_skills -> PASS 4/4
+
+measured criterion uplift -> none in this single run
+```
+
+That result is retained because "no observed uplift" is still useful evidence. It is not rewritten into a stronger claim.
+
+Relevant files:
+
+- [`evidence/evaluations/cases.json`](evidence/evaluations/cases.json)
+- [`evidence/evaluations/fixtures.json`](evidence/evaluations/fixtures.json)
+- [`evidence/evaluations/results/`](evidence/evaluations/results/)
+- [`evidence/evaluations/router-cases.json`](evidence/evaluations/router-cases.json)
+- [`evidence/evaluations/context-current.json`](evidence/evaluations/context-current.json)
+
+---
+
+## Provenance and attribution
+
+This repository was **not** produced in isolation.
+
+Public repositories, public engineering patterns, and official documentation were inspected and compared while these skills were being written. Material was then rewritten, narrowed, reorganized, or adapted for this repository's agent-oriented workflow.
+
+The repository should therefore be read as a **curated synthesis and working engineering collection**, not as a claim that every underlying idea originated here.
+
+Source and license records are kept in:
+
+- [`SOURCES.md`](SOURCES.md)
+- [`ATTRIBUTION.md`](ATTRIBUTION.md)
+- [`NOTICE`](NOTICE)
+- [`PROVENANCE.json`](PROVENANCE.json)
+
+`PROVENANCE.json` is the canonical machine-readable source-to-skill mapping validated by repository tests.
+
+---
+
+## GrowthOps project example
+
+`growthops-engineering` is deliberately project-specific.
+
+It exists because this repository also needed one non-toy example of composition:
+
+```text
+project vocabulary
++ project milestones
++ project constraints
++ generic specialist skills
+= project router
+```
+
+It should **not** be copied to an unrelated project by simply renaming "GrowthOps".
+
+The public case study is sanitized and based on committed project evidence:
+
+[`docs/case-study-growthops-m01-m04.md`](docs/case-study-growthops-m01-m04.md)
+
+---
+
+## Repository layout
+
+```text
+skills/                  skill packages
+templates/               reusable authoring/router templates
+examples/                routing and usage examples
+evidence/                evaluation, lifecycle, compatibility, release evidence
+tests/                   PowerShell contract and regression tests
+docs/                    PRD, compatibility/release notes, case-study documentation
+REGISTRY.json            canonical skill registry + suite version
+install.ps1              selective transactional installer
+validate.ps1             root static validator
+PROVENANCE.json          canonical machine-readable source mapping
+```
+
+---
+
+## Creating or adapting a skill
+
+Start with:
+
+- [`AUTHORING_STANDARD.md`](AUTHORING_STANDARD.md)
+- [`templates/project-router/SKILL.md`](templates/project-router/SKILL.md)
+- [`examples/ROUTING_EXAMPLES.md`](examples/ROUTING_EXAMPLES.md)
+- [`REGISTRY.json`](REGISTRY.json)
+
+A new skill should have a narrow trigger, clear non-goals, useful completion criteria, and an explicit evidence plan.
+
+Adding a skill directly as `stable` just because the topic sounds important is intentionally discouraged.
+
+---
+
+## Version and release semantics
+
+Latest published release: **[`v1.2.0`](https://github.com/exxrawrrr/codex-engineering-skills/releases/tag/v1.2.0)**.
+
+The suite uses simple SemVer-style versioning:
+
+- **MAJOR** — breaking registry/installer contract changes, incompatible default behavior, or removal/renaming of maintained stable interfaces;
+- **MINOR** — backward-compatible skills or new installer/evidence/validation capabilities;
+- **PATCH** — backward-compatible fixes, documentation/provenance corrections, and test hardening.
+
+A release tag is created only after the release commit is on `main` and required CI is green.
+
+> The README on `main` may receive documentation-only updates after the latest published tag. The release evidence under `evidence/releases/` remains historical evidence for the tagged release and is not rewritten to pretend later documentation existed at release time.
+
+---
+
+## License
+
+Apache-2.0.
+
+Third-party projects retain their own copyrights and licenses as recorded in the attribution files.
+
+---
+
+# Owner's Notes — catatan buat gue sendiri
+
+> Bagian atas buat orang yang pengen tahu repo ini **sebenarnya apa**.  
+> Bagian bawah ini buat gue sendiri biar enam bulan lagi nggak sok lupa terus bikin kekacauan yang sama.
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/exxrawrrr/exxrawrrr/main/assets/readme-memes/merge-conflict.jpg" width="315" alt="merge conflict meme" />
 </p>
 
-## Ngene loh, cak.
+## Ngene loh, Raf.
 
-Awalnya gue cuma butuh beberapa instruction yang bikin agent engineering **nggak ngawur**.
+Awalnya cuma pengen bikin beberapa instruction biar Codex kalau ngerjain engineering nggak ngawur-ngawur amat.
 
-Bukan cuma:
+Terus mulai:
 
-> "buat monorepo."
+```text
+butuh monorepo rules
+-> bikin skill
 
-Tapi:
+butuh SQLite durability
+-> bikin skill
 
-> "buat monorepo, ngerti ownership package-nya, dependency direction-nya, export boundary-nya, terus jangan bikin semua package saling gandengan kayak rombongan kondangan."
+butuh crawler nggak amnesia
+-> bikin skill
 
-Terus berkembang.
+butuh security
+-> bikin skill
 
-Butuh SQLite? bikin skill.
+butuh testing
+-> bikin skill
 
-Butuh crawler yang nggak amnesia habis restart? bikin skill.
-
-Butuh security local-first? bikin skill.
-
-Butuh testing yang nggak cuma tiga assertion terus merasa aman? bikin skill.
-
-Butuh router khusus GrowthOps? yo bikin lagi.
+butuh router
+-> bikin lagi
+```
 
 Lama-lama:
 
-> **lah kok dadi bengkel.**
+> **lah jancuk, kok dadi bengkel.**
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/exxrawrrr/exxrawrrr/main/assets/readme-memes/99-bugs.jpg" width="300" alt="99 bugs meme" />
-</p>
+Ya wis. Bengkel ya bengkel.
 
-Dan akhirnya gue sadar:
+Tapi inget: **bengkel bukan museum perkakas**.
 
-**ya sudah. Memang ini bengkel.**
+Jangan semua obeng, kunci ring, bor, gerinda, dongkrak, kompresor, sama palu dimasukin tas cuma karena semuanya tersedia.
 
 ---
 
-## Ini skill garage, bukan buffet all-you-can-eat
+## Aturan nomor siji: OJO LOAD KABEH
 
-Kesalahan paling gampang waktu punya koleksi skill:
+Kalau nanti jumlah skill tambah banyak terus lo mikir:
+
+> "sekalian load semua ben pinter."
+
+**DAMPUT. OJO.**
+
+Skema gobloknya sudah jelas:
 
 ```text
-"wah ada 8"
-↓
-"load semua"
-↓
-context gede
-↓
-instruction tabrakan
-↓
-agent mikir kelamaan
-↓
-token kobong
-↓
-gue:
-"kok ngene?"
+skill tambah akeh
+-> load kabeh
+-> context dadi gudang
+-> instruction tabrakan
+-> model muter-muter
+-> token kobong
+-> terus lo ngomel:
+   "kok Codex lemot sih?"
 ```
 
-Ora usah.
+Yo salahmu dewe, diancuk.
 
-Prinsip repo ini sederhana:
-
-> **pakai skill paling sedikit yang cukup buat kerjaan saat ini.**
-
-Bukan semua skill harus aktif.
-
-Bukan semua skill harus stable.
-
-Bukan semua skill harus relevan ke semua project.
-
-<p align="center">
-  <img src="https://raw.githubusercontent.com/exxrawrrr/exxrawrrr/main/assets/readme-memes/printf-debugging.jpg" width="290" alt="printf debugging meme" />
-</p>
+Pakai **skill paling sedikit yang cukup**.
 
 Presence is not endorsement.
 
-Kalau satu skill ada di sini, artinya:
-
-> **pernah cukup berguna, menarik, atau penting untuk dikoleksi.**
-
-Bukan berarti harus disuntikkan ke setiap chat sampai model megap-megap.
-
-<p align="center">
-  <img src="https://raw.githubusercontent.com/exxrawrrr/exxrawrrr/main/assets/readme-memes/heisenbug.jpg" width="305" alt="heisenbug meme" />
-</p>
+Ada di repo bukan berarti harus disuntikkan ke setiap kerjaan.
 
 ---
 
-## Yang gue kejar dari skill beginian
+## Repo ini juga dudu wahyu engineering
 
-Gue nggak terlalu peduli skill-nya terdengar keren.
+Jangan suatu hari nulis README:
 
-Gue lebih peduli apakah setelah skill dipakai:
+> "revolutionary autonomous engineering intelligence framework™"
 
-- agent ngerti boundary;
-- keputusan teknis lebih konsisten;
-- context lebih kecil;
-- testing lebih masuk akal;
-- error lebih recoverable;
-- source dan provenance jelas;
-- project-specific rule nggak bocor ke project lain;
-- dan hasil akhirnya bisa diverifikasi.
+Jancuk tenan nek nganti ngono.
 
-Kalau skill cuma bikin agent ngomong makin panjang tapi implementasinya sama:
+Banyak bagian repo ini lahir dari:
 
-**ngapain.**
+- baca dokumentasi;
+- lihat repo orang;
+- cek pattern orang;
+- bandingkan cara orang;
+- kena bug sendiri;
+- betulin;
+- terus tulis ulang biar cocok dipakai agent.
+
+Dan itu **nggak masalah**.
+
+Yang penting jangan nyolong diam-diam, jangan ngaku dapat wahyu dari langit, attribution jelas, license jelas, terus hasil adaptasinya memang ada gunanya.
+
+Repo ini biasa aja.
+
+Cuma diusahakan **rapi, bisa dicek, dan nggak terlalu ngibul**.
+
+Itu sudah cukup.
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/exxrawrrr/exxrawrrr/main/assets/readme-memes/stackoverflow-copypaste.jpg" width="290" alt="stackoverflow copy paste meme" />
@@ -128,458 +553,190 @@ Kalau skill cuma bikin agent ngomong makin panjang tapi implementasinya sama:
 
 ---
 
-## Cara gue mikir routing-nya
+## v1.2.0 — sing wis mari
 
-Kurang lebih:
+Yang sudah beres dan jangan dibongkar cuma karena gabut:
+
+- validator dasar sudah jauh lebih waras;
+- mojibake punya regression fixture;
+- lifecycle dipisah dari evidence;
+- behavioral harness sudah ada;
+- context benchmark sudah ada;
+- router corpus sudah ada;
+- GrowthOps public case study sudah ada;
+- installer bisa pilih skill;
+- staging / backup / rollback / idempotency sudah dites;
+- Windows + Ubuntu CI sudah hijau;
+- compatibility claim sudah dibatesin;
+- provenance sudah dirapikan;
+- Wave A dan Wave B sudah punya keputusan;
+- Phase 16 cleanup selesai;
+- vNext acceptance **20/20**;
+- tag dan release **v1.2.0** sudah terbit.
+
+Iki **selesai untuk scope vNext**, bukan berarti repo sakti mandraguna.
+
+---
+
+## Sing durung — utang nyata, bukan utang khayalan
+
+Masih ada yang belum terbukti:
+
+- macOS belum dites;
+- runtime loading di agent lain belum dibuktikan;
+- router belum diuji apakah agent beneran nurut saat runtime;
+- context byte lebih kecil belum berarti token pasti lebih hemat;
+- enam incubating skill masih **UNPROVEN**;
+- benchmark behavior masih tipis;
+- comparison Phase 17 malah hasilnya baseline PASS, selected PASS — **ora ono uplift sing kebukten nang run iku**;
+- belum ada bukti lintas banyak model / banyak user / banyak project bahwa collection ini secara umum lebih bagus.
+
+Kalau nanti mau lanjut:
+
+**bayar utang yang nyata ini.**
+
+Jangan malah bikin:
 
 ```text
-PROJECT CONTEXT
-      ↓
-PROJECT ROUTER
-      ↓
-pilih specialist skill yang relevan
-      ↓
-ambil references seperlunya
-      ↓
-implement
-      ↓
-verify
+observability-super-agent-skill-v2-final-final
+multi-orchestrator-meta-router
+agentic-agent-skill-manager-manager
 ```
+
+padahal evidence yang lama belum dibayar.
+
+Jancuk.
+
+---
+
+## Delete test
+
+Setiap mau nambah mekanisme baru, tanya:
+
+> Kalau benda ini gue hapus, apa ada sesuatu yang benar-benar hilang?
+
+Kalau jawabannya:
+
+> "hmmm... sebenernya nggak."
+
+**hapus wae.**
+
+Jangan miara complexity karena sayang sama commit sendiri.
+
+Commit nggak punya perasaan.
+
+---
+
+## Stable iku dudu gelar profesor
+
+`stable` artinya dipelihara buat pemakaian normal.
 
 Bukan:
 
-```text
-PROJECT
-  ↓
-LOAD EVERYTHING
-  ↓
-SEMOGA ALLAH MEMBERKATI CONTEXT WINDOW
-```
+> "skill ini secara ilmiah meningkatkan AI sebesar 37.4%."
 
-Nah.
+Ora ono bukti ngono.
 
----
+Dan `incubating` juga bukan berarti sampah.
 
-## Status itu penting
+Artinya:
 
-Gue sengaja bedain skill jadi beberapa jenis.
-
-### `stable`
-
-Sudah cukup berguna buat pemakaian normal dan memang diniatkan untuk dirawat.
-
-### `incubating`
-
-Masih diuji.
-
-Bisa berubah.
-
-Bisa dipotong.
-
-Bisa ternyata idenya bagus tapi implementasinya perlu ditampar ulang.
-
-### `reference`
-
-Disimpan sebagai knowledge/pattern.
-
-Nggak harus masuk install normal.
-
-### `project`
-
-Sengaja spesifik ke satu project.
-
-Contohnya `growthops-engineering`.
-
-Kalau lu copy mentah skill project-specific ke project lain terus ternyata aneh:
-
-ya karena memang **ora digawe kanggo kono**.
-
----
-
-## Skill yang sekarang ada
-
-| Skill | Status | Buat apa |
-| --- | --- | --- |
-| `typescript-node-architecture` | stable | strict TypeScript/Node boundaries, contracts, lifecycle, error design |
-| `monorepo-typescript` | stable | pnpm workspaces, package ownership, exports, dependency direction |
-| `sqlite-data-modeling` | stable | schema, migration, transactions, locking, restart-safe persistence |
-| `resilient-crawler-engineering` | stable | durable crawling, retries, robots/sitemaps, checkpoint/resume |
-| `application-security-local-first` | stable | SSRF, DNS rebinding, XSS, path safety, secrets, prompt boundaries |
-| `testing-typescript-systems` | stable | Vitest, MSW, fixtures, durability/fault/restart testing |
-| `agent-skill-authoring` | incubating | bikin, review, package, dan maintain agent skill |
-| `agent-skill-evaluation` | incubating | evaluasi skill/router dengan case, baseline, evidence, dan context-cost discipline |
-| `api-contract-testing` | incubating | compatibility API, schema/provider conformance, consumer-driven contract, dan breaking-change gate |
-| `ci-pipeline-reliability` | incubating | trigger/matrix/runtime/failure-signal CI, cache-artifact boundary, dan flaky-test discipline |
-| `runtime-compatibility-engineering` | incubating | bukti support OS/runtime/toolchain, version boundary, adaptation, dan anti-overclaim compatibility |
-| `software-supply-chain-integrity` | incubating | trust dependency/action/source, lockfile integrity, digest, attestation, dan artifact provenance |
-| `growthops-engineering` | project | router + engineering contract khusus GrowthOps |
-
-Canonical registry: [REGISTRY.json](REGISTRY.json)
-
----
-
-## Kenapa ada `growthops-engineering` di repo generic?
-
-Karena gue pengen ada satu contoh **beneran dipakai di project nyata**.
-
-Bukan contoh:
-
-```text
-my-awesome-project
-todo: implement later
-```
-
-Tapi router yang memang punya vocabulary, milestone, contract, dan boundary dari project asli.
-
-Fungsinya buat belajar composition.
-
-Bukan buat dicopy terus nama GrowthOps diganti `ProjectX`.
-
-<p align="center">
-  <img src="https://raw.githubusercontent.com/exxrawrrr/exxrawrrr/main/assets/readme-memes/git-commit-fixed-stuff.jpg" width="300" alt="git commit fixed stuff meme" />
-</p>
-
-**Adapt. Ojo mung Ctrl+C Ctrl+V.**
-
-<p align="center">
-  <img src="https://raw.githubusercontent.com/exxrawrrr/exxrawrrr/main/assets/readme-memes/xkcd-git.png" width="300" alt="xkcd git meme" />
-</p>
-
----
-
-## Gue juga nggak mau skill ini jadi kitab suci
-
-Engineering berubah.
-
-Library berubah.
-
-Agent behavior berubah.
-
-Model berubah.
-
-Best practice juga kadang cuma best practice sampai ketemu production.
-
-Jadi skill harus bisa:
-
-```text
-dipakai
-→ diuji
-→ dikritik
-→ direvisi
-→ dipromosikan
-→ diturunkan statusnya
-→ dipensiunkan kalau perlu
-```
-
-Makanya ada [COLLECTION_POLICY.md](COLLECTION_POLICY.md).
-
-Kalau sebuah skill sudah redundant atau ternyata lebih banyak bikin ribet daripada membantu:
-
-**ya wes, jangan dipelihara karena gengsi.**
-
----
-
-## Provenance jangan disembunyikan
-
-Repo ini bukan hasil gue bangun dari ruang hampa terus mendadak mendapat wahyu engineering.
-
-Public repositories dan official docs dipelajari.
-
-Pattern dibandingkan.
-
-Lalu instruction ditulis ulang, disempitkan, dikembangkan, dan disusun buat workflow agent.
-
-Detailnya ada di:
-
-- [ATTRIBUTION.md](ATTRIBUTION.md)
-- [NOTICE](NOTICE)
-- [SOURCES.md](SOURCES.md)
-- [PROVENANCE.json](PROVENANCE.json) — mapping source → skill yang divalidasi CI
-
-Kalau ada ide bagus datang dari orang lain, ya sebut.
+> "iki durung cukup bukti. ojo kemaki."
 
 Simple.
 
 ---
 
-## Install
+## Tentang GrowthOps
 
-Dry run dulu kalau pengen lihat apa yang bakal berubah:
+`growthops-engineering` ada karena butuh contoh project router yang beneran punya project context.
 
-```powershell
-pwsh -NoProfile -File .\install.ps1 -DryRun
-```
+Bukan template generik berkumis.
 
-Install:
+Kalau nanti bikin project baru:
 
-```powershell
-pwsh -NoProfile -File .\install.ps1
-```
+**adaptasi pola composition-nya.**
 
-Generic skills only:
-
-```powershell
-pwsh -NoProfile -File .\install.ps1 -GenericOnly
-```
-
-Install only selected skills:
-
-```powershell
-pwsh -NoProfile -File .\install.ps1 -SkillName "sqlite-data-modeling,testing-typescript-systems"
-```
-
-`-GenericOnly` and `-SkillName` are intentionally mutually exclusive so selection behavior stays unambiguous.
-
-Selection contract:
-
-- no selection flag = install the full current registry, preserving the original default behavior;
-- `-GenericOnly` = install exactly entries whose registry `kind` is `generic`;
-- `-SkillName` = install exactly the requested registry entries; matching is case-insensitive and output/install paths use the canonical registry name;
-- unknown, blank, mixed-valid/unknown, or ambiguous selections fail before target mutation;
-- skills outside the selected set are left untouched.
-
-Default target:
+Jangan:
 
 ```text
-%USERPROFILE%\.codex\skills
+Ctrl+C
+Ctrl+V
+GrowthOps -> ProjectBaru
+commit
+"architecture complete"
 ```
 
-Changed skills are handled as one invocation-level transaction: every changed bundle is staged and verified first, then every required existing bundle is backed up and verified before the first swap. Only after those preparation gates pass does replacement begin.
-
-If any swap or post-install verification fails, every destination already attempted in that invocation is rolled back: existing bundles are restored from their verified backups, while failed fresh installs are removed. If restore verification itself fails, the unverified active destination is removed and the verified backup path is preserved in the error for manual recovery. Identical reinstalls report `UNCHANGED` and do not create redundant backups.
-
-The installer cleans the staging directory created by the current invocation, but does not sweep unrelated `.skill-install-staging-*` directories because they may belong to another live or interrupted process.
-
-By default backups live in the sibling directory:
-
-```text
-%USERPROFILE%\.codex\skills-backups
-```
-
-—not inside the active skill-discovery root. Each backup run uses a timestamp plus GUID suffix so concurrent/rapid runs do not share one backup directory.
-
-A custom `-BackupRoot` must stay outside `-TargetRoot` and outside the repository source-skill tree. Existing target/backup path chains and installed skill destinations must not traverse symlink, junction, or reparse-point aliases; the installer rejects those instead of guessing which physical tree is authoritative. Path containment is case-insensitive on Windows and case-sensitive on Unix-like systems.
-
-Karena installer yang merasa paling tahu lalu nimpa file tanpa backup itu bukan automation.
-
-Itu villain origin story.
+Diancuk.
 
 ---
 
-## Validate
+## Kalau suatu hari repo ini punya 100 skill
 
-```powershell
-pwsh -NoProfile -File .\validate.ps1
+STOP.
+
+Buka README iki.
+
+Terus cek:
+
+```text
+apakah 100 skill itu benar-benar 100 kemampuan berbeda?
+
+atau
+
+gue cuma hobi koleksi folder?
 ```
 
-Validator ngecek hal-hal seperti:
-
-- frontmatter block structure;
-- skill names dan canonical registered paths;
-- references;
-- UTF-8 BOM, replacement-character, dan common mojibake corruption;
-- tool-output contamination;
-- guardrail panjang `SKILL.md` (>500 baris menghasilkan warning);
-- generic/project leakage;
-- registry kind/lifecycle-status dan evidence-reference contract;
-- project suite-manifest consistency;
-
-Kalau validator merah:
-
-jangan dibujuk.
-
-Benerin.
+Kalau jawabannya yang kedua:
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/exxrawrrr/exxrawrrr/main/assets/readme-memes/xkcd-compiling.png" width="295" alt="xkcd compiling meme" />
+  <img src="https://raw.githubusercontent.com/exxrawrrr/exxrawrrr/main/assets/readme-memes/99-bugs.jpg" width="300" alt="99 bugs meme" />
 </p>
 
----
+**PRUNING.**
 
-## Build your own skills
-
-Kalau mau bikin skill sendiri, mulai dari:
-
-- [AUTHORING_STANDARD.md](AUTHORING_STANDARD.md)
-- [templates/project-router/SKILL.md](templates/project-router/SKILL.md)
-- [examples/ROUTING_EXAMPLES.md](examples/ROUTING_EXAMPLES.md)
-- [REGISTRY.json](REGISTRY.json)
-
-`agent-skill-authoring` juga sengaja ada sebagai meta-skill untuk bantu proses itu.
-
-Tapi tetap:
-
-> skill yang bagus bukan skill yang paling panjang.
-
-Skill yang bagus adalah instruction yang bikin agent **lebih tepat**, tanpa bikin context berubah jadi gudang kardus.
+Ora usah sentimental.
 
 ---
 
-## Pesan buat gue nanti
+## Reminder terakhir
 
-Kalau collection ini suatu hari isinya 100 skill:
+Yang dicari dari repo ini bukan biar orang buka terus ngomong:
 
-cek lagi.
+> "WOOOOOW AGENTIC ENGINEERING SUPER SYSTEM."
 
-Jangan-jangan yang gue bangun bukan skill system.
+Ra perlu.
 
-Jangan-jangan cuma folder hoarding dengan YAML.
+Kalau orang buka terus ngerti:
+
+- ini collection buat apa;
+- skill mana yang relevan;
+- mana yang stable;
+- mana yang masih percobaan;
+- evidence-nya di mana;
+- batas klaimnya apa;
+- cara install dan validasinya gimana;
+
+**wes apik.**
+
+Kalau kerjaan agent jadi sedikit lebih konsisten karena boundary-nya jelas:
+
+bonus.
+
+Kalau suatu skill ternyata nggak membantu:
+
+buang atau revisi.
+
+Kalau gue sendiri suatu hari mulai overclaim:
+
+> **Rafdi, ojok kemaki. Woco evidence-mu dewe, jancuk.**
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/exxrawrrr/exxrawrrr/main/assets/readme-memes/rubber-duck.jpg" width="285" alt="rubber duck debugging meme" />
 </p>
 
-Yang dicari tetap sama:
-
-> **small context, strong boundaries, boring reliability.**
-
-Kalau skill nggak membantu salah satu dari itu, minimal harus punya alasan bagus kenapa dia masih tinggal di sini.
-
 ---
 
-<br/>
+**Small context. Clear boundaries. Boring reliability.**
 
-# For everyone else
-
-> If you came here for the reusable engineering suite rather than the owner's notes, this section is the cleaner overview.
-
-## Codex Engineering Skills
-
-**Codex Engineering Skills is a curated collection of reusable engineering skills for Codex and other agent workflows that understand `SKILL.md`-style instructions.**
-
-The suite focuses on reliable engineering patterns rather than maximum instruction volume.
-
-Its main goals are:
-
-- smaller task-specific context;
-- explicit engineering boundaries;
-- reusable specialist guidance;
-- clear separation between generic and project-specific instructions;
-- validation and provenance;
-- testable, recoverable system design.
-
-## Included skills
-
-| Skill | Purpose |
-| --- | --- |
-| `typescript-node-architecture` | Strict TypeScript/Node boundaries, contracts, async lifecycle, error design |
-| `monorepo-typescript` | pnpm workspaces, package ownership, exports, dependency direction |
-| `sqlite-data-modeling` | Schema design, migrations, transactions, locking, restart-safe state |
-| `resilient-crawler-engineering` | Durable frontier, retries/backoff, robots/sitemaps, checkpoint/resume |
-| `application-security-local-first` | SSRF/DNS rebinding, XSS, path safety, secrets, prompt-injection boundaries |
-| `testing-typescript-systems` | Vitest, MSW, fixtures, durability/fault/restart tests, targeted E2E |
-| `agent-skill-authoring` | Meta-skill for creating, reviewing, packaging, and publishing agent skills |
-| `agent-skill-evaluation` | Evidence-backed evaluation of skill/router effectiveness, routing, and context cost |
-| `api-contract-testing` | Machine-readable API compatibility, provider conformance, and consumer/provider contract verification |
-| `ci-pipeline-reliability` | Trustworthy CI triggers, matrices, failure propagation, runtime assumptions, caches/artifacts, and flaky-test handling |
-| `runtime-compatibility-engineering` | Host/runtime/toolchain support matrices, evidence boundaries, minimum versions, and adaptation requirements |
-| `software-supply-chain-integrity` | Technical trust for dependencies/actions, immutable refs, lockfiles, digests, attestations, and build provenance |
-| `growthops-engineering` | Real project-specific router and engineering contract example |
-
-## Routing model
-
-```text
-project router
-  -> relevant specialist skill(s)
-    -> selected references
-      -> implementation
-        -> verification
-```
-
-The collection intentionally avoids the assumption that every available skill should be loaded for every task.
-
-## Collection model
-
-Registry status communicates intended use:
-
-**stable** — reusable and maintained for normal use.
-
-**incubating** — experimental and expected to evolve.
-
-**reference** — retained primarily as a knowledge or pattern asset.
-
-**project** — intentionally tied to one project's scope and vocabulary.
-
-See [COLLECTION_POLICY.md](COLLECTION_POLICY.md) and [REGISTRY.json](REGISTRY.json).
-
-## Installation
-
-```powershell
-pwsh -NoProfile -File .\install.ps1 -DryRun
-pwsh -NoProfile -File .\install.ps1
-```
-
-Generic skills only:
-
-```powershell
-pwsh -NoProfile -File .\install.ps1 -GenericOnly
-```
-
-Selected skills only:
-
-```powershell
-pwsh -NoProfile -File .\install.ps1 -SkillName "sqlite-data-modeling,testing-typescript-systems"
-```
-
-`-SkillName` matching remains case-insensitive for compatibility, while installed/output names use the canonical registry spelling. No selection flag preserves the original full-registry install; `-GenericOnly` selects exactly registry `kind=generic`; `-SkillName` selects only the named entries and leaves other installed skills untouched. Invalid or mixed-valid/unknown selections fail before mutation.
-
-Backups default to the sibling `skills-backups` directory, use collision-resistant per-run IDs, and are rejected if the backup path is inside the active target tree or overlaps the repository source-skill tree. Existing symlink/junction/reparse-point aliases in installer-controlled target/backup paths are rejected rather than followed.
-
-Changed skills are transaction-scoped per installer invocation: all changed bundles are staged/verified and all required backups are verified before the first replacement. A later swap or installed-verification failure rolls back every destination already attempted in that invocation. Fresh installs are removed on rollback; existing installs are restored from verified backups. An incomplete restore removes the unverified active destination and reports the retained verified backup path.
-
-## Validation
-
-```powershell
-pwsh -NoProfile -File .\validate.ps1
-```
-
-The validator checks frontmatter structure, skill metadata and canonical registered paths, references, `SKILL.md` length guardrails, generic/project leakage, BOM/U+FFFD/common-mojibake text hygiene, generated-output contamination, registry kind/lifecycle/evidence contracts, and project suite-manifest consistency.
-
-## Provenance
-
-These skills are newly authored as a curated synthesis rather than a wholesale fork of one upstream project.
-
-Public repositories and official documentation were studied and compared, then the material was rewritten and organized for agent workflows.
-
-See:
-
-- [ATTRIBUTION.md](ATTRIBUTION.md)
-- [NOTICE](NOTICE)
-- [SOURCES.md](SOURCES.md)
-- [PROVENANCE.json](PROVENANCE.json) — canonical machine-readable source → skill mapping
-
-## Authoring
-
-To create or adapt skills, start with:
-
-- [AUTHORING_STANDARD.md](AUTHORING_STANDARD.md)
-- [templates/project-router/SKILL.md](templates/project-router/SKILL.md)
-- [examples/ROUTING_EXAMPLES.md](examples/ROUTING_EXAMPLES.md)
-
-## License
-
-Apache-2.0.
-
-Third-party projects retain their own copyrights and licenses as documented in the attribution files.
-
-## Version and release semantics
-
-Current suite release: **v1.2.0**.
-
-Repository tooling and installer execution are tested with **PowerShell Core 7+ (`pwsh`)** on GitHub-hosted Windows and Ubuntu. Windows PowerShell 5.1 is not a supported installer runtime.
-
-The suite version follows simple SemVer-style rules:
-
-- **MAJOR** — breaking registry/installer contract changes, incompatible default behavior, or removal/renaming of maintained stable interfaces;
-- **MINOR** — backward-compatible new skills, optional installer/evidence/validation capabilities, or maintained feature additions;
-- **PATCH** — backward-compatible fixes, documentation/provenance corrections, test hardening, and implementation repairs.
-
-When `REGISTRY.json` changes version for a release-ready main commit, publish `v<version>` only after required CI is green.
-
-v1.2.0 release notes: [docs/releases/v1.2.0-vnext.md](docs/releases/v1.2.0-vnext.md)
-
-Machine-readable vNext acceptance: [evidence/releases/v1.2.0-vnext-acceptance-2026-10-01.json](evidence/releases/v1.2.0-vnext-acceptance-2026-10-01.json)
-
----
-
-**Use the smallest skill set that can do the job well. Context is a resource too.**
+Terus kerja. Ojo nggawe framework anyar mung mergo deadline liyane durung kelar.
