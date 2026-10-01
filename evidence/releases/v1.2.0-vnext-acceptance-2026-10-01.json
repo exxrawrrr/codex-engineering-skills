@@ -241,14 +241,17 @@
   },
   "optional_local_smoke": {
     "machine_connection": "Rafdi Remote GROWTH Stable",
-    "exact_repository_ref_verified": "962461d4af23296d145da7de6d9bf389ec9f8d07",
+    "baseline_attempt_ref": "962461d4af23296d145da7de6d9bf389ec9f8d07",
+    "guard_verification_ref": "a43ad832d47433103d215192b6c050c87508ffa2",
     "host_shell": "Windows PowerShell 5.1.26100.9444 Desktop",
     "git": "2.55.0.windows.3",
     "root_validator": "PASS (13 PASS / 0 WARN / 0 FAIL)",
-    "installer_smoke": "NOT_RUN_SUPPORTED_RUNTIME",
-    "reason": "The remote machine does not have pwsh/PowerShell Core 7+, while the repository compatibility contract requires PowerShell Core 7+ for tested tooling execution.",
+    "supported_runtime_installer_smoke": "NOT_RUN",
+    "supported_runtime_reason": "The remote machine does not have pwsh/PowerShell Core 7+, so a successful local installer execution in the supported runtime was not available.",
+    "unsupported_runtime_guard": "PASS",
+    "unsupported_runtime_guard_evidence": "install.ps1 rejected Windows PowerShell 5.1 immediately with: install.ps1 requires PowerShell Core 7+ (pwsh). Windows PowerShell 5.1 is not a supported installer runtime.",
     "temp_cleanup": "PASS",
-    "release_impact": "NON_BLOCKING; required supported-runtime execution is covered by green Windows and Ubuntu GitHub Actions pwsh jobs."
+    "release_impact": "NON_BLOCKING; required successful tooling execution is covered by green Windows and Ubuntu GitHub Actions jobs using PowerShell Core 7+."
   },
   "external_execution_notes": {
     "openai_api_comparison_attempt": "NOT_RUN",
