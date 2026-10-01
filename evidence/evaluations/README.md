@@ -127,7 +127,7 @@ Causal or comparative claims require matched comparative executions and must obe
 ./tests/evaluation-harness-contract.ps1
 ~~~
 
-Phase 05 keeps the three seed executions as `NOT_RUN`. The harness proves the format and scorer contract without fabricating an agent run.
+The historical seed execution file retains its `NOT_RUN` placeholder rows. Completed executions are added as separate result files rather than rewriting a historical `NOT_RUN` row into success. Phase 17 adds one matched `no_skills` versus `selected_skills` comparison and records its no-uplift limitation explicitly.
 
 Raw private agent transcripts are not required. Prefer compact evidence such as public commit references, exact validation commands/results, or sanitized artifacts. The harness validates structure and treatment identity; a human reviewer still decides whether a supplied evidence string is substantively credible.
 
