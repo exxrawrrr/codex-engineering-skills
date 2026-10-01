@@ -149,6 +149,9 @@ function Assert-SkillBundle {
   if ($frontmatter -notmatch "(?m)^name:\s+$([regex]::Escape($ExpectedName))\s*$") {
     throw "Invalid skill bundle '$ExpectedName': frontmatter name mismatch"
   }
+  if ($frontmatter -notmatch "(?m)^description:\s+.+$") {
+    throw "Invalid skill bundle '$ExpectedName': missing description in YAML frontmatter"
+  }
 }
 
 function Get-DirectoryFingerprint {
