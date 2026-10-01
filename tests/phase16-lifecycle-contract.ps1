@@ -105,8 +105,7 @@ $expectedCleanupDecision = if ($state -eq "COMPLETE") { "REMOVED_IN_16B" } else 
 if ($cleanup.Count -ne 1 -or [string]$cleanup[0].decision -ne $expectedCleanupDecision) {
   $errors.Add("Phase 16 cleanup decision must be '$expectedCleanupDecision' for completion_state '$state'")
 }
-$repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
-$cleanupFullPath = Join-Path $repoRoot $cleanupPath
+$cleanupFullPath = Join-Path $SkillRoot "growthops-engineering/scripts/validate-suite.ps1"
 if ($state -eq "DECISIONS_LOCKED_CLEANUP_PENDING_16B" -and -not (Test-Path -LiteralPath $cleanupFullPath)) {
   $errors.Add("16A pending cleanup asset must still exist before 16B")
 }
